@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
 *{
   font-family: "Roboto", sans-serif;
 }
