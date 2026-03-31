@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([
@@ -119,11 +120,7 @@ const AdminUsers = () => {
 
                 {/* User */}
                 <td className="p-4 flex items-center gap-3">
-                  <img
-                    src={`https://i.pravatar.cc/40?u=${user.id}`}
-                    alt=""
-                    className="rounded-full"
-                  />
+                  
                   {user.name}
                 </td>
 
@@ -160,13 +157,13 @@ const AdminUsers = () => {
 
                 {/* Actions */}
                 <td className="p-4 flex justify-center gap-3">
-                  <button className="text-blue-600">✏️</button>
+                  <button className="text-blue-600"><FaPencilAlt /></button>
 
                   <button
                     onClick={() => handleDelete(user.id)}
                     className="text-red-500"
                   >
-                    🗑
+                    <FaTrashAlt />
                   </button>
                 </td>
 
@@ -182,7 +179,7 @@ const AdminUsers = () => {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
 
           <div className="bg-white p-6 rounded-xl w-96">
-            <h3 className="text-lg font-bold mb-4">➕ Add User</h3>
+            <h3 className="text-lg font-bold mb-4">Add User</h3>
 
             <input
               type="text"
