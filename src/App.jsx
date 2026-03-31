@@ -15,10 +15,10 @@ import AddApplication from './user/components/AddApplication'
 import EditApplication from './user/components/EditApplication'
 
 // ADMIN
-import AdminHome from './Admin/Pages/AdminHome'
-import AdminApplications from './Admin/Pages/AdminApplications'
-import AdminUsers from './Admin/Pages/AdminUsers'
+import AdminHome from './Admin/Pages/adminHome'
 import AdminProfile from './Admin/Pages/AdminProfile'
+import AdminApplications from './Admin/Pages/AdminApplications'
+import AdminUsers from './Admin/Pages/adminUsers'
 
 function App() {
 
