@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaEdit, FaArrowLeft, FaSave, FaFileAlt } from "react-icons/fa";
 
 const EditApplication = () => {
-  const { id } = useParams(); // get id from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -16,14 +17,11 @@ const EditApplication = () => {
     notes: "",
   });
 
-  // Fetch existing data
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        // 🔗 Replace with your API
         const response = await fetch(`/api/applications/${id}`);
         const data = await response.json();
-
         setFormData(data);
       } catch (error) {
         console.error("Error fetching application:", error);
@@ -33,7 +31,6 @@ const EditApplication = () => {
     fetchApplication();
   }, [id]);
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -41,12 +38,10 @@ const EditApplication = () => {
     });
   };
 
-  // Submit updated data
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // 🔗 Replace with your API
       await fetch(`/api/applications/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -62,11 +57,13 @@ const EditApplication = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow">
+
+      <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow-lg">
 
         {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          ✏️ Edit Application
+        <h2 className="text-2xl font-bold mb-6 flex items-center justify-center gap-2 text-gray-800">
+          <FaEdit className="text-blue-500" />
+          Edit Application
         </h2>
 
         {/* Form */}
@@ -80,7 +77,7 @@ const EditApplication = () => {
               value={formData.company}
               onChange={handleChange}
               placeholder="Company Name"
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
               required
             />
 
@@ -90,7 +87,7 @@ const EditApplication = () => {
               value={formData.role}
               onChange={handleChange}
               placeholder="Job Role"
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
               required
             />
           </div>
@@ -101,7 +98,7 @@ const EditApplication = () => {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
             >
               <option value="">Select Status</option>
               <option value="Applied">Applied</option>
@@ -115,7 +112,7 @@ const EditApplication = () => {
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
@@ -127,7 +124,7 @@ const EditApplication = () => {
               value={formData.location}
               onChange={handleChange}
               placeholder="Location"
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
             />
 
             <input
@@ -136,7 +133,7 @@ const EditApplication = () => {
               value={formData.salary}
               onChange={handleChange}
               placeholder="Expected Salary"
-              className="border p-3 rounded-lg"
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
             />
           </div>
 
@@ -147,7 +144,7 @@ const EditApplication = () => {
             value={formData.link}
             onChange={handleChange}
             placeholder="Job Link"
-            className="border p-3 rounded-lg w-full"
+            className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 outline-none"
           />
 
           {/* Notes */}
@@ -156,24 +153,26 @@ const EditApplication = () => {
             value={formData.notes}
             onChange={handleChange}
             placeholder="Additional Notes..."
-            className="border p-3 rounded-lg w-full h-28"
+            className="border p-3 rounded-lg w-full h-28 focus:ring-2 focus:ring-blue-400 outline-none"
           />
 
           {/* Buttons */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pt-4">
 
             <button
               type="button"
               onClick={() => navigate("/dashboard")}
-              className="bg-gray-300 px-5 py-2 rounded-lg"
+              className="flex items-center gap-2 bg-gray-300 px-5 py-2 rounded-lg hover:bg-gray-400 transition"
             >
+              <FaArrowLeft />
               Cancel
             </button>
 
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
+              <FaSave />
               Update Application
             </button>
 

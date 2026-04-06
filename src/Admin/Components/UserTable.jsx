@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import { FiSearch } from "react-icons/fi";
+import { FaUsers } from "react-icons/fa";
 
 const UserTable = () => {
   const [users, setUsers] = useState([
@@ -27,12 +31,10 @@ const UserTable = () => {
 
   const [search, setSearch] = useState("");
 
-  // Delete user
   const handleDelete = (id) => {
     setUsers(users.filter((user) => user.id !== id));
   };
 
-  // Toggle status
   const toggleStatus = (id) => {
     setUsers(
       users.map((user) =>
@@ -46,19 +48,16 @@ const UserTable = () => {
     );
   };
 
-  // Search filter
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Status color
   const getStatusColor = (status) => {
     return status === "Active"
       ? "bg-green-100 text-green-600"
       : "bg-red-100 text-red-500";
   };
 
-  // Role color
   const getRoleColor = (role) => {
     return role === "Admin"
       ? "bg-purple-100 text-purple-600"
@@ -66,57 +65,74 @@ const UserTable = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-8 bg-gray-100 min-h-screen">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">👥 Users</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <FaUsers className="text-blue-500" />
+          Users
+        </h2>
       </div>
 
       {/* Search */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 rounded-lg w-1/3"
-        />
+      <div className="mb-6">
+        <div className="relative w-80">
+          <FiSearch className="absolute left-3 top-3 text-gray-400" />
+
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-          <thead className="bg-gray-200">
+        <table className="w-full">
+
+          <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
             <tr>
-              <th className="p-4">Name</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Role</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 text-center">Actions</th>
+              <th className="p-5 text-left">User</th>
+              <th className="p-5 text-left">Email</th>
+              <th className="p-5 text-left">Role</th>
+              <th className="p-5 text-left">Status</th>
+              <th className="p-5 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
-                <tr key={user.id} className="border-t hover:bg-gray-50">
-
-                  <td className="p-4 flex items-center gap-3">
+                <tr
+                  key={user.id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  {/* User */}
+                  <td className="p-5 flex items-center gap-3">
                     <img
                       src={`https://i.pravatar.cc/40?u=${user.id}`}
                       alt="avatar"
-                      className="rounded-full"
+                      className="w-10 h-10 rounded-full"
                     />
-                    {user.name}
+                    <span className="font-semibold text-gray-800">
+                      {user.name}
+                    </span>
                   </td>
 
-                  <td className="p-4">{user.email}</td>
+                  {/* Email */}
+                  <td className="p-5 text-gray-500">
+                    {user.email}
+                  </td>
 
-                  <td className="p-4">
+                  {/* Role */}
+                  <td className="p-5">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm ${getRoleColor(
+                      className={`px-4 py-1 rounded-full text-sm font-semibold ${getRoleColor(
                         user.role
                       )}`}
                     >
@@ -124,10 +140,11 @@ const UserTable = () => {
                     </span>
                   </td>
 
-                  <td className="p-4">
+                  {/* Status */}
+                  <td className="p-5">
                     <button
                       onClick={() => toggleStatus(user.id)}
-                      className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
+                      className={`px-4 py-1 rounded-full text-sm font-semibold ${getStatusColor(
                         user.status
                       )}`}
                     >
@@ -136,15 +153,21 @@ const UserTable = () => {
                   </td>
 
                   {/* Actions */}
-                  <td className="p-4 flex justify-center gap-3">
-                    <button className="text-blue-600">✏️</button>
+                  <td className="p-5">
+                    <div className="flex justify-center items-center gap-5">
 
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className="text-red-500"
-                    >
-                      🗑
-                    </button>
+                      <button className="text-blue-500 hover:text-blue-700 transition">
+                        <FaEdit size={16} />
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                      >
+                        <MdDeleteOutline size={18} />
+                      </button>
+
+                    </div>
                   </td>
 
                 </tr>

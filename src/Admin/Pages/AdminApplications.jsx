@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { FaUser, FaSearch, FaRegEye } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 
 const AdminApplications = () => {
   const [applications, setApplications] = useState([
@@ -25,12 +27,10 @@ const AdminApplications = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  // Delete application
   const handleDelete = (id) => {
     setApplications(applications.filter((app) => app.id !== id));
   };
 
-  // Update status
   const updateStatus = (id, newStatus) => {
     setApplications(
       applications.map((app) =>
@@ -39,7 +39,6 @@ const AdminApplications = () => {
     );
   };
 
-  // Filter + Search
   const filteredData = applications.filter((app) => {
     return (
       (filter === "All" || app.status === filter) &&
@@ -48,8 +47,7 @@ const AdminApplications = () => {
     );
   });
 
-  // Status colors
-  const getStatusColor = (status) => {
+  const getStatusStyle = (status) => {
     switch (status) {
       case "Applied":
         return "bg-blue-100 text-blue-600";
@@ -60,7 +58,7 @@ const AdminApplications = () => {
       case "Rejected":
         return "bg-red-100 text-red-500";
       default:
-        return "bg-gray-100";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -68,24 +66,36 @@ const AdminApplications = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">🧑‍💼 Admin Applications</h2>
+      <div className="mb-6">
+        <h2 className="text-3xl font-bold flex items-center gap-2 text-gray-800">
+          <FaUser className="text-blue-500" />
+          Admin Applications
+        </h2>
+        <p className="text-gray-500 text-sm mt-1">
+          Manage and monitor all job applications
+        </p>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by user or company..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 rounded-lg w-1/3"
-        />
+      {/* Search + Filter */}
+      <div className="flex flex-col md:flex-row gap-4 mb-6 justify-between">
 
+        {/* Search */}
+        <div className="relative w-full md:w-1/3">
+          <FaSearch className="absolute top-3 left-3 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search by user or company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          />
+        </div>
+
+        {/* Filter */}
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="border px-4 py-2 rounded-lg"
+          className="px-4 py-2 rounded-xl border bg-white shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
         >
           <option>All</option>
           <option>Applied</option>
@@ -93,50 +103,61 @@ const AdminApplications = () => {
           <option>Offer</option>
           <option>Rejected</option>
         </select>
+
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
-          <thead className="bg-gray-200">
+        <table className="w-full">
+
+          <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
             <tr>
-              <th className="p-4">User</th>
-              <th className="p-4">Company</th>
-              <th className="p-4">Role</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Date</th>
-              <th className="p-4 text-center">Actions</th>
+              <th className="p-5 text-left">User</th>
+              <th className="p-5 text-left">Company</th>
+              <th className="p-5 text-left">Role</th>
+              <th className="p-5 text-left">Status</th>
+              <th className="p-5 text-left">Date</th>
+              <th className="p-5 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((app) => (
-                <tr key={app.id} className="border-t hover:bg-gray-50">
+                <tr
+                  key={app.id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
 
                   {/* User */}
-                  <td className="p-4">
-                    <p className="font-medium">{app.user}</p>
-                    <span className="text-sm text-gray-500">
-                      {app.email}
-                    </span>
+                  <td className="p-5">
+                    <div className="flex flex-col">
+                      <span className="font-medium text-gray-800">
+                        {app.user}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {app.email}
+                      </span>
+                    </div>
                   </td>
 
                   {/* Company */}
-                  <td className="p-4">{app.company}</td>
+                  <td className="p-5 text-gray-700 font-medium">
+                    {app.company}
+                  </td>
 
                   {/* Role */}
-                  <td className="p-4">{app.role}</td>
+                  <td className="p-5 text-gray-600">{app.role}</td>
 
                   {/* Status */}
-                  <td className="p-4">
+                  <td className="p-5">
                     <select
                       value={app.status}
                       onChange={(e) =>
                         updateStatus(app.id, e.target.value)
                       }
-                      className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
+                      className={`px-7 py-1 rounded-full text-sm font-medium outline-none ${getStatusStyle(
                         app.status
                       )}`}
                     >
@@ -148,25 +169,33 @@ const AdminApplications = () => {
                   </td>
 
                   {/* Date */}
-                  <td className="p-4">{app.date}</td>
+                  <td className="p-5 text-gray-500 text-sm">
+                    {app.date}
+                  </td>
 
                   {/* Actions */}
-                  <td className="p-4 flex justify-center gap-3">
-                    <button className="text-blue-600">👁</button>
+                  <td className="p-5">
+                    <div className="flex justify-center gap-4">
 
-                    <button
-                      onClick={() => handleDelete(app.id)}
-                      className="text-red-500"
-                    >
-                      🗑
-                    </button>
+                      <button className="p-2 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                        <FaRegEye className="text-blue-600" />
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(app.id)}
+                        className="p-2 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                      >
+                        <MdDeleteOutline className="text-red-500" />
+                      </button>
+
+                    </div>
                   </td>
 
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center p-6 text-gray-500">
+                <td colSpan="6" className="text-center p-8 text-gray-500">
                   No applications found
                 </td>
               </tr>

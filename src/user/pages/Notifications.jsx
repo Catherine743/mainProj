@@ -1,4 +1,12 @@
 import React, { useState } from "react";
+import {
+  FaBell,
+  FaBriefcase,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaClock,
+  FaTrash,
+} from "react-icons/fa";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([
@@ -12,7 +20,7 @@ const Notifications = () => {
     {
       id: 2,
       type: "offer",
-      message: "You received an offer from Infosys 🎉",
+      message: "You received an offer from Infosys",
       time: "1 day ago",
       read: false,
     },
@@ -32,7 +40,6 @@ const Notifications = () => {
     },
   ]);
 
-  // Mark as read
   const markAsRead = (id) => {
     setNotifications(
       notifications.map((n) =>
@@ -41,29 +48,27 @@ const Notifications = () => {
     );
   };
 
-  // Delete notification
   const deleteNotification = (id) => {
     setNotifications(notifications.filter((n) => n.id !== id));
   };
 
-  // Clear all
   const clearAll = () => {
     setNotifications([]);
   };
 
-  // Icon based on type
+  // Icon mapping
   const getIcon = (type) => {
     switch (type) {
       case "interview":
-        return "🎤";
+        return <FaBriefcase className="text-blue-500" />;
       case "offer":
-        return "🎉";
+        return <FaCheckCircle className="text-green-500" />;
       case "rejected":
-        return "❌";
+        return <FaTimesCircle className="text-red-500" />;
       case "reminder":
-        return "⏰";
+        return <FaClock className="text-yellow-500" />;
       default:
-        return "🔔";
+        return <FaBell className="text-gray-500" />;
     }
   };
 
@@ -72,37 +77,46 @@ const Notifications = () => {
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">🔔 Notifications</h2>
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <FaBell className="text-blue-500" />
+          Notifications
+        </h2>
 
         <button
           onClick={clearAll}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+          className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
         >
+          <FaTrash />
           Clear All
         </button>
       </div>
 
-      {/* Notification List */}
+      {/* List */}
       <div className="bg-white rounded-2xl shadow p-4 space-y-4">
 
         {notifications.length === 0 ? (
-          <p className="text-center text-gray-500">
+          <p className="text-center text-gray-500 py-6">
             No notifications available
           </p>
         ) : (
           notifications.map((n) => (
             <div
               key={n.id}
-              className={`flex justify-between items-center p-4 rounded-xl border ${
+              className={`flex justify-between items-center p-4 rounded-xl border transition ${
                 n.read ? "bg-gray-50" : "bg-blue-50"
               }`}
             >
+
               {/* Left */}
               <div className="flex items-center gap-4">
-                <span className="text-2xl">{getIcon(n.type)}</span>
+                <div className="text-xl">
+                  {getIcon(n.type)}
+                </div>
 
                 <div>
-                  <p className="font-medium">{n.message}</p>
+                  <p className="font-medium text-gray-800">
+                    {n.message}
+                  </p>
                   <span className="text-sm text-gray-500">
                     {n.time}
                   </span>
@@ -110,12 +124,12 @@ const Notifications = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3">
+              <div className="flex items-center gap-4">
 
                 {!n.read && (
                   <button
                     onClick={() => markAsRead(n.id)}
-                    className="text-blue-600 text-sm"
+                    className="text-blue-600 text-sm hover:underline"
                   >
                     Mark as read
                   </button>
@@ -123,12 +137,13 @@ const Notifications = () => {
 
                 <button
                   onClick={() => deleteNotification(n.id)}
-                  className="text-red-500 text-sm"
+                  className="text-red-500 hover:text-red-700 transition"
                 >
-                  Delete
+                  <FaTrash />
                 </button>
 
               </div>
+
             </div>
           ))
         )}

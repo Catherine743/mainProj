@@ -27,11 +27,6 @@ const Profile = () => {
 
       {/* Header */}
       <div className="bg-white p-6 rounded-2xl shadow mb-6 flex items-center gap-6">
-        <img
-          src="https://i.pravatar.cc/100"
-          alt="profile"
-          className="rounded-full w-24 h-24"
-        />
 
         <div>
           <h2 className="text-2xl font-bold">{user.name}</h2>

@@ -1,5 +1,12 @@
 import React from "react";
-import { FaLightbulb } from "react-icons/fa";
+import {
+  FaLightbulb,
+  FaHandPaper,
+  FaPlus,
+  FaTasks,
+  FaBolt,
+  FaBriefcase,
+} from "react-icons/fa";
 
 const Home = () => {
   return (
@@ -7,37 +14,41 @@ const Home = () => {
 
       {/* Header */}
       <div className="bg-white p-6 rounded-2xl shadow mb-6 flex justify-between items-center">
+
         <div>
-          <h1 className="text-2xl font-bold">Welcome back, Catherine <i class="fa-light fa-hand-wave"></i></h1>
-          <p className="text-gray-500">Track your progress and stay focused</p>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Welcome back, Catherine
+            <FaHandPaper className="text-yellow-400" />
+          </h1>
+          <p className="text-gray-500">
+            Track your progress and stay focused
+          </p>
         </div>
 
-        <button className="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700">
-          + Add Application
+        <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">
+          <FaPlus />
+          Add Application
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-6 mb-6">
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h4 className="text-gray-500">Applied</h4>
-          <p className="text-2xl font-bold">24</p>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h4 className="text-gray-500">Interviews</h4>
-          <p className="text-2xl font-bold">8</p>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h4 className="text-gray-500">Offers</h4>
-          <p className="text-2xl font-bold text-green-600">3</p>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h4 className="text-gray-500">Rejected</h4>
-          <p className="text-2xl font-bold text-red-500">5</p>
-        </div>
+        {[
+          { title: "Applied", value: "24" },
+          { title: "Interviews", value: "8" },
+          { title: "Offers", value: "3", color: "text-green-600" },
+          { title: "Rejected", value: "5", color: "text-red-500" },
+        ].map((card, i) => (
+          <div
+            key={i}
+            className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
+          >
+            <h4 className="text-gray-500 text-sm">{card.title}</h4>
+            <p className={`text-2xl font-bold ${card.color || ""}`}>
+              {card.value}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Main Section */}
@@ -45,7 +56,10 @@ const Home = () => {
 
         {/* Today Focus */}
         <div className="bg-white p-5 rounded-xl shadow col-span-2">
-          <h3 className="font-bold mb-4"> Today's Focus</h3>
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <FaTasks className="text-blue-500" />
+            Today's Focus
+          </h3>
 
           <ul className="space-y-3">
             <li className="flex justify-between bg-gray-100 p-3 rounded-lg">
@@ -67,18 +81,24 @@ const Home = () => {
 
         {/* Quick Actions */}
         <div className="bg-white p-5 rounded-xl shadow">
-          <h3 className="font-bold mb-4"> Quick Actions</h3>
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <FaBolt className="text-yellow-500" />
+            Quick Actions
+          </h3>
 
           <div className="flex flex-col gap-3">
-            <button className="bg-blue-500 text-white py-2 rounded-lg">
+            <button className="flex items-center justify-center gap-2 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
+              <FaPlus />
               Add Application
             </button>
 
-            <button className="bg-green-500 text-white py-2 rounded-lg">
+            <button className="flex items-center justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
+              <FaBriefcase />
               Schedule Interview
             </button>
 
-            <button className="bg-purple-500 text-white py-2 rounded-lg">
+            <button className="flex items-center justify-center gap-2 bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition">
+              <FaTasks />
               Update Resume
             </button>
           </div>
@@ -91,7 +111,10 @@ const Home = () => {
 
         {/* Recent Applications */}
         <div className="bg-white p-5 rounded-xl shadow">
-          <h3 className="font-bold mb-4">Recent Applications</h3>
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <FaBriefcase className="text-blue-500" />
+            Recent Applications
+          </h3>
 
           <ul className="space-y-3">
             <li className="flex justify-between border-b pb-2">
@@ -113,10 +136,14 @@ const Home = () => {
 
         {/* Motivation */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-5 rounded-xl shadow">
-          <h3 className="font-bold mb-3"><FaLightbulb />Tip of the Day</h3>
-          <p>
-            Consistency is key. Apply daily and keep improving your skills. Every
-            rejection is one step closer to success 
+          <h3 className="font-bold mb-3 flex items-center gap-2">
+            <FaLightbulb />
+            Tip of the Day
+          </h3>
+
+          <p className="text-sm leading-relaxed">
+            Consistency is key. Apply daily and keep improving your skills.
+            Every rejection is one step closer to success.
           </p>
         </div>
 

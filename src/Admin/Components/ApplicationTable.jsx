@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaPlus, FaEdit } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import { FiSearch } from "react-icons/fi";
 
 const ApplicationTable = () => {
   const navigate = useNavigate();
@@ -31,12 +34,10 @@ const ApplicationTable = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  // Delete
   const handleDelete = (id) => {
     setApplications(applications.filter((app) => app.id !== id));
   };
 
-  // Filter + Search
   const filteredData = applications.filter((app) => {
     return (
       (filter === "All" || app.status === filter) &&
@@ -44,7 +45,6 @@ const ApplicationTable = () => {
     );
   });
 
-  // Status badge
   const getStatusColor = (status) => {
     switch (status) {
       case "Applied":
@@ -61,34 +61,44 @@ const ApplicationTable = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-8 bg-gray-100 min-h-screen">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">📊 Applications</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800">
+          Applications
+        </h2>
 
         <button
           onClick={() => navigate("/add")}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+          className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition"
         >
-          + Add Application
+          <FaPlus />
+          Add Application
         </button>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by company..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-2 rounded-lg w-1/3"
-        />
+      <div className="flex flex-wrap gap-4 mb-6 items-center">
 
+        {/* Search */}
+        <div className="relative w-80">
+          <FiSearch className="absolute left-3 top-3 text-gray-400" />
+
+          <input
+            type="text"
+            placeholder="Search by company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        {/* Filter */}
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="border px-4 py-2 rounded-lg"
+          className="px-4 py-2 border rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option>All</option>
           <option>Applied</option>
@@ -99,30 +109,41 @@ const ApplicationTable = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-          <thead className="bg-gray-200">
+        <table className="w-full">
+
+          <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
             <tr>
-              <th className="p-4">Company</th>
-              <th className="p-4">Role</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Date</th>
-              <th className="p-4 text-center">Actions</th>
+              <th className="p-5 text-left">Company</th>
+              <th className="p-5 text-left">Role</th>
+              <th className="p-5 text-left">Status</th>
+              <th className="p-5 text-left">Date</th>
+              <th className="p-5 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((app) => (
-                <tr key={app.id} className="border-t hover:bg-gray-50">
+                <tr
+                  key={app.id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  {/* Company */}
+                  <td className="p-5 font-medium text-gray-800">
+                    {app.company}
+                  </td>
 
-                  <td className="p-4">{app.company}</td>
-                  <td className="p-4">{app.role}</td>
+                  {/* Role */}
+                  <td className="p-5 text-gray-600">
+                    {app.role}
+                  </td>
 
-                  <td className="p-4">
+                  {/* Status */}
+                  <td className="p-5">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
+                      className={`px-4 py-1 rounded-full text-sm font-semibold ${getStatusColor(
                         app.status
                       )}`}
                     >
@@ -130,25 +151,31 @@ const ApplicationTable = () => {
                     </span>
                   </td>
 
-                  <td className="p-4">{app.date}</td>
-
-                  {/* Actions */}
-                  <td className="p-4 flex justify-center gap-3">
-                    <button
-                      onClick={() => navigate(`/edit/${app.id}`)}
-                      className="text-blue-600"
-                    >
-                      ✏️
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(app.id)}
-                      className="text-red-500"
-                    >
-                      🗑
-                    </button>
+                  {/* Date */}
+                  <td className="p-5 text-gray-500">
+                    {app.date}
                   </td>
 
+                  {/* Actions */}
+                  <td className="p-5">
+                    <div className="flex justify-center items-center gap-5">
+
+                      <button
+                        onClick={() => navigate(`/edit/${app.id}`)}
+                        className="text-blue-500 hover:text-blue-700 transition"
+                      >
+                        <FaEdit size={16} />
+                      </button>
+
+                      <button
+                        onClick={() => handleDelete(app.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                      >
+                        <MdDeleteOutline size={18} />
+                      </button>
+
+                    </div>
+                  </td>
                 </tr>
               ))
             ) : (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaBell } from "react-icons/fa";
 
 const AdminHeader = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -25,7 +26,7 @@ const AdminHeader = () => {
 
         {/* Notification */}
         <div className="relative cursor-pointer">
-          <span className="text-2xl">🔔</span>
+          <span className="text-2xl"><FaBell /></span>
 
           {/* Badge */}
           <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
