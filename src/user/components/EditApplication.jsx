@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { FaEdit, FaArrowLeft, FaSave, FaFileAlt } from "react-icons/fa";
 
 const EditApplication = () => {
@@ -17,18 +17,18 @@ const EditApplication = () => {
     notes: "",
   });
 
+  // ✅ LOAD DATA FROM LOCALSTORAGE
   useEffect(() => {
-    const fetchApplication = async () => {
-      try {
-        const response = await fetch(`/api/applications/${id}`);
-        const data = await response.json();
-        setFormData(data);
-      } catch (error) {
-        console.error("Error fetching application:", error);
-      }
-    };
+    const apps =
+      JSON.parse(localStorage.getItem("applications")) || [];
 
-    fetchApplication();
+    const selectedApp = apps.find(
+      (app) => app.id === Number(id)
+    );
+
+    if (selectedApp) {
+      setFormData(selectedApp);
+    }
   }, [id]);
 
   const handleChange = (e) => {
@@ -38,21 +38,24 @@ const EditApplication = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  // ✅ UPDATE DATA IN LOCALSTORAGE
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      await fetch(`/api/applications/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+    let apps =
+      JSON.parse(localStorage.getItem("applications")) || [];
 
-      alert("Application Updated Successfully!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Update failed:", error);
-    }
+    const updatedApps = apps.map((app) =>
+      app.id === Number(id) ? formData : app
+    );
+
+    localStorage.setItem(
+      "applications",
+      JSON.stringify(updatedApps)
+    );
+
+    alert("Application Updated Successfully!");
+    navigate("/home", { replace: true }); 
   };
 
   return (
@@ -159,14 +162,13 @@ const EditApplication = () => {
           {/* Buttons */}
           <div className="flex justify-between items-center pt-4">
 
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard")}
+            <Link
+              to="/home"
               className="flex items-center gap-2 bg-gray-300 px-5 py-2 rounded-lg hover:bg-gray-400 transition"
             >
               <FaArrowLeft />
               Cancel
-            </button>
+            </Link>
 
             <button
               type="submit"

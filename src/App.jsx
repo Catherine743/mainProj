@@ -1,6 +1,5 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-
 // COMMON
 import Auth from './Pages/Auth'
 import Pnf from './Pages/Pnf'
@@ -20,18 +19,24 @@ import AdminProfile from './Admin/Pages/AdminProfile'
 import AdminApplications from './Admin/Pages/AdminApplications'
 import AdminUsers from './Admin/Pages/AdminUsers'
 
+import { useState } from 'react'
+
 function App() {
 
-  const loader = false // you can connect with state later
+  const[loader, setLoader] = useState(true)
+
+  setTimeout(() => {
+    setLoader(false)
+  }, 5000);
 
   return (
     <>
       <Routes>
 
         {/* PUBLIC */}
-        <Route path='/' element={loader ? <Preloader /> : <Home />} />
+        <Route path='/home' element={loader ? <Preloader /> : <Home />} />
         <Route path='/login' element={<Auth />} />
-        <Route path='/register' element={<Auth register />} />
+        <Route path='/' element={<Auth register />} />
 
         {/* USER MODULE */}
         <Route path='/dashboard' element={<Dashboard />} />

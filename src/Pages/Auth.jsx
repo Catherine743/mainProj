@@ -1,138 +1,221 @@
-import React, { useState } from 'react'
-import { CiUser } from 'react-icons/ci'
-import { FaEye, FaEyeSlash } from 'react-icons/fa6'
-import { Link, useNavigate } from 'react-router-dom'
-import { loginAPI, registerAPI } from '../services/allAPI'
-import { Bounce, ToastContainer, toast } from 'react-toastify'
+import React, { useState } from "react";
+import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { Link, useNavigate } from "react-router-dom";
 
 function Auth({ register }) {
-
-  const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
   const [userDetails, setUserDetails] = useState({
-    username: "", email: "", password: ""
-  })
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  // console.log(userDetails);
-
-  const handleRegister = async (e) => {
+  // =========================
+  // REGISTER
+  // =========================
+  const handleRegister = (e) => {
     e.preventDefault();
+
     const { username, email, password } = userDetails;
-    if (username && email && password) {
-      try {
-        const result = await registerAPI(userDetails);
-        console.log(result);
-        if (result.status == 200) {
-          toast.success("Successfully registered");
-          setUserDetails({ username: "", email: "", password: "" });
-          navigate('/login');
-        }
-        else {
-          toast.warn("error")
-          setUserDetails({ username: "", email: "", password: "" });
-        }
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }
-  }
 
-  // handleLogin
-  const handleLogin = async (e) => {
+    if (!username || !email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const existingUsers =
+      JSON.parse(localStorage.getItem("users")) || [];
+
+    const userExists = existingUsers.find(
+      (u) => u.email === email
+    );
+
+    if (userExists) {
+      alert("User already exists");
+      return;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      username,
+      email,
+      password,
+      role: email === "admin@gmail.com" ? "admin" : "user", // 🔥 ROLE ADDED
+    };
+
+    localStorage.setItem(
+      "users",
+      JSON.stringify([newUser, ...existingUsers])
+    );
+
+    alert("Registered successfully");
+
+    setUserDetails({
+      username: "",
+      email: "",
+      password: "",
+    });
+
+    navigate("/login");
+  };
+
+  // =========================
+  // LOGIN
+  // =========================
+  const handleLogin = (e) => {
     e.preventDefault();
-    const { email, password } = userDetails;
-    if (email && password) {
-      const result = await loginAPI(userDetails);
-      // console.log(result);
-      if (result.status == 200) {
-        toast.success("User logined");
-        sessionStorage.setItem("token", result.data.token);
-        sessionStorage.setItem("user", JSON.stringify(result.data.user));
-        setUserDetails({ email: "", password: "" });
-        setTimeout(() => {
-          if (result.data.role == "admin") {
-            navigate('/admin/home')
-          }
-          else {
-            navigate('/')
-          }
-        }, 2000)
-      }
-      else if (result.status == 401 || result.status == 404) {
-        toast.warning(result.response.data)
-        setUserDetails({ email: "", password: ""})
-      }
-      else{
-        toast.error("Something went wrong");
-        console.log(result);
-      }
-    }
-    else{
-      toast.info("Please fill the form");
-    }
-  }
-  
-  return (
-    <div className='w-full min-h-screen flex justify-center items-center flex-col bg-[url(https://img.freepik.com/free-photo/open-book-more-books_23-2148213810.jpg?t=st=1721778194~exp=1721781794~hmac=ccb27007259d20e3b0ac7ba53bfb8abba03070caa5b56b85535d3cbc7e9a87f9&w=1060)] bg-cover bg-center'>
-      <div className='p-10'>
-        <h1 className='text-3xl font-bold text-center text-white'>Book Store</h1>
-        <div style={{ width: "400px" }} className='bg-black text-white p-5 flex flex-col justify-center items-center my-5'>
-          <div style={{ width: "100px", height: "100px", borderRadius: '50%' }} className='border mb-5 flex justify-center items-center'>
-            <CiUser className='text-3xl' />
-          </div>
-          <h1 className='text-2xl'>{register ? "Register" : "Login"}</h1>
 
-          <form action="" className='my-5 w-full'>
-            {
-              register &&
-              <input onChange={e => setUserDetails({ ...userDetails, username: e.target.value })} placeholder='Username' type='text' className='bg-white p-3 w-full rounded placeholder-gray-500 my-5 text-black' />
-            }
-            <input onChange={e => setUserDetails({ ...userDetails, email: e.target.value })} placeholder='Email ID' type='email' className='bg-white p-3 w-full rounded placeholder-gray-500 mb-5 text-black ' />
-            <div className='flex items-center'>
-              <input onChange={e => setUserDetails({ ...userDetails, password: e.target.value })} placeholder='Password' type={viewPasswordStatus ? "text" : "password"} className='bg-white mb-5 p-3 w-full rounded placeholder-gray-500 text-black' />
-              {!viewPasswordStatus ?
-                <FaEye onClick={() => setViewPasswordStatus(!viewPasswordStatus)} style={{ marginLeft: '-30px' }} className='text-gray-500 cursor-pointer' />
-                :
-                <FaEyeSlash onClick={() => setViewPasswordStatus(!viewPasswordStatus)} style={{ marginLeft: '-30px' }} className='text-gray-500 cursor-pointer' />
-              }
-            </div>
-            <div className='flex justify-between mb-5'>
-              <p className='text-xs text-orange-300'>*Never share your password with others</p>
-              <button className='text-xs underline'>Forgot Password</button>
-            </div>
-            <div className='text-center'>
-              {
-                register ?
-                  <button type='button' className='bg-green-700 p-2 w-full rounded' onClick={handleRegister}>Register</button>
-                  :
-                  <button type='button' className='bg-green-700 p-2 w-full rounded' onClick={handleLogin}>Login</button>
-              }
-            </div>
-            <div className='my-5 text-center'>
-              {
-                register ?
-                  <p className='text-blue-600'>Are you already a user?
-                    <Link to={'/login'} className='underline ms-5'>Login</Link>
-                  </p>
-                  :
-                  <p className='text-blue-600'>Are you a new user?
-                    <Link to={'/register'} className='underline ms-5'>Register</Link>
-                  </p>
-              }
-            </div>
-          </form>
+    const { email, password } = userDetails;
+
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
+    }
+
+    const users =
+      JSON.parse(localStorage.getItem("users")) || [];
+
+    const validUser = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!validUser) {
+      alert("Invalid credentials");
+      return;
+    }
+
+    // 🔥 SAVE SESSION USER
+    localStorage.setItem("loggedUser", JSON.stringify(validUser));
+
+    alert("Login successful");
+
+    // =========================
+    // ROLE BASED REDIRECT
+    // =========================
+    if (validUser.role === "admin") {
+      navigate("/admin/home");
+    } else {
+      navigate("/home");
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+
+      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+
+        {/* HEADER */}
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 mx-auto bg-gray-900 text-white flex items-center justify-center rounded-full mb-4">
+            <FaUserAlt />
+          </div>
+
+          <h2 className="text-2xl font-semibold">
+            {register ? "Create Account" : "Welcome Back"}
+          </h2>
+
+          <p className="text-sm text-gray-500 mt-1">
+            {register ? "Register to continue" : "Login to continue"}
+          </p>
         </div>
+
+        {/* FORM */}
+        <form className="space-y-5">
+
+          {/* Username (register only) */}
+          {register && (
+            <div className="relative">
+              <FaUserAlt className="absolute top-3 left-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Username"
+                value={userDetails.username}
+                onChange={(e) =>
+                  setUserDetails({
+                    ...userDetails,
+                    username: e.target.value,
+                  })
+                }
+                className="w-full pl-10 py-2 border rounded-lg"
+              />
+            </div>
+          )}
+
+          {/* Email */}
+          <div className="relative">
+            <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="email"
+              placeholder="Email"
+              value={userDetails.email}
+              onChange={(e) =>
+                setUserDetails({
+                  ...userDetails,
+                  email: e.target.value,
+                })
+              }
+              className="w-full pl-10 py-2 border rounded-lg"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="relative">
+            <FaLock className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={userDetails.password}
+              onChange={(e) =>
+                setUserDetails({
+                  ...userDetails,
+                  password: e.target.value,
+                })
+              }
+              className="w-full pl-10 pr-10 py-2 border rounded-lg"
+            />
+
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute top-3 right-3 cursor-pointer"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
+          {/* BUTTON */}
+          <button
+            onClick={register ? handleRegister : handleLogin}
+            className="w-full bg-gray-900 text-white py-2 rounded-lg"
+          >
+            {register ? "Register" : "Login"}
+          </button>
+
+          {/* SWITCH */}
+          <p className="text-center text-sm">
+            {register ? (
+              <>
+                Already have account?{" "}
+                <Link to="/login" className="text-blue-600">
+                  Login
+                </Link>
+              </>
+            ) : (
+              <>
+                New user?{" "}
+                <Link to="/" className="text-blue-600">
+                  Register
+                </Link>
+              </>
+            )}
+          </p>
+
+        </form>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        theme="colored"
-        transition={Bounce}
-      />
     </div>
-  )
+  );
 }
 
-export default Auth
-
+export default Auth;

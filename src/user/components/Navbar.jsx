@@ -1,27 +1,35 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <div className="flex justify-between items-center bg-white/80 backdrop-blur-lg shadow-md px-6 py-3 rounded-2xl mb-6">
+    <div className="flex justify-between p-4 bg-white shadow">
 
-        <h2 className="text-xl font-bold text-indigo-600">
-          Smart Tracker
-        </h2>
+      <h1
+        className="font-bold cursor-pointer"
+        onClick={() => navigate("/dashboard")}
+      >
+        Pipeline Tracker
+      </h1>
 
-        <div className="flex gap-3">
-          <button className="px-3 py-1 rounded-lg bg-slate-200 hover:bg-slate-300">
-            Profile
-          </button>
+      <div className="flex gap-4">
 
-          <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg">
-            Logout
-          </button>
-        </div>
+        <button onClick={() => navigate("/dashboard")}>
+          Dashboard
+        </button>
+
+        <button onClick={() => navigate("/profile")}>
+          Profile
+        </button>
+
+        <button onClick={() => navigate("/notifications")}>
+          Notifications
+        </button>
 
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

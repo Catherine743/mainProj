@@ -1,203 +1,192 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  FaBuilding,
   FaBriefcase,
-  FaMapMarkerAlt,
-  FaMoneyBillWave,
-  FaLink,
-  FaStickyNote,
+  FaBuilding,
+  FaCalendarAlt,
 } from "react-icons/fa";
-import { FiCalendar } from "react-icons/fi";
-import { MdWork } from "react-icons/md";
-import { FaSave } from "react-icons/fa";
 
 const AddApplication = () => {
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+
+  const loggedUser =
+    JSON.parse(localStorage.getItem("loggedUser")) || {};
+
+  const [form, setForm] = useState({
     company: "",
     role: "",
     status: "Applied",
     date: "",
-    location: "",
-    salary: "",
-    link: "",
-    notes: "",
   });
 
+  const [error, setError] = useState("");
+
+  // HANDLE INPUT CHANGE
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setForm({
+      ...form,
       [e.target.name]: e.target.value,
     });
   };
 
+  // HANDLE SUBMIT
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Application Data:", formData);
-    alert("Application Added Successfully!");
 
-    setFormData({
+    // VALIDATION
+    if (!form.company || !form.role || !form.date) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    const newApplication = {
+      id: Date.now(),
+      user: loggedUser.username || "Unknown",
+      email: loggedUser.email || "",
+      company: form.company,
+      role: form.role,
+      status: form.status,
+      date: form.date,
+    };
+
+    // GET EXISTING APPLICATIONS
+    const existing =
+      JSON.parse(localStorage.getItem("applications")) || [];
+
+    const updatedApps = [newApplication, ...existing];
+
+    localStorage.setItem(
+      "applications",
+      JSON.stringify(updatedApps)
+    );
+
+    // ✅ CREATE NOTIFICATION
+    const newNotification = {
+      id: Date.now(),
+      type: "application",
+      message: `New application added: ${form.role} at ${form.company}`,
+      time: new Date().toLocaleString(),
+      read: false,
+    };
+
+    const existingNotifications =
+      JSON.parse(localStorage.getItem("notifications")) || [];
+
+    localStorage.setItem(
+      "notifications",
+      JSON.stringify([
+        newNotification,
+        ...existingNotifications,
+      ])
+    );
+
+    // RESET FORM
+    setForm({
       company: "",
       role: "",
       status: "Applied",
       date: "",
-      location: "",
-      salary: "",
-      link: "",
-      notes: "",
     });
+
+    setError("");
+
+    // NAVIGATE
+    navigate("/dashboard");
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
 
-      <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow-lg">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-xl">
 
-        {/* Header */}
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Add New Application
+        {/* TITLE */}
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Add Job Application
         </h2>
 
-        {/* Form */}
+        {/* ERROR */}
+        {error && (
+          <p className="text-red-500 text-sm mb-4 text-center">
+            {error}
+          </p>
+        )}
+
+        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Company & Role */}
-          <div className="grid grid-cols-2 gap-4">
-
-            <div className="relative">
-              <FaBuilding className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type="text"
-                name="company"
-                placeholder="Company Name"
-                value={formData.company}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </div>
-
-            <div className="relative">
-              <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type="text"
-                name="role"
-                placeholder="Job Role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </div>
-
-          </div>
-
-          {/* Status & Date */}
-          <div className="grid grid-cols-2 gap-4">
-
-            <div className="relative">
-              <MdWork className="absolute top-3 left-3 text-gray-400" />
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl bg-white focus:ring-2 focus:ring-blue-400"
-              >
-                <option>Applied</option>
-                <option>Interview</option>
-                <option>Offer</option>
-                <option>Rejected</option>
-              </select>
-            </div>
-
-            <div className="relative">
-              <FiCalendar className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </div>
-
-          </div>
-
-          {/* Location & Salary */}
-          <div className="grid grid-cols-2 gap-4">
-
-            <div className="relative">
-              <FaMapMarkerAlt className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type="text"
-                name="location"
-                placeholder="Location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-            <div className="relative">
-              <FaMoneyBillWave className="absolute top-3 left-3 text-gray-400" />
-              <input
-                type="text"
-                name="salary"
-                placeholder="Expected Salary"
-                value={formData.salary}
-                onChange={handleChange}
-                className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-          </div>
-
-          {/* Job Link */}
+          {/* COMPANY */}
           <div className="relative">
-            <FaLink className="absolute top-3 left-3 text-gray-400" />
+            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
             <input
-              type="url"
-              name="link"
-              placeholder="Job Link"
-              value={formData.link}
+              type="text"
+              name="company"
+              value={form.company}
               onChange={handleChange}
-              className="w-full pl-10 p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
+              placeholder="Company Name"
+              className="w-full pl-10 py-2 border rounded-xl"
             />
           </div>
 
-          {/* Notes */}
+          {/* ROLE */}
           <div className="relative">
-            <FaStickyNote className="absolute top-3 left-3 text-gray-400" />
-            <textarea
-              name="notes"
-              placeholder="Additional Notes..."
-              value={formData.notes}
+            <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              name="role"
+              value={form.role}
               onChange={handleChange}
-              className="w-full pl-10 p-3 border rounded-xl h-28 focus:ring-2 focus:ring-blue-400"
-            ></textarea>
+              placeholder="Job Role"
+              className="w-full pl-10 py-2 border rounded-xl"
+            />
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-4 pt-2">
+          {/* STATUS */}
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl"
+          >
+            <option>Applied</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
 
-            <button
-              type="reset"
-              className="px-5 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition"
-            >
-              Cancel
-            </button>
+          {/* DATE */}
+          <div className="relative">
+            <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              className="w-full pl-10 py-2 border rounded-xl"
+            />
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex gap-4">
 
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition shadow"
+              className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700"
             >
-              <FaSave />
               Save Application
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/home")}
+              className="w-full bg-gray-300 text-black py-2 rounded-xl"
+            >
+              Cancel
             </button>
 
           </div>
 
         </form>
+
       </div>
     </div>
   );
