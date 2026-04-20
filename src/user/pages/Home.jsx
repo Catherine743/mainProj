@@ -9,6 +9,7 @@ import {
   FaEdit,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Home = () => {
   const location = useLocation();
@@ -53,8 +54,9 @@ const Home = () => {
   );
 
   return (
+    
     <div className="min-h-screen bg-gray-100 p-6">
-
+      < Navbar />
       {/* HEADER */}
       <div className="bg-white p-6 rounded-2xl shadow mb-6 flex justify-between items-center">
 

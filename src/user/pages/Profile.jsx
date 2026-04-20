@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 const Profile = () => {
   const [user, setUser] = useState({
     name: "Catherine",
@@ -9,6 +8,19 @@ const Profile = () => {
     skills: "React, Node.js, MongoDB",
     bio: "Passionate about building modern web applications.",
   });
+  
+  const [username, setUsername] = useState("")
+  const [role, setRole] = useState("")
+  const [dp, setDp] = useState("")
+  
+  useEffect(() => {
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+      const user = JSON.parse(sessionStorage.getItem("user"))
+      setUsername(user?.username)
+      setRole(user?.role)
+      setDp(user?.image)
+    }
+  }, [])
 
   const handleChange = (e) => {
     setUser({
@@ -26,12 +38,14 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-100 p-6">
 
       {/* Header */}
-      <div className="bg-white p-6 rounded-2xl shadow mb-6 flex items-center gap-6">
+      <div className="bg-white p-6 rounded-2xl shadow mb-6 flex items-center gap-6 justify-between">
 
         <div>
-          <h2 className="text-2xl font-bold">{user.name}</h2>
-          <p className="text-gray-500">{user.role}</p>
+          <h2 className="text-2xl font-bold">{username}</h2>
+          <p className="text-gray-500">{role}</p>
         </div>
+        <img width={80} height={80} className="rounded-full" 
+        src={dp ? dp : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"} alt="user" />
       </div>
 
       {/* Stats */}

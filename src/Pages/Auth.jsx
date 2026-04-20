@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
-
+import { googleLoginAPI, loginAPI, registerAPI } from "../services/allAPI";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 function Auth({ register }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -16,91 +18,89 @@ function Auth({ register }) {
   // =========================
   // REGISTER
   // =========================
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-
     const { username, email, password } = userDetails;
-
-    if (!username || !email || !password) {
-      alert("Please fill all fields");
-      return;
+    if (username && email && password) {
+      try {
+        const result = await registerAPI(userDetails);
+        // console.log(result);
+        if (result.status == 200) {
+          alert("Successfully registered");
+          setUserDetails({ username: "", email: "", password: "" });
+          navigate('/login');
+        }
+        else {
+          alert("Something went wrong")
+          setUserDetails({ username: "", email: "", password: "" });
+        }
+      }
+      catch (err) {
+        alert("Error")
+        console.log(err);
+      }
     }
-
-    const existingUsers =
-      JSON.parse(localStorage.getItem("users")) || [];
-
-    const userExists = existingUsers.find(
-      (u) => u.email === email
-    );
-
-    if (userExists) {
-      alert("User already exists");
-      return;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      username,
-      email,
-      password,
-      role: email === "admin@gmail.com" ? "admin" : "user", // 🔥 ROLE ADDED
-    };
-
-    localStorage.setItem(
-      "users",
-      JSON.stringify([newUser, ...existingUsers])
-    );
-
-    alert("Registered successfully");
-
-    setUserDetails({
-      username: "",
-      email: "",
-      password: "",
-    });
-
-    navigate("/login");
-  };
+  }
 
   // =========================
   // LOGIN
   // =========================
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
     const { email, password } = userDetails;
-
-    if (!email || !password) {
-      alert("Please enter email and password");
-      return;
+    if (email && password) {
+      const result = await loginAPI(userDetails)
+      // console.log(result);
+      if (result.status == 200) {
+        alert("User logined")
+        sessionStorage.setItem("token", result.data.token)
+        sessionStorage.setItem("user", JSON.stringify(result.data.user))
+        setUserDetails({ email: "", password: "" })
+        if (result.data.role == "admin") {
+          navigate('/admin/home')
+        }
+        else {
+          navigate('/home')
+        }
+      }
+      else if (result.status == 401 || result.status == 404) {
+        alert(result.response.data)
+        setUserDetails({ email: "", password: "" })
+      }
+      else {
+        alert("Something went wrong");
+        console.log(result);
+      }
     }
-
-    const users =
-      JSON.parse(localStorage.getItem("users")) || [];
-
-    const validUser = users.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (!validUser) {
-      alert("Invalid credentials");
-      return;
+    else {
+      alert("Please fill the form");
     }
+  }
 
-    // 🔥 SAVE SESSION USER
-    localStorage.setItem("loggedUser", JSON.stringify(validUser));
-
-    alert("Login successful");
-
-    // =========================
-    // ROLE BASED REDIRECT
-    // =========================
-    if (validUser.role === "admin") {
-      navigate("/admin/home");
-    } else {
-      navigate("/home");
+  // google login
+  const handleGoogleLogin = async (credentialResponse) => {
+    console.log(credentialResponse);
+    const decode = jwtDecode(credentialResponse.credential)
+    console.log(decode.email, decode.name, decode.picture);
+    const result = await googleLoginAPI({ email: decode.email, password: 'googlepassword', username: decode.name, image : decode.picture })
+    if (result.status == 200) {
+      alert("User logined with google")
+      sessionStorage.setItem("token", result.data.token);
+      sessionStorage.setItem("user", JSON.stringify(result.data.user));
+      setTimeout(() => {
+        if (result.data.role == "admin") {
+          navigate('/admin/home')
+        }
+        else {
+          navigate('/home')
+        }
+      }, 2000)
     }
-  };
+    else {
+      alert("Something went wrong");
+      console.log(result);
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -133,7 +133,7 @@ function Auth({ register }) {
                 type="text"
                 placeholder="Username"
                 value={userDetails.username}
-                onChange={(e) =>
+                onChange={e =>
                   setUserDetails({
                     ...userDetails,
                     username: e.target.value,
@@ -151,7 +151,7 @@ function Auth({ register }) {
               type="email"
               placeholder="Email"
               value={userDetails.email}
-              onChange={(e) =>
+              onChange={e =>
                 setUserDetails({
                   ...userDetails,
                   email: e.target.value,
@@ -168,7 +168,7 @@ function Auth({ register }) {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={userDetails.password}
-              onChange={(e) =>
+              onChange={e =>
                 setUserDetails({
                   ...userDetails,
                   password: e.target.value,
@@ -192,6 +192,18 @@ function Auth({ register }) {
           >
             {register ? "Register" : "Login"}
           </button>
+
+          {/* GOOGLE OAUTH */}
+          {register && <div className="flex items-center gap-2 justify-center">
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                handleGoogleLogin(credentialResponse);
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
+          </div>}
 
           {/* SWITCH */}
           <p className="text-center text-sm">
