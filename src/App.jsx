@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom'
 // COMMON
 import Auth from './Pages/Auth'
 import Pnf from './Pages/Pnf'
-import Preloader from './Components/Preloader'
 
 // USER
 import Home from './user/pages/Home'
@@ -23,18 +22,12 @@ import { useState } from 'react'
 
 function App() {
 
-  const[loader, setLoader] = useState(true)
-
-  setTimeout(() => {
-    setLoader(false)
-  }, 5000);
-
   return (
     <>
       <Routes>
 
         {/* PUBLIC */}
-        <Route path='/home' element={loader ? <Preloader /> : <Home />} />
+        <Route path='/home' element={<Home />} />
         <Route path='/login' element={<Auth />} />
         <Route path='/' element={<Auth register />} />
 

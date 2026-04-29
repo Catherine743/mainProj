@@ -50,7 +50,6 @@ const AdminApplications = () => {
   });
 
   return (
-    <AdminLayout>
 
       <div className="min-h-screen bg-gray-100 p-6">
 
@@ -163,7 +162,7 @@ const AdminApplications = () => {
         </div>
       </div>
 
-    </AdminLayout>
+
   );
 };
 

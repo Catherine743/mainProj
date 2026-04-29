@@ -10,7 +10,6 @@ const AdminUsers = () => {
   }, []);
 
   return (
-    <AdminLayout>
 
       <div className="bg-white p-5 rounded-xl shadow">
 
@@ -38,7 +37,6 @@ const AdminUsers = () => {
 
       </div>
 
-    </AdminLayout>
   );
 };
 
