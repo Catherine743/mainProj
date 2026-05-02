@@ -13,8 +13,7 @@ const AddApplication = () => {
     JSON.parse(localStorage.getItem("loggedUser")) || {};
 
   const [form, setForm] = useState({
-    company: "",
-    role: "",
+    designation: "",
     status: "Applied",
     date: "",
   });
@@ -34,7 +33,7 @@ const AddApplication = () => {
     e.preventDefault();
 
     // VALIDATION
-    if (!form.company || !form.role || !form.date) {
+    if (!form.designation || !form.date) {
       setError("Please fill all fields");
       return;
     }
@@ -43,8 +42,7 @@ const AddApplication = () => {
       id: Date.now(),
       user: loggedUser.username || "Unknown",
       email: loggedUser.email || "",
-      company: form.company,
-      role: form.role,
+      designation: form.designation,
       status: form.status,
       date: form.date,
     };
@@ -64,7 +62,7 @@ const AddApplication = () => {
     const newNotification = {
       id: Date.now(),
       type: "application",
-      message: `New application added: ${form.role} at ${form.company}`,
+      message: `New application added: ${form.designation}`,
       time: new Date().toLocaleString(),
       read: false,
     };
@@ -82,8 +80,7 @@ const AddApplication = () => {
 
     // RESET FORM
     setForm({
-      company: "",
-      role: "",
+      designation: "",
       status: "Applied",
       date: "",
     });
@@ -114,28 +111,15 @@ const AddApplication = () => {
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* COMPANY */}
-          <div className="relative">
-            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
-            <input
-              type="text"
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              placeholder="Company Name"
-              className="w-full pl-10 py-2 border rounded-xl"
-            />
-          </div>
-
-          {/* ROLE */}
+          {/* DESIGNATION */}
           <div className="relative">
             <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
             <input
               type="text"
-              name="role"
-              value={form.role}
+              name="designation"
+              value={form.designation}
               onChange={handleChange}
-              placeholder="Job Role"
+              placeholder="Designation"
               className="w-full pl-10 py-2 border rounded-xl"
             />
           </div>

@@ -45,7 +45,7 @@ function App() {
         <Route path='/admin/profile' element={<AdminProfile />} />
 
         {/* NOT FOUND */}
-        <Route path='*' element={<Pnf />} />
+        <Route path='/*' element={<Pnf />} />
 
       </Routes>
     </>

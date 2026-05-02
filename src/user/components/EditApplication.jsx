@@ -7,8 +7,7 @@ const EditApplication = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    company: "",
-    role: "",
+    designation: "",
     status: "",
     date: "",
     location: "",
@@ -76,20 +75,10 @@ const EditApplication = () => {
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
-              name="company"
-              value={formData.company}
+              name="designation"
+              value={formData.designation}
               onChange={handleChange}
-              placeholder="Company Name"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-              required
-            />
-
-            <input
-              type="text"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              placeholder="Job Role"
+              placeholder="Designation"
               className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
               required
             />
