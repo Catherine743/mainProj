@@ -4,12 +4,26 @@ import { useNavigate } from "react-router-dom";
 import { getProfileAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 
-const AdminHeader = ({ onSearch }) => {
+const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const [admin, setAdmin] = useState({});
   const navigate = useNavigate();
 
-  const { token, logout, user } = useAuth();
+  const { token, logout } = useAuth();
+
+  const getImageUrl = (img) => {
+    if (!img) {
+      return `https://ui-avatars.com/api/?name=${admin?.username || "Admin"}`;
+    }
+
+    // already full URL
+    if (img.startsWith("http")) {
+      return img;
+    }
+
+    // filename → convert to backend URL
+    return `http://localhost:4000/uploads/${img}`;
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -45,11 +59,8 @@ const AdminHeader = ({ onSearch }) => {
         {/* PROFILE */}
         <div onClick={() => setOpen(!open)} className="cursor-pointer">
           <img
-            src={
-              admin?.image ||
-              `https://ui-avatars.com/api/?name=${admin?.username || "Admin"}`
-            }
-            className="w-8 h-8 rounded-full"
+            src={getImageUrl(admin?.image)}
+            className="w-8 h-8 rounded-full object-cover"
             alt="admin"
           />
         </div>

@@ -26,8 +26,9 @@ export const getProfileAPI = async (reqHeader) => {
   return await commonAPI("GET", `${server_url}/get-profile`, "", reqHeader);
 };
 
-export const updateProfileAPI = async (data, reqHeader) => {
-  return await commonAPI("PUT", `${server_url}/update-profile`, data, reqHeader);
+// UPDATE PROFILE (ADMIN)
+export const updateProfileAPI = async (reqBody, reqHeader) => {
+  return await commonAPI("PUT", `${server_url}/update-profile`, reqBody, reqHeader);
 };
 
 // USER APPLICATIONS
