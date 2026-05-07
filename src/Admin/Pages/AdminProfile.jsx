@@ -1,24 +1,33 @@
-import React, { useState } from "react";
-import AdminLayout from "../components/AdminLayout";
+import React, { useEffect, useState } from "react";
 import { FaUserEdit, FaSave, FaCamera } from "react-icons/fa";
+import { updateProfileAPI } from "../../services/allAPI";
 
 const AdminProfile = () => {
-  const stored = JSON.parse(localStorage.getItem("loggedUser"));
+  const storedUser =
+    JSON.parse(sessionStorage.getItem("user")) || {};
 
-  const [user, setUser] = useState(
-    stored || {
-      username: "Admin",
-      email: "admin@gmail.com",
-      role: "Admin",
-      location: "India",
-      bio: "Manage platform and users",
-      image: "",
+  const token = sessionStorage.getItem("token");
+
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    role: "",
+    location: "",
+    bio: "",
+    image: "",
+  });
+
+  const [preview, setPreview] = useState("");
+
+  // LOAD USER FROM SESSION
+  useEffect(() => {
+    if (storedUser) {
+      setUser(storedUser);
+      setPreview(storedUser.image);
     }
-  );
+  }, []);
 
-  const [preview, setPreview] = useState(user.image || "");
-
-  // Handle input change
+  // HANDLE INPUT
   const handleChange = (e) => {
     setUser({
       ...user,
@@ -26,7 +35,7 @@ const AdminProfile = () => {
     });
   };
 
-  // Handle image upload
+  // HANDLE IMAGE
   const handleImage = (e) => {
     const file = e.target.files[0];
 
@@ -42,13 +51,34 @@ const AdminProfile = () => {
     }
   };
 
-  // Save
-  const handleSave = () => {
-    localStorage.setItem("loggedUser", JSON.stringify(user));
-    alert("✅ Profile Updated!");
+  // SAVE (API)
+  const handleSave = async () => {
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await updateProfileAPI(user, reqHeader);
+
+      if (res.status === 200) {
+        alert("✅ Profile Updated!");
+
+        // update sessionStorage
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(res.data)
+        );
+      } else {
+        alert("Failed to update profile");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
   };
 
   return (
+
       <div className="p-6 bg-gray-100 min-h-screen">
 
         {/* Title */}
@@ -60,7 +90,7 @@ const AdminProfile = () => {
         {/* Card */}
         <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow p-6">
 
-          {/* Profile Image Section */}
+          {/* Profile Image */}
           <div className="flex flex-col items-center mb-6 relative">
 
             <img
@@ -72,45 +102,50 @@ const AdminProfile = () => {
               className="w-24 h-24 rounded-full object-cover border"
             />
 
-            {/* Upload Button */}
             <label className="absolute bottom-0 right-[calc(50%-48px)] bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600">
               <FaCamera />
-              <input
-                type="file"
-                hidden
-                onChange={handleImage}
-              />
+              <input type="file" hidden onChange={handleImage} />
             </label>
 
-            <h3 className="mt-3 font-semibold">{user.username}</h3>
-            <p className="text-sm text-gray-500">{user.role}</p>
+            <h3 className="mt-3 font-semibold">
+              {user.username}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {user.role}
+            </p>
           </div>
 
-          {/* Form */}
+          {/* FORM */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <div>
-              <label className="text-sm text-gray-600">Username</label>
+              <label className="text-sm text-gray-600">
+                Username
+              </label>
               <input
                 name="username"
                 value={user.username}
                 onChange={handleChange}
-                className="w-full border px-4 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-400 outline-none"
+                className="w-full border px-4 py-2 rounded-lg mt-1"
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Email</label>
+              <label className="text-sm text-gray-600">
+                Email
+              </label>
               <input
                 name="email"
                 value={user.email}
                 onChange={handleChange}
-                className="w-full border px-4 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-400 outline-none"
+                className="w-full border px-4 py-2 rounded-lg mt-1"
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Role</label>
+              <label className="text-sm text-gray-600">
+                Role
+              </label>
               <input
                 value={user.role}
                 disabled
@@ -119,29 +154,31 @@ const AdminProfile = () => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-600">Location</label>
+              <label className="text-sm text-gray-600">
+                Location
+              </label>
               <input
                 name="location"
-                value={user.location}
+                value={user.location || ""}
                 onChange={handleChange}
-                className="w-full border px-4 py-2 rounded-lg mt-1 focus:ring-2 focus:ring-blue-400 outline-none"
+                className="w-full border px-4 py-2 rounded-lg mt-1"
               />
             </div>
 
           </div>
 
-          {/* Bio */}
+          {/* BIO */}
           <div className="mt-4">
             <label className="text-sm text-gray-600">Bio</label>
             <textarea
               name="bio"
-              value={user.bio}
+              value={user.bio || ""}
               onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg mt-1 h-24 focus:ring-2 focus:ring-blue-400 outline-none"
+              className="w-full border px-4 py-2 rounded-lg mt-1 h-24"
             />
           </div>
 
-          {/* Save */}
+          {/* SAVE */}
           <div className="flex justify-end mt-6">
             <button
               onClick={handleSave}

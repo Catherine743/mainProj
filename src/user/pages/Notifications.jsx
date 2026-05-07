@@ -1,151 +1,113 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  FaBell,
-  FaBriefcase,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaClock,
-  FaTrash,
-} from "react-icons/fa";
+  getNotificationsAPI,
+  markNotificationAPI,
+  clearNotificationsAPI,
+} from "../../services/allAPI";
+
+import { useAuth } from "../../context/AuthContext";
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "interview",
-      message: "Interview scheduled with Google at 10:00 AM",
-      time: "2 hours ago",
-      read: false,
-    },
-    {
-      id: 2,
-      type: "offer",
-      message: "You received an offer from Infosys",
-      time: "1 day ago",
-      read: false,
-    },
-    {
-      id: 3,
-      type: "rejected",
-      message: "Application rejected by Amazon",
-      time: "2 days ago",
-      read: true,
-    },
-    {
-      id: 4,
-      type: "reminder",
-      message: "Reminder: Apply to 3 jobs today",
-      time: "3 days ago",
-      read: true,
-    },
-  ]);
+  const { token } = useAuth();
 
-  const markAsRead = (id) => {
-    setNotifications(
-      notifications.map((n) =>
-        n.id === id ? { ...n, read: true } : n
-      )
-    );
+  const [notifications, setNotifications] = useState([]);
+
+  // FETCH NOTIFICATIONS
+  const fetchNotifications = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getNotificationsAPI(headers);
+
+      if (res.status === 200) {
+        setNotifications(res.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const deleteNotification = (id) => {
-    setNotifications(notifications.filter((n) => n.id !== id));
+  // LOAD
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  // MARK AS READ
+  const handleRead = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      await markNotificationAPI(id, headers);
+
+      fetchNotifications();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const clearAll = () => {
-    setNotifications([]);
-  };
+  // CLEAR ALL
+  const handleClear = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
 
-  // Icon mapping
-  const getIcon = (type) => {
-    switch (type) {
-      case "interview":
-        return <FaBriefcase className="text-blue-500" />;
-      case "offer":
-        return <FaCheckCircle className="text-green-500" />;
-      case "rejected":
-        return <FaTimesCircle className="text-red-500" />;
-      case "reminder":
-        return <FaClock className="text-yellow-500" />;
-      default:
-        return <FaBell className="text-gray-500" />;
+      await clearNotificationsAPI(headers);
+
+      setNotifications([]);
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
 
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <FaBell className="text-blue-500" />
+        <h1 className="text-2xl font-bold">
           Notifications
-        </h2>
+        </h1>
 
         <button
-          onClick={clearAll}
-          className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          onClick={handleClear}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg"
         >
-          <FaTrash />
           Clear All
         </button>
       </div>
 
-      {/* List */}
-      <div className="bg-white rounded-2xl shadow p-4 space-y-4">
+      {/* NOTIFICATIONS */}
+      <div className="bg-white rounded-xl shadow">
 
-        {notifications.length === 0 ? (
-          <p className="text-center text-gray-500 py-6">
-            No notifications available
-          </p>
-        ) : (
+        {notifications.length > 0 ? (
           notifications.map((n) => (
             <div
-              key={n.id}
-              className={`flex justify-between items-center p-4 rounded-xl border transition ${
-                n.read ? "bg-gray-50" : "bg-blue-50"
+              key={n._id}
+              onClick={() => handleRead(n._id)}
+              className={`p-4 border-b cursor-pointer transition ${
+                n.read
+                  ? "bg-white"
+                  : "bg-blue-50"
               }`}
             >
+              <p className="text-gray-800">
+                {n.message}
+              </p>
 
-              {/* Left */}
-              <div className="flex items-center gap-4">
-                <div className="text-xl">
-                  {getIcon(n.type)}
-                </div>
-
-                <div>
-                  <p className="font-medium text-gray-800">
-                    {n.message}
-                  </p>
-                  <span className="text-sm text-gray-500">
-                    {n.time}
-                  </span>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-4">
-
-                {!n.read && (
-                  <button
-                    onClick={() => markAsRead(n.id)}
-                    className="text-blue-600 text-sm hover:underline"
-                  >
-                    Mark as read
-                  </button>
-                )}
-
-                <button
-                  onClick={() => deleteNotification(n.id)}
-                  className="text-red-500 hover:text-red-700 transition"
-                >
-                  <FaTrash />
-                </button>
-
-              </div>
-
+              <small className="text-gray-500">
+                {n.time}
+              </small>
             </div>
           ))
+        ) : (
+          <div className="p-6 text-center text-gray-500">
+            No notifications
+          </div>
         )}
 
       </div>

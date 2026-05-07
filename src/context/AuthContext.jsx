@@ -1,53 +1,35 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+// AuthContext.jsx
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(
+    JSON.parse(sessionStorage.getItem("user")) || null
+  );
 
-  useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
-    const storedUser = sessionStorage.getItem('user');
-
-    if (storedToken && storedUser) {
-      try {
-        const decoded = jwtDecode(storedToken);
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-        setRole(decoded.role);
-      } catch (error) {
-        console.error('Invalid token', error);
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
-      }
-    }
-  }, []);
-
-  const login = (newToken, newUser) => {
-    sessionStorage.setItem('token', newToken);
-    sessionStorage.setItem('user', JSON.stringify(newUser));
-    const decoded = jwtDecode(newToken);
-    setToken(newToken);
-    setUser(newUser);
-    setRole(decoded.role);
+  const [token, setToken] = useState(
+    sessionStorage.getItem("token") || null
+  );
+  
+  const login = (data) => {
+    setUser(data.user);
+    setToken(data.token);
+    sessionStorage.setItem("user", JSON.stringify(data.user));
+    sessionStorage.setItem("token", data.token);
   };
 
   const logout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('user');
-    setToken(null);
     setUser(null);
-    setRole(null);
+    setToken(null);
+    sessionStorage.clear();
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);

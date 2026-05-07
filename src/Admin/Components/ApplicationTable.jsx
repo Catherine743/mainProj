@@ -1,76 +1,59 @@
 import React from "react";
 import { MdDeleteOutline } from "react-icons/md";
 
-const ApplicationTable = ({ data, onDelete, onStatusChange }) => {
+const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
 
-  const statusStyle = (status) => {
-    switch (status) {
-      case "Applied":
-        return "bg-blue-100 text-blue-600";
-      case "Interview":
-        return "bg-yellow-100 text-yellow-600";
-      case "Offer":
-        return "bg-green-100 text-green-600";
-      case "Rejected":
-        return "bg-red-100 text-red-500";
-      default:
-        return "bg-gray-100 text-gray-600";
-    }
+  const formatDate = (date) => {
+    if (!date) return "-";
+    return new Date(date).toLocaleDateString();
   };
 
   return (
     <div className="overflow-x-auto">
 
-      <table className="w-full text-sm">
+      <table className="w-full text-sm table-fixed border-collapse">
 
+        {/* HEADER */}
         <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
           <tr>
-            <th className="p-4 text-left">User</th>
-            <th className="p-4 text-left">Company</th>
-            <th className="p-4 text-left">Role</th>
-            <th className="p-4 text-left">Status</th>
-            <th className="p-4 text-left">Date</th>
-            <th className="p-4 text-center">Action</th>
+            <th className="p-3 text-left w-[18%]">User</th>
+            <th className="p-3 text-left w-[15%]">Company</th>
+            <th className="p-3 text-left w-[15%]">Role</th>
+            <th className="p-3 text-left w-[15%]">Status</th>
+            <th className="p-3 text-left w-[15%]">Interview Date</th>
+            <th className="p-3 text-left w-[12%]">Date</th>
+            <th className="p-3 text-center w-[10%]">Action</th>
           </tr>
         </thead>
 
+        {/* BODY */}
         <tbody>
           {data.length > 0 ? (
             data.map((app) => (
-              <tr key={app.id} className="border-t hover:bg-gray-50">
+              <tr key={app._id} className="border-t hover:bg-gray-50">
 
                 {/* USER */}
-                <td className="p-4">
-                  <div>
-                    <p className="font-medium text-gray-800">
-                      {app.user || "Unknown"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {app.email}
-                    </p>
+                <td className="p-3">
+                  <div className="flex flex-col">
+                    <span className="font-medium truncate">{app.user}</span>
+                    <span className="text-xs text-gray-500 truncate">{app.email}</span>
                   </div>
                 </td>
 
                 {/* COMPANY */}
-                <td className="p-4 font-medium text-gray-700">
-                  {app.company}
-                </td>
+                <td className="p-3 truncate">{app.company}</td>
 
                 {/* ROLE */}
-                <td className="p-4 text-gray-600">
-                  {app.role}
-                </td>
+                <td className="p-3 truncate">{app.designation}</td>
 
                 {/* STATUS */}
-                <td className="p-4">
+                <td className="p-3">
                   <select
                     value={app.status}
                     onChange={(e) =>
-                      onStatusChange(app.id, e.target.value)
+                      onStatusChange(app._id, e.target.value, app.interviewDate)
                     }
-                    className={`px-3 py-1 rounded-full text-xs font-medium outline-none ${statusStyle(
-                      app.status
-                    )}`}
+                    className="border px-2 py-1 rounded text-xs w-full"
                   >
                     <option>Applied</option>
                     <option>Interview</option>
@@ -79,16 +62,40 @@ const ApplicationTable = ({ data, onDelete, onStatusChange }) => {
                   </select>
                 </td>
 
+                {/* INTERVIEW DATE */}
+                <td className="p-3">
+                  {app.status === "Interview" ? (
+                    <input
+                      type="date"
+                      value={
+                        app.interviewDate
+                          ? app.interviewDate.substring(0, 10)
+                          : ""
+                      }
+                      onChange={(e) =>
+                        onStatusChange(
+                          app._id,
+                          "Interview",
+                          e.target.value
+                        )
+                      }
+                      className="border px-2 py-1 rounded text-xs w-full"
+                    />
+                  ) : (
+                    <span className="text-gray-400">-</span>
+                  )}
+                </td>
+
                 {/* DATE */}
-                <td className="p-4 text-gray-500">
-                  {app.date}
+                <td className="p-3 text-gray-500">
+                  {formatDate(app.date)}
                 </td>
 
                 {/* DELETE */}
-                <td className="p-4 text-center">
+                <td className="p-3 text-center">
                   <button
-                    onClick={() => onDelete(app.id)}
-                    className="p-2 bg-red-50 rounded-lg hover:bg-red-100"
+                    onClick={() => onDelete(app._id)}
+                    className="p-2 bg-red-50 rounded hover:bg-red-100"
                   >
                     <MdDeleteOutline className="text-red-500" />
                   </button>
@@ -98,7 +105,7 @@ const ApplicationTable = ({ data, onDelete, onStatusChange }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center p-6 text-gray-500">
+              <td colSpan="7" className="text-center p-6 text-gray-500">
                 No applications found
               </td>
             </tr>
@@ -106,7 +113,6 @@ const ApplicationTable = ({ data, onDelete, onStatusChange }) => {
         </tbody>
 
       </table>
-
     </div>
   );
 };

@@ -1,37 +1,35 @@
 import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import AdminHeader from "./AdminHeader";
+import AdminSidebar from "./AdminSidebar";
+import { useAuth } from "../../context/AuthContext";
 
 function AdminLayout() {
   const navigate = useNavigate();
+  const { token, user } = useAuth();
+
+  useEffect(() => {
+    if (!token) return; // wait for load
+
+    if (user?.role !== "admin") {
+      navigate("/login");
+    }
+  }, [token, user]);
+
+  if (!token) return null; // prevent flicker
 
   return (
     <div className="flex h-screen">
 
-      {/* SIDEBAR */}
-      <div className="w-64 bg-gray-900 text-white p-4">
+      <AdminSidebar />
 
-        <h2 className="font-bold mb-6">Admin Panel</h2>
+      <div className="flex-1 flex flex-col">
+        <AdminHeader />
 
-        <p onClick={() => navigate("/admin")} className="cursor-pointer">
-          Dashboard
-        </p>
+        <div className="flex-1 p-4 bg-gray-100 overflow-y-auto">
+          <Outlet />
+        </div>
 
-        <p onClick={() => navigate("/admin/users")} className="cursor-pointer">
-          Users
-        </p>
-
-        <p onClick={() => navigate("/admin/applications")} className="cursor-pointer">
-          Applications
-        </p>
-
-        <p onClick={() => navigate("/admin/profile")} className="cursor-pointer">
-          Profile
-        </p>
-
-      </div>
-
-      {/* CONTENT */}
-      <div className="flex-1 p-4">
-        <Outlet />
       </div>
 
     </div>

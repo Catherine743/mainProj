@@ -1,168 +1,117 @@
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../components/AdminLayout";
+import ApplicationTable from "../components/ApplicationTable";
+import {
+  getAllApplicationsAPI,
+  updateStatusAPI,
+  deleteAdminApplicationAPI,
+} from "../../services/allAPI";
+import { useAuth } from "../../context/AuthContext";
 
 const AdminApplications = () => {
+  const { token } = useAuth();
   const [apps, setApps] = useState([]);
   const [search, setSearch] = useState("");
 
-  // LOAD DATA FROM LOCALSTORAGE
+  // =========================
+  // FETCH APPLICATIONS
+  // =========================
+  const fetchApplications = async () => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const res = await getAllApplicationsAPI(headers);
+
+      if (res.status === 200) {
+        setApps(res.data.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const data =
-      JSON.parse(localStorage.getItem("applications")) || [];
-    setApps(data);
-  }, []);
+    if (token) fetchApplications();
+  }, [token]);
 
-  // UPDATE STATUS
-  const updateStatus = (id, status) => {
-    const updated = apps.map((app) =>
-      app.id === id ? { ...app, status } : app
-    );
+  // =========================
+  // DELETE APPLICATION (ADMIN)
+  // =========================
+  const handleDelete = async (id) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
 
-    localStorage.setItem(
-      "applications",
-      JSON.stringify(updated)
-    );
+      await deleteAdminApplicationAPI(id, headers);
 
-    setApps(updated);
+      fetchApplications();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  // DELETE APPLICATION
-  const deleteApp = (id) => {
-    const updated = apps.filter((app) => app.id !== id);
+  // =========================
+  // UPDATE STATUS + INTERVIEW DATE
+  // =========================
+  const handleStatusChange = async (id, status, interviewDate = null) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
 
-    localStorage.setItem(
-      "applications",
-      JSON.stringify(updated)
-    );
+      const payload = { status };
 
-    setApps(updated);
+      if (status === "Interview") {
+        const date =
+          interviewDate || prompt("Enter Interview Date (YYYY-MM-DD)");
+
+        if (!date) return;
+
+        payload.interviewDate = date;
+      }
+
+      await updateStatusAPI(id, payload, headers);
+
+      fetchApplications();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
+  // =========================
   // SEARCH FILTER
-  const filtered = apps.filter((app) => {
-    const keyword = search.toLowerCase();
+  // =========================
+  const filteredApps = apps.filter((app) => {
+    const k = search.toLowerCase();
 
     return (
-      app.company?.toLowerCase().includes(keyword) ||
-      app.role?.toLowerCase().includes(keyword) ||
-      app.user?.toLowerCase().includes(keyword)
+      app.user?.toLowerCase().includes(k) ||
+      app.company?.toLowerCase().includes(k) ||
+      app.designation?.toLowerCase().includes(k)
     );
   });
 
   return (
+    <div className="min-h-screen bg-gray-100 p-6">
 
-      <div className="min-h-screen bg-gray-100 p-6">
+      {/* HEADER */}
+      <div className="flex justify-between mb-6">
+        <h1 className="text-2xl font-bold">Applications</h1>
 
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">
-            Applications Management
-          </h1>
-
-          {/* SEARCH */}
-          <input
-            type="text"
-            placeholder="Search by user, company, role..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border px-4 py-2 rounded-lg w-72"
-          />
-        </div>
-
-        {/* TABLE */}
-        <div className="bg-white rounded-xl shadow overflow-x-auto">
-
-          <table className="w-full text-sm">
-
-            {/* HEAD */}
-            <thead className="bg-gray-100 text-gray-600">
-              <tr>
-                <th className="p-3 text-left">User</th>
-                <th className="p-3 text-left">Company</th>
-                <th className="p-3 text-left">Role</th>
-                <th className="p-3 text-left">Status</th>
-                <th className="p-3 text-left">Date</th>
-                <th className="p-3 text-center">Action</th>
-              </tr>
-            </thead>
-
-            {/* BODY */}
-            <tbody>
-
-              {filtered.length > 0 ? (
-                filtered.map((app) => (
-                  <tr
-                    key={app.id}
-                    className="border-t hover:bg-gray-50"
-                  >
-
-                    {/* USER */}
-                    <td className="p-3">
-                      <p className="font-medium">
-                        {app.user || "Unknown"}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {app.email}
-                      </p>
-                    </td>
-
-                    {/* COMPANY */}
-                    <td className="p-3">{app.company}</td>
-
-                    {/* ROLE */}
-                    <td className="p-3">{app.role}</td>
-
-                    {/* STATUS */}
-                    <td className="p-3">
-                      <select
-                        value={app.status}
-                        onChange={(e) =>
-                          updateStatus(app.id, e.target.value)
-                        }
-                        className="border px-2 py-1 rounded"
-                      >
-                        <option>Applied</option>
-                        <option>Interview</option>
-                        <option>Offer</option>
-                        <option>Rejected</option>
-                      </select>
-                    </td>
-
-                    {/* DATE */}
-                    <td className="p-3 text-gray-600">
-                      {app.date}
-                    </td>
-
-                    {/* ACTION */}
-                    <td className="p-3 text-center">
-                      <button
-                        onClick={() => deleteApp(app.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        Delete
-                      </button>
-                    </td>
-
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="text-center p-6 text-gray-500"
-                  >
-                    No applications found
-                  </td>
-                </tr>
-              )}
-
-            </tbody>
-
-          </table>
-        </div>
+        <input
+          className="border px-4 py-2 rounded-lg"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
+      {/* TABLE */}
+      <div className="bg-white p-4 rounded-xl shadow">
+        <ApplicationTable
+          data={filteredApps}
+          onDelete={handleDelete}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
 
+    </div>
   );
 };
 

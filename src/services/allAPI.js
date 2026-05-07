@@ -15,3 +15,77 @@ export const loginAPI = async (reqBody) => {
 export const googleLoginAPI = async (reqBody) => {
     return await commonAPI("POST", `${server_url}/google-login`, reqBody);
 }
+
+// ADD APPLICATION
+export const addApplicationAPI = async (reqBody, reqHeader) => {
+  return await commonAPI("POST", `${server_url}/add`, reqBody, reqHeader);
+};
+
+// PROFILE
+export const getProfileAPI = async (reqHeader) => {
+  return await commonAPI("GET", `${server_url}/get-profile`, "", reqHeader);
+};
+
+export const updateProfileAPI = async (data, reqHeader) => {
+  return await commonAPI("PUT", `${server_url}/update-profile`, data, reqHeader);
+};
+
+// USER APPLICATIONS
+export const getUserApplicationsAPI = async (reqHeader) => {
+  return await commonAPI("GET", `${server_url}/user-apps`, "", reqHeader);
+}
+
+// ALL APLLICATIONS (ADMIN)
+export const getAllApplicationsAPI = (headers) => {
+  return commonAPI("GET", `${server_url}/all-apps`, "", headers);
+};
+
+// ALL USERS (ADMIN)
+export const getAllUsersAPI = (headers) => {
+  return commonAPI("GET", `${server_url}/all-users`, "", headers);
+};
+
+// GET SINGLE APPLICATION
+export const getSingleApplicationAPI = async (id, reqHeader) => {
+  return await commonAPI("GET", `${server_url}/single/${id}`, "", reqHeader);
+};
+
+// EDIT APPLICATION
+export const editApplicationAPI = (id, reqBody, reqHeader) => {
+  return commonAPI("PUT",`${server_url}/edit/${id}`,reqBody,reqHeader)
+}
+
+// UPDATE STATUS
+export const updateStatusAPI = (id, body, headers) => {
+  return commonAPI("PUT", `${server_url}/update/${id}`, body, headers);
+};
+
+// DELETE
+export const deleteApplicationAPI = (id, headers) => {
+  return commonAPI("DELETE", `${server_url}/user/delete/${id}`, "", headers);
+};
+
+// DELETE (ADMIN)
+export const deleteAdminApplicationAPI = (id, headers) => {
+  return commonAPI("DELETE", `${server_url}/admin/delete/${id}`, "", headers);
+};
+
+// GET NOTIFICATIONS
+export const getNotificationsAPI = async (header) => {
+  return await commonAPI("GET", `${server_url}/get-notify`, "", header);
+};
+
+// MARK NOTIFICATION AS READ
+export const markNotificationAPI = async (id, header) => {
+  return await commonAPI("PUT", `${server_url}/put-notify/${id}`, {}, header);
+};
+
+// DELETE NOTIFICATION
+export const deleteNotificationAPI = async (id, header) => {
+  return await commonAPI("DELETE", `${server_url}/delete-notify/${id}`, "", header);
+};
+
+// CLEAR ALL NOTIFICATIONS
+export const clearNotificationsAPI = async (header) => {
+  return await commonAPI("DELETE", `${server_url}/clear-notify`, "", header);
+};

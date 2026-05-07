@@ -1,26 +1,50 @@
 import React from "react";
 
-const UserTable = ({ users }) => {
+const UserTable = ({ users = [] }) => {
   return (
-    <table className="w-full bg-white shadow rounded-xl">
+    <div className="overflow-x-auto">
 
-      <thead className="bg-gray-100">
-        <tr>
-          <th className="p-4">Name</th>
-          <th>Email</th>
-        </tr>
-      </thead>
+      <table className="w-full bg-white shadow rounded-xl text-sm">
 
-      <tbody>
-        {users.map((u, i) => (
-          <tr key={i} className="border-t text-center">
-            <td>{u.username}</td>
-            <td>{u.email}</td>
+        {/* HEADER */}
+        <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+          <tr>
+            <th className="p-4 text-left">Name</th>
+            <th className="p-4 text-left">Email</th>
           </tr>
-        ))}
-      </tbody>
+        </thead>
 
-    </table>
+        {/* BODY */}
+        <tbody>
+          {users.length > 0 ? (
+            users.map((u) => (
+              <tr key={u._id} className="border-t hover:bg-gray-50">
+
+                <td className="p-4 font-medium text-gray-800">
+                  {u.username || "Unknown"}
+                </td>
+
+                <td className="p-4 text-gray-600">
+                  {u.email || "-"}
+                </td>
+
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan="2"
+                className="text-center p-6 text-gray-500"
+              >
+                No users found
+              </td>
+            </tr>
+          )}
+        </tbody>
+
+      </table>
+
+    </div>
   );
 };
 

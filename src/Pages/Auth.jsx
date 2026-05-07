@@ -56,7 +56,7 @@ function Auth({ register }) {
         sessionStorage.setItem("token", result.data.token)
         sessionStorage.setItem("user", JSON.stringify(result.data.user))
         setUserDetails({ email: "", password: "" })
-        if (result.data.role == "admin") {
+        if (result.data.user.role == "admin") {
           navigate('/admin/home')
         }
         else {
@@ -88,7 +88,7 @@ function Auth({ register }) {
       sessionStorage.setItem("token", result.data.token);
       sessionStorage.setItem("user", JSON.stringify(result.data.user));
       setTimeout(() => {
-        if (result.data.role == "admin") {
+        if (result.data.user.role == "admin") {
           navigate('/admin/home')
         }
         else {
@@ -210,14 +210,14 @@ function Auth({ register }) {
             {register ? (
               <>
                 Already have account?{" "}
-                <Link to="/login" className="text-blue-600">
+                <Link to="/" className="text-blue-600">
                   Login
                 </Link>
               </>
             ) : (
               <>
                 New user?{" "}
-                <Link to="/" className="text-blue-600">
+                <Link to="/register" className="text-blue-600">
                   Register
                 </Link>
               </>

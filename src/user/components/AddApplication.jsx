@@ -1,26 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaBriefcase,
-  FaBuilding,
-  FaCalendarAlt,
-} from "react-icons/fa";
+import { addApplicationAPI } from "../../services/allAPI";
+import { FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 
 const AddApplication = () => {
+
   const navigate = useNavigate();
 
+  const [error, setError] = useState("");
+  const [resume, setResume] = useState("");
+
   const loggedUser =
-    JSON.parse(localStorage.getItem("loggedUser")) || {};
+    JSON.parse(sessionStorage.getItem("user")) || {};
+
+  const token = sessionStorage.getItem("token");
 
   const [form, setForm] = useState({
+    user: loggedUser?.username || "",
+    email: loggedUser?.email || "",
     designation: "",
-    status: "Applied",
-    date: "",
+    company: "",
+    date: ""
   });
 
-  const [error, setError] = useState("");
-
-  // HANDLE INPUT CHANGE
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -28,67 +30,46 @@ const AddApplication = () => {
     });
   };
 
-  // HANDLE SUBMIT
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleAdd = async () => {
+    try {
 
-    // VALIDATION
-    if (!form.designation || !form.date) {
-      setError("Please fill all fields");
-      return;
+      if (!form.designation || !form.company || !form.date) {
+        setError("Please fill all fields");
+        return;
+      }
+
+      const reqBody = new FormData();
+
+      reqBody.append("userId", loggedUser._id);
+      reqBody.append("user", form.user);
+      reqBody.append("email", form.email);
+      reqBody.append("designation", form.designation);
+      reqBody.append("company", form.company);
+      reqBody.append("date", form.date);
+
+      // STATUS ALWAYS HANDLED IN BACKEND (Applied default)
+      // NO STATUS FIELD HERE
+
+      if (resume) {
+        reqBody.append("resume", resume);
+      }
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      };
+
+      const result = await addApplicationAPI(reqBody, reqHeader);
+
+      if (result.status === 200) {
+        alert("Application Added Successfully");
+        navigate("/home");
+      }
+
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data || "Application adding failed");
     }
-
-    const newApplication = {
-      id: Date.now(),
-      user: loggedUser.username || "Unknown",
-      email: loggedUser.email || "",
-      designation: form.designation,
-      status: form.status,
-      date: form.date,
-    };
-
-    // GET EXISTING APPLICATIONS
-    const existing =
-      JSON.parse(localStorage.getItem("applications")) || [];
-
-    const updatedApps = [newApplication, ...existing];
-
-    localStorage.setItem(
-      "applications",
-      JSON.stringify(updatedApps)
-    );
-
-    // ✅ CREATE NOTIFICATION
-    const newNotification = {
-      id: Date.now(),
-      type: "application",
-      message: `New application added: ${form.designation}`,
-      time: new Date().toLocaleString(),
-      read: false,
-    };
-
-    const existingNotifications =
-      JSON.parse(localStorage.getItem("notifications")) || [];
-
-    localStorage.setItem(
-      "notifications",
-      JSON.stringify([
-        newNotification,
-        ...existingNotifications,
-      ])
-    );
-
-    // RESET FORM
-    setForm({
-      designation: "",
-      status: "Applied",
-      date: "",
-    });
-
-    setError("");
-
-    // NAVIGATE
-    navigate("/dashboard");
   };
 
   return (
@@ -96,26 +77,41 @@ const AddApplication = () => {
 
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-xl">
 
-        {/* TITLE */}
         <h2 className="text-2xl font-bold mb-6 text-center">
           Add Job Application
         </h2>
 
-        {/* ERROR */}
         {error && (
           <p className="text-red-500 text-sm mb-4 text-center">
             {error}
           </p>
         )}
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleAdd();
+          }}
+        >
 
-          {/* DESIGNATION */}
+          <input
+            name="user"
+            value={form.user}
+            readOnly
+            className="w-full px-4 py-2 border rounded-xl bg-gray-100"
+          />
+
+          <input
+            name="email"
+            value={form.email}
+            readOnly
+            className="w-full px-4 py-2 border rounded-xl bg-gray-100"
+          />
+
           <div className="relative">
             <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
             <input
-              type="text"
               name="designation"
               value={form.designation}
               onChange={handleChange}
@@ -124,20 +120,14 @@ const AddApplication = () => {
             />
           </div>
 
-          {/* STATUS */}
-          <select
-            name="status"
-            value={form.status}
+          <input
+            name="company"
+            value={form.company}
             onChange={handleChange}
+            placeholder="Company"
             className="w-full px-4 py-2 border rounded-xl"
-          >
-            <option>Applied</option>
-            <option>Interview</option>
-            <option>Offer</option>
-            <option>Rejected</option>
-          </select>
+          />
 
-          {/* DATE */}
           <div className="relative">
             <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
             <input
@@ -149,12 +139,23 @@ const AddApplication = () => {
             />
           </div>
 
-          {/* BUTTONS */}
+          <div>
+            <label className="block mb-2 font-medium">
+              Upload Resume
+            </label>
+
+            <input
+              type="file"
+              onChange={(e) => setResume(e.target.files[0])}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+
           <div className="flex gap-4">
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700"
+              className="w-full bg-blue-600 text-white py-2 rounded-xl"
             >
               Save Application
             </button>
@@ -162,7 +163,7 @@ const AddApplication = () => {
             <button
               type="button"
               onClick={() => navigate("/home")}
-              className="w-full bg-gray-300 text-black py-2 rounded-xl"
+              className="w-full bg-gray-300 py-2 rounded-xl"
             >
               Cancel
             </button>

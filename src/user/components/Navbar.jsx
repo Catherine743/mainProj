@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaHome, FaUser, FaBell, FaBars } from "react-icons/fa";
 
 function Navbar() {
@@ -8,20 +8,21 @@ function Navbar() {
   const [token, setToken] = useState("")
   const [dp, setDp] = useState("")
   const [dropDown, setDropDown] = useState(false)
+  const location = useLocation();
 
   useEffect(() => {
     if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
       const userToken = sessionStorage.getItem("token")
       setToken(userToken)
       const user = JSON.parse(sessionStorage.getItem("user"))
-      setDp(user.image)
+      setDp(user?.image || "")
     }
   }, [token])
 
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");
     sessionStorage.clear();
-    navigate("/");
+    navigate("/home");
   };
 
   const isActive = (path) =>
@@ -34,8 +35,7 @@ function Navbar() {
       <div className="bg-white shadow-md px-6 py-4 flex justify-between items-center rounded-xl mb-6">
         {/* LEFT: LOGO */}
         <h1
-          className="text-xl font-bold text-blue-600 cursor-pointer"
-          onClick={() => navigate("/dashboard")}
+          className="text-xl font-bold text-blue-600"
         >
           Smart Pipeline
         </h1>

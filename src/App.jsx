@@ -1,5 +1,6 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
+
 // COMMON
 import Auth from './Pages/Auth'
 import Pnf from './Pages/Pnf'
@@ -13,42 +14,40 @@ import AddApplication from './user/components/AddApplication'
 import EditApplication from './user/components/EditApplication'
 
 // ADMIN
+import AdminLayout from './Admin/Components/AdminLayout'
 import AdminHome from './Admin/Pages/AdminHome'
 import AdminProfile from './Admin/Pages/AdminProfile'
 import AdminApplications from './Admin/Pages/AdminApplications'
 import AdminUsers from './Admin/Pages/AdminUsers'
 
-import { useState } from 'react'
-
 function App() {
-
   return (
-    <>
-      <Routes>
+    <Routes>
 
-        {/* PUBLIC */}
-        <Route path='/home' element={<Home />} />
-        <Route path='/login' element={<Auth />} />
-        <Route path='/' element={<Auth register />} />
+      {/* PUBLIC */}
+      <Route path='/home' element={<Home />} />
+      <Route path='/' element={<Auth />} />
+      <Route path='/register' element={<Auth register />} />
 
-        {/* USER MODULE */}
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/notifications' element={<Notifications />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/add-application' element={<AddApplication />} />
-        <Route path='/edit-application/:id' element={<EditApplication />} />
+      {/* USER MODULE */}
+      <Route path='/dashboard' element={<Dashboard />} />
+      <Route path='/notifications' element={<Notifications />} />
+      <Route path='/profile' element={<Profile />} />
+      <Route path='/add-application' element={<AddApplication />} />
+      <Route path='/edit-application/:id' element={<EditApplication />} />
 
-        {/* ADMIN MODULE */}
-        <Route path='/admin/home' element={<AdminHome />} />
-        <Route path='/admin/applications' element={<AdminApplications />} />
-        <Route path='/admin/users' element={<AdminUsers />} />
-        <Route path='/admin/profile' element={<AdminProfile />} />
+      {/* ADMIN MODULE */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="home" element={<AdminHome />} />
+        <Route path="applications" element={<AdminApplications />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="profile" element={<AdminProfile />} />
+      </Route>
 
-        {/* NOT FOUND */}
-        <Route path='/*' element={<Pnf />} />
+      {/* NOT FOUND */}
+      <Route path='/*' element={<Pnf />} />
 
-      </Routes>
-    </>
+    </Routes>
   )
 }
 

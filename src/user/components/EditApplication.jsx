@@ -1,34 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { FaEdit, FaArrowLeft, FaSave, FaFileAlt } from "react-icons/fa";
+
+import {
+  getSingleApplicationAPI,
+  editApplicationAPI,
+} from "../../services/allAPI";
+
+import { FaEdit, FaArrowLeft, FaSave } from "react-icons/fa";
 
 const EditApplication = () => {
+
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [resume, setResume] = useState("");
+  const [existingResume, setExistingResume] = useState("");
+  const [interviewDate, setInterviewDate] = useState("");
+
   const [formData, setFormData] = useState({
+    user: "",
+    email: "",
     designation: "",
-    status: "",
+    company: "",
     date: "",
-    location: "",
-    salary: "",
-    link: "",
-    notes: "",
+    status: ""
   });
 
-  // ✅ LOAD DATA FROM LOCALSTORAGE
   useEffect(() => {
-    const apps =
-      JSON.parse(localStorage.getItem("applications")) || [];
+    getApplication();
+  }, []);
 
-    const selectedApp = apps.find(
-      (app) => app.id === Number(id)
-    );
+  const getApplication = async () => {
+    try {
 
-    if (selectedApp) {
-      setFormData(selectedApp);
+      const token = sessionStorage.getItem("token");
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getSingleApplicationAPI(id, reqHeader);
+
+      if (res.status === 200) {
+        const app = res.data;
+
+        setFormData({
+          user: app.user,
+          email: app.email,
+          designation: app.designation,
+          company: app.company,
+          date: app.date?.split("T")[0],
+          status: app.status
+        });
+
+        setInterviewDate(app.interviewDate || "");
+        setExistingResume(app.resume);
+      }
+
+    } catch (err) {
+      console.log(err);
     }
-  }, [id]);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -37,24 +69,48 @@ const EditApplication = () => {
     });
   };
 
-  // ✅ UPDATE DATA IN LOCALSTORAGE
-  const handleSubmit = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
-    let apps =
-      JSON.parse(localStorage.getItem("applications")) || [];
+    try {
 
-    const updatedApps = apps.map((app) =>
-      app.id === Number(id) ? formData : app
-    );
+      const token = sessionStorage.getItem("token");
 
-    localStorage.setItem(
-      "applications",
-      JSON.stringify(updatedApps)
-    );
+      const reqBody = new FormData();
 
-    alert("Application Updated Successfully!");
-    navigate("/home", { replace: true }); 
+      reqBody.append("user", formData.user);
+      reqBody.append("email", formData.email);
+      reqBody.append("designation", formData.designation);
+      reqBody.append("company", formData.company);
+      reqBody.append("date", formData.date);
+
+      // STATUS CONTROLLED HERE ONLY (ADMIN FLOW)
+      reqBody.append("status", formData.status);
+
+      if (formData.status === "Interview") {
+        reqBody.append("interviewDate", interviewDate);
+      }
+
+      if (resume) {
+        reqBody.append("resume", resume);
+      }
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      };
+
+      const result = await editApplicationAPI(id, reqBody, reqHeader);
+
+      if (result.status === 200) {
+        alert("Application Updated Successfully");
+        navigate("/home");
+      }
+
+    } catch (err) {
+      console.log(err);
+      alert("Update Failed");
+    }
   };
 
   return (
@@ -62,98 +118,94 @@ const EditApplication = () => {
 
       <div className="bg-white w-full max-w-3xl p-8 rounded-2xl shadow-lg">
 
-        {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 flex items-center justify-center gap-2 text-gray-800">
+        <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
           <FaEdit className="text-blue-500" />
           Edit Application
         </h2>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleUpdate} className="space-y-5">
 
-          {/* Company & Role */}
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="designation"
-              value={formData.designation}
-              onChange={handleChange}
-              placeholder="Designation"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-              required
-            />
-          </div>
+          <input
+            name="user"
+            value={formData.user}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          />
 
-          {/* Status & Date */}
-          <div className="grid grid-cols-2 gap-4">
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            >
-              <option value="">Select Status</option>
-              <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Offer">Offer</option>
-              <option value="Rejected">Rejected</option>
-            </select>
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          />
 
+          <input
+            name="designation"
+            value={formData.designation}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          />
+
+          <input
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          />
+
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          />
+
+          {/* STATUS (ONLY IN EDIT) */}
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="border p-3 rounded-lg w-full"
+          >
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+
+          {/* INTERVIEW DATE */}
+          {formData.status === "Interview" && (
             <input
               type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+              value={interviewDate}
+              onChange={(e) => setInterviewDate(e.target.value)}
+              className="border p-3 rounded-lg w-full"
             />
-          </div>
+          )}
 
-          {/* Location & Salary */}
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="Location"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-
-            <input
-              type="text"
-              name="salary"
-              value={formData.salary}
-              onChange={handleChange}
-              placeholder="Expected Salary"
-              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            />
-          </div>
-
-          {/* Job Link */}
           <input
-            type="url"
-            name="link"
-            value={formData.link}
-            onChange={handleChange}
-            placeholder="Job Link"
-            className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-400 outline-none"
+            type="file"
+            onChange={(e) => setResume(e.target.files[0])}
+            className="border p-3 rounded-lg w-full"
           />
 
-          {/* Notes */}
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            placeholder="Additional Notes..."
-            className="border p-3 rounded-lg w-full h-28 focus:ring-2 focus:ring-blue-400 outline-none"
-          />
+          {existingResume && (
+            <a
+              href={`http://localhost:4000/uploads/${existingResume}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 text-sm"
+            >
+              View Resume
+            </a>
+          )}
 
-          {/* Buttons */}
-          <div className="flex justify-between items-center pt-4">
+          <div className="flex justify-between pt-4">
 
             <Link
               to="/home"
-              className="flex items-center gap-2 bg-gray-300 px-5 py-2 rounded-lg hover:bg-gray-400 transition"
+              className="bg-gray-300 px-5 py-2 rounded-lg flex items-center gap-2"
             >
               <FaArrowLeft />
               Cancel
@@ -161,15 +213,16 @@ const EditApplication = () => {
 
             <button
               type="submit"
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
             >
               <FaSave />
-              Update Application
+              Update
             </button>
 
           </div>
 
         </form>
+
       </div>
     </div>
   );
