@@ -27,7 +27,11 @@ const AdminProfile = () => {
   useEffect(() => {
     if (storedUser) {
       setUser(storedUser);
-      setPreview(storedUser.image);
+      setPreview(
+        storedUser.image
+          ? `http://localhost:4000/uploads/${storedUser.image}`
+          : ""
+      );
     }
   }, []);
 
@@ -66,7 +70,7 @@ const AdminProfile = () => {
     }
 
     try {
-      const res = await updateProfileAPI(user._id,formData,reqHeader);
+      const res = await updateProfileAPI(user._id, formData, reqHeader);
 
       if (res.status === 200) {
         alert("Profile Updated!");
@@ -75,7 +79,11 @@ const AdminProfile = () => {
         const updatedUser = res.data;
 
         setUser(updatedUser);
-        setPreview(updatedUser.image); // ✅ IMPORTANT
+        setPreview(
+          updatedUser.image
+            ? `http://localhost:4000/uploads/${updatedUser.image}`
+            : ""
+        );
 
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
       }
@@ -102,9 +110,11 @@ const AdminProfile = () => {
 
           <img
             src={
-              preview ||
-              user.image ||
-              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              preview
+                ? preview
+                : user.image
+                  ? `http://localhost:4000/uploads/${user.image}`
+                  : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             }
             alt="profile"
             className="w-24 h-24 min-w-24 min-h-24 rounded-full object-cover aspect-square border"
