@@ -57,6 +57,7 @@ function Auth({ register }) {
         sessionStorage.setItem("user", JSON.stringify(result.data.user))
         setUserDetails({ email: "", password: "" })
         if (result.data.user.role == "admin") {
+          alert("Admin logined")
           navigate('/admin/home')
         }
         else {
@@ -89,6 +90,7 @@ function Auth({ register }) {
       sessionStorage.setItem("user", JSON.stringify(result.data.user));
       setTimeout(() => {
         if (result.data.user.role == "admin") {
+          alert("Admin logined with google")
           navigate('/admin/home')
         }
         else {
