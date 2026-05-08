@@ -52,7 +52,6 @@ function Auth({ register }) {
       const result = await loginAPI(userDetails)
       // console.log(result);
       if (result.status == 200) {
-        alert("User logined")
         sessionStorage.setItem("token", result.data.token)
         sessionStorage.setItem("user", JSON.stringify(result.data.user))
         setUserDetails({ email: "", password: "" })
@@ -61,6 +60,7 @@ function Auth({ register }) {
           navigate('/admin/home')
         }
         else {
+          alert("User logined")
           navigate('/home')
         }
       }
@@ -83,9 +83,8 @@ function Auth({ register }) {
     console.log(credentialResponse);
     const decode = jwtDecode(credentialResponse.credential)
     console.log(decode.email, decode.name, decode.picture);
-    const result = await googleLoginAPI({ email: decode.email, password: 'googlepassword', username: decode.name, image : decode.picture })
+    const result = await googleLoginAPI({ email: decode.email, password: 'googlepassword', username: decode.name, image: decode.picture })
     if (result.status == 200) {
-      alert("User logined with google")
       sessionStorage.setItem("token", result.data.token);
       sessionStorage.setItem("user", JSON.stringify(result.data.user));
       setTimeout(() => {
@@ -94,6 +93,7 @@ function Auth({ register }) {
           navigate('/admin/home')
         }
         else {
+          alert("User logined with google")
           navigate('/home')
         }
       }, 2000)
