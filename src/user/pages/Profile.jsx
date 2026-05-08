@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { getProfileAPI, updateProfileAPI, getUserApplicationsAPI } from "../../services/allAPI";
+
+import {
+  getProfileAPI,
+  userUpdateProfileAPI,
+  getUserApplicationsAPI
+} from "../../services/allAPI";
+
 import { useNavigate } from "react-router-dom";
+
+import {
+  FaCamera
+} from "react-icons/fa";
+
 const Profile = () => {
 
   const [user, setUser] = useState({
@@ -8,9 +19,13 @@ const Profile = () => {
     email: "",
     role: "",
     bio: "",
+    location: "",
+    image: "",
   });
 
   const [dp, setDp] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
   const [stats, setStats] = useState({
     applied: 0,
     interviews: 0,
@@ -19,19 +34,23 @@ const Profile = () => {
   });
 
   const navigate = useNavigate();
-  // ✅ GET PROFILE DATA FROM BACKEND
+
+  // ✅ GET PROFILE DATA
+
   const getProfile = async () => {
+
     try {
+
       const token = sessionStorage.getItem("token");
 
       const reqHeader = {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
 
       const result = await getProfileAPI(reqHeader);
 
       if (result.status === 200) {
+
         const data = result.data;
 
         setUser({
@@ -39,9 +58,17 @@ const Profile = () => {
           email: data.email,
           role: data.role,
           bio: data.bio || "",
+          location: data.location || "",
+          image: data.image || "",
         });
 
         setDp(data.image || "");
+
+        // SAVE UPDATED USER IN SESSION
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(data)
+        );
       }
 
     } catch (err) {
@@ -50,26 +77,37 @@ const Profile = () => {
   };
 
   // ✅ GET APPLICATION STATS
+
   const getStats = async () => {
+
     try {
+
       const token = sessionStorage.getItem("token");
-      const user = JSON.parse(sessionStorage.getItem("user"));
 
       const reqHeader = {
         Authorization: `Bearer ${token}`,
       };
 
-      const storedUser = JSON.parse(sessionStorage.getItem("user"));
-      const res = await getUserApplicationsAPI(reqHeader)
+      const res = await getUserApplicationsAPI(reqHeader);
 
       if (res.status === 200) {
+
         const apps = res.data;
 
         setStats({
           applied: apps.length,
-          interviews: apps.filter(a => a.status === "Interview").length,
-          offers: apps.filter(a => a.status === "Offer").length,
-          rejected: apps.filter(a => a.status === "Rejected").length,
+
+          interviews: apps.filter(
+            a => a.status === "Interview"
+          ).length,
+
+          offers: apps.filter(
+            a => a.status === "Offer"
+          ).length,
+
+          rejected: apps.filter(
+            a => a.status === "Rejected"
+          ).length,
         });
       }
 
@@ -79,105 +117,210 @@ const Profile = () => {
   };
 
   useEffect(() => {
+
     getProfile();
+
     getStats();
+
   }, []);
 
   // HANDLE INPUT CHANGE
+
   const handleChange = (e) => {
+
     setUser({
       ...user,
       [e.target.name]: e.target.value,
     });
   };
 
-  // ✅ UPDATE PROFILE API
+  // HANDLE IMAGE
+
+  const handleImage = (e) => {
+
+    const file = e.target.files[0];
+
+    if (file) {
+
+      setImageFile(file);
+
+      // PREVIEW IMAGE
+      setDp(URL.createObjectURL(file));
+    }
+  };
+
+  // ✅ UPDATE PROFILE
+
   const handleSave = async () => {
+
     try {
+
       const token = sessionStorage.getItem("token");
 
+      const formData = new FormData();
+
+      formData.append("username", user.username);
+      formData.append("email", user.email);
+      formData.append("bio", user.bio);
+      formData.append("location", user.location);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
       const reqHeader = {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
 
-      const payload = {
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        bio: user.bio,
-      }
-      const result = await updateProfileAPI(payload, reqHeader);
+      const result = await userUpdateProfileAPI(
+        formData,
+        reqHeader
+      );
 
       if (result.status === 200) {
+
         alert("Profile Updated Successfully!");
+
+        const updatedUser = result.data;
+
+        setUser(updatedUser);
+
+        setDp(updatedUser.image);
+
+        // UPDATE SESSION
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(updatedUser)
+        );
+
         navigate("/home");
       }
 
     } catch (err) {
+
       console.log(err);
+
       alert("Update failed!");
     }
   };
 
   return (
+
     <div className="min-h-screen bg-gray-100 p-6">
 
       {/* HEADER */}
+
       <div className="bg-white p-6 rounded-2xl shadow mb-6 flex items-center gap-6 justify-between">
+
         <div>
-          <h2 className="text-2xl font-bold">{user.username}</h2>
-          <p className="text-gray-500">{user.role}</p>
+
+          <h2 className="text-2xl font-bold">
+            {user.username}
+          </h2>
+
+          <p className="text-gray-500">
+            {user.role}
+          </p>
+
         </div>
 
-        <img
-          width={80}
-          height={80}
-          className="rounded-full"
-          src={
-            dp
-              ? dp
-              : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"
-          }
-          alt="user"
-        />
+        {/* PROFILE IMAGE */}
+
+        <div className="relative">
+
+          <img
+            className="w-20 h-20 rounded-full object-cover border aspect-square"
+            src={
+              dp
+                ? dp
+                : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            }
+            alt="user"
+          />
+
+          {/* CAMERA BUTTON */}
+
+          <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600">
+
+            <FaCamera />
+
+            <input
+              type="file"
+              hidden
+              onChange={handleImage}
+            />
+
+          </label>
+
+        </div>
+
       </div>
 
       {/* STATS */}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
-          <p className="text-gray-500">Applied</p>
-          <h3 className="text-xl font-bold">{stats.applied}</h3>
+
+          <p className="text-gray-500">
+            Applied
+          </p>
+
+          <h3 className="text-xl font-bold">
+            {stats.applied}
+          </h3>
+
         </div>
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
-          <p className="text-gray-500">Interviews</p>
-          <h3 className="text-xl font-bold">{stats.interviews}</h3>
+
+          <p className="text-gray-500">
+            Interviews
+          </p>
+
+          <h3 className="text-xl font-bold">
+            {stats.interviews}
+          </h3>
+
         </div>
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
-          <p className="text-gray-500">Offers</p>
+
+          <p className="text-gray-500">
+            Offers
+          </p>
+
           <h3 className="text-xl font-bold text-green-600">
             {stats.offers}
           </h3>
+
         </div>
 
         <div className="bg-white p-5 rounded-xl shadow text-center">
-          <p className="text-gray-500">Rejected</p>
+
+          <p className="text-gray-500">
+            Rejected
+          </p>
+
           <h3 className="text-xl font-bold text-red-500">
             {stats.rejected}
           </h3>
+
         </div>
 
       </div>
 
       {/* FORM */}
+
       <div className="bg-white p-6 rounded-2xl shadow">
 
-        <h3 className="text-xl font-bold mb-4">Edit Profile</h3>
+        <h3 className="text-xl font-bold mb-4">
+          Edit Profile
+        </h3>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* USERNAME */}
 
           <input
             type="text"
@@ -188,6 +331,8 @@ const Profile = () => {
             className="border p-3 rounded-lg"
           />
 
+          {/* EMAIL */}
+
           <input
             type="email"
             name="email"
@@ -197,32 +342,51 @@ const Profile = () => {
             className="border p-3 rounded-lg"
           />
 
+          {/* ROLE */}
+
           <input
             type="text"
-            name="role"
             value={user.role}
+            disabled
+            className="border p-3 rounded-lg bg-gray-100"
+          />
+
+          {/* LOCATION */}
+
+          <input
+            type="text"
+            name="location"
+            value={user.location}
             onChange={handleChange}
-            placeholder="Job Role"
+            placeholder="Location"
             className="border p-3 rounded-lg"
           />
 
         </div>
 
-        {/* Bio */}
+        {/* BIO */}
+
         <div className="mt-4">
-          <label className="block mb-2 font-medium">Bio</label>
+
+          <label className="block mb-2 font-medium">
+            Bio
+          </label>
+
           <textarea
             name="bio"
             value={user.bio}
             onChange={handleChange}
             className="border p-3 rounded-lg w-full h-28"
           ></textarea>
+
         </div>
 
-        {/* SAVE + BACK */}
+        {/* BUTTONS */}
+
         <div className="flex justify-between mt-6">
 
-          {/* BACK BUTTON (LEFT) */}
+          {/* BACK BUTTON */}
+
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -231,7 +395,8 @@ const Profile = () => {
             ← Back
           </button>
 
-          {/* SAVE BUTTON (RIGHT) */}
+          {/* SAVE BUTTON */}
+
           <button
             onClick={handleSave}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"

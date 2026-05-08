@@ -52,7 +52,7 @@ function Navbar() {
             Dashboard
           </button>
 
-          
+
 
           <button
             onClick={() => navigate("/notifications")}
@@ -76,7 +76,15 @@ function Navbar() {
           ) : (
             <div className="relative inline-block text-left">
               <button onClick={() => setDropDown(!dropDown)} className="w-full px-3 py-2 hover:bg-gray-50 rounded-full border border-gray-200">
-                <img width={40} height={40} className="rounded-full" src={dp ? dp : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"} alt="user" />
+                <img
+                  src={
+                    dp
+                      ? dp
+                      : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"
+                  }
+                  alt="user"
+                  className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"
+                />
               </button>
               {dropDown && (
                 <div className="absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
@@ -106,7 +114,15 @@ function Navbar() {
           ) : (
             <div className="relative inline-block text-left">
               <button onClick={() => setDropDown(!dropDown)} className="w-full px-3 py-2 hover:bg-gray-50 rounded">
-                <img width={'40px'} height={'40px'} style={{ borderRadius: '50%' }} src={dp ? dp : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"} alt="user" />
+                <img
+                  src={
+                    dp
+                      ? dp
+                      : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"
+                  }
+                  alt="user"
+                  className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"
+                />
               </button>
               {dropDown && <div className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
                 <div className="py-1">

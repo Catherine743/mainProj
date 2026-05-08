@@ -66,7 +66,7 @@ const AdminProfile = () => {
     }
 
     try {
-      const res = await updateProfileAPI(formData, reqHeader);
+      const res = await updateProfileAPI(user._id,formData,reqHeader);
 
       if (res.status === 200) {
         alert("Profile Updated!");
@@ -107,7 +107,7 @@ const AdminProfile = () => {
               "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             }
             alt="profile"
-            className="w-24 h-24 rounded-full object-cover border"
+            className="w-24 h-24 min-w-24 min-h-24 rounded-full object-cover aspect-square border"
           />
 
           <label className="absolute bottom-0 right-[calc(50%-48px)] bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600">

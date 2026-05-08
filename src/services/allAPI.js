@@ -27,8 +27,13 @@ export const getProfileAPI = async (reqHeader) => {
 };
 
 // UPDATE PROFILE (ADMIN)
-export const updateProfileAPI = async (reqBody, reqHeader) => {
-  return await commonAPI("PUT", `${server_url}/update-profile`, reqBody, reqHeader);
+export const updateProfileAPI = async (id, reqBody, reqHeader) => {
+  return await commonAPI("PUT", `${server_url}/admin-profile/${id}`, reqBody, reqHeader);
+};
+
+// UPDATE PROFILE 
+export const userUpdateProfileAPI = async (reqBody, reqHeader) => {
+  return await commonAPI("PUT", `${server_url}/user-profile`, reqBody, reqHeader);
 };
 
 // USER APPLICATIONS
