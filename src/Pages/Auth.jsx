@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { googleLoginAPI, loginAPI, registerAPI } from "../services/allAPI";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 function Auth({ register }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const [userDetails, setUserDetails] = useState({
     username: "",
@@ -52,8 +55,7 @@ function Auth({ register }) {
       const result = await loginAPI(userDetails)
       // console.log(result);
       if (result.status == 200) {
-        sessionStorage.setItem("token", result.data.token)
-        sessionStorage.setItem("user", JSON.stringify(result.data.user))
+        login(result.data)
         setUserDetails({ email: "", password: "" })
         if (result.data.user.role == "admin") {
           alert("Admin logined")
@@ -85,8 +87,7 @@ function Auth({ register }) {
     console.log(decode.email, decode.name, decode.picture);
     const result = await googleLoginAPI({ email: decode.email, password: 'googlepassword', username: decode.name, image: decode.picture })
     if (result.status == 200) {
-      sessionStorage.setItem("token", result.data.token);
-      sessionStorage.setItem("user", JSON.stringify(result.data.user));
+      login(result.data)
       setTimeout(() => {
         if (result.data.user.role == "admin") {
           alert("Admin logined with google")

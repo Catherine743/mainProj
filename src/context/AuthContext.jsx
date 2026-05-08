@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   const [token, setToken] = useState(
-    sessionStorage.getItem("token") || null
+    sessionStorage.getItem("token") || ""
   );
   
   const login = (data) => {
