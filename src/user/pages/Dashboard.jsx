@@ -365,10 +365,6 @@ const Dashboard = () => {
                   {username}
                 </h4>
 
-                <p className="text-xs text-gray-500">
-                  User Dashboard
-                </p>
-
               </div>
 
               <FaChevronDown className="text-gray-500 text-sm" />

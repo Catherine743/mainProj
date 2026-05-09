@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   FaLightbulb,
-  FaHandPaper,
   FaPlus,
   FaTasks,
   FaBolt,
@@ -100,7 +99,6 @@ const Home = () => {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             Welcome back, {name}
-            <FaHandPaper className="text-yellow-400" />
           </h1>
 
           <p className="text-gray-500">

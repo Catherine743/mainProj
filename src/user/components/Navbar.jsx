@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { FaHome, FaUser, FaBell, FaBars } from "react-icons/fa";
+import { FaHome, FaUser, FaBell, FaBars, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -58,8 +58,6 @@ function Navbar() {
             Dashboard
           </button>
 
-
-
           <button
             onClick={() => navigate("/notifications")}
             className={`flex items-center gap-2 hover:text-blue-600 ${isActive(
@@ -80,8 +78,14 @@ function Navbar() {
               </button>
             </Link>
           ) : (
-            <div className="relative inline-block text-left">
-              <button onClick={() => setDropDown(!dropDown)} className="w-full px-3 py-2 hover:bg-gray-50 rounded-full border border-gray-200">
+            <div className="relative">
+
+              {/* PROFILE BUTTON */}
+              <div
+                onClick={() => setDropDown(!dropDown)}
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-2 rounded-xl transition"
+              >
+
                 <img
                   src={
                     dp
@@ -89,17 +93,52 @@ function Navbar() {
                       : `https://ui-avatars.com/api/?name=${username}`
                   }
                   alt="user"
-                  className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
-              </button>
+
+                <FaChevronDown className="text-gray-500 text-xs" />
+
+              </div>
+
+              {/* DROPDOWN */}
               {dropDown && (
-                <div className="absolute right-0 z-20 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
-                  <div className="py-1">
-                    <button onClick={() => { navigate('/profile'); setDropDown(false); }} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</button>
-                    <button onClick={() => { handleLogout(); setDropDown(false); }} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                  </div>
+
+                <div className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+
+                  {/* PROFILE */}
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setDropDown(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left"
+                  >
+
+                    <FaUser className="text-blue-500" />
+
+                    <span>Profile</span>
+
+                  </button>
+
+                  {/* LOGOUT */}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setDropDown(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition text-left text-red-600"
+                  >
+
+                    <FaSignOutAlt />
+
+                    <span>Logout</span>
+
+                  </button>
+
                 </div>
+
               )}
+
             </div>
           )}
           <button
@@ -110,16 +149,27 @@ function Navbar() {
           </button>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-5">
+
           {!token ? (
+
             <Link to="/login">
-              <button className="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-700 flex items-center gap-2">
-                <FaUser />Login
+              <button className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 flex items-center gap-2">
+                <FaUser />
+                Login
               </button>
             </Link>
+
           ) : (
-            <div className="relative inline-block text-left">
-              <button onClick={() => setDropDown(!dropDown)} className="w-full px-3 py-2 hover:bg-gray-50 rounded">
+
+            <div className="relative">
+
+              {/* PROFILE MENU */}
+              <div
+                onClick={() => setDropDown(!dropDown)}
+                className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-xl transition"
+              >
+
                 <img
                   src={
                     dp
@@ -127,17 +177,64 @@ function Navbar() {
                       : `https://ui-avatars.com/api/?name=${username}`
                   }
                   alt="user"
-                  className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"
+                  className="w-11 h-11 rounded-full object-cover"
                 />
-              </button>
-              {dropDown && <div className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden">
-                <div className="py-1">
-                  <button onClick={() => { navigate('/profile'); setDropDown(false) }} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"> Profile </button>
-                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"> Logout</button>
+
+                <div className="hidden md:block">
+
+                  <h4 className="font-semibold text-gray-800">
+                    {username}
+                  </h4>
+
                 </div>
-              </div>}
+
+                <FaChevronDown className="text-gray-500 text-sm" />
+
+              </div>
+
+              {/* DROPDOWN */}
+              {dropDown && (
+
+                <div className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+
+                  {/* PROFILE */}
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setDropDown(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left"
+                  >
+
+                    <FaUser className="text-blue-500" />
+
+                    <span>Profile</span>
+
+                  </button>
+
+                  {/* LOGOUT */}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setDropDown(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition text-left text-red-600"
+                  >
+
+                    <FaSignOutAlt />
+
+                    <span>Logout</span>
+
+                  </button>
+
+                </div>
+
+              )}
+
             </div>
+
           )}
+
         </div>
       </div>
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getProfileAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
+
 
 const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -56,33 +57,69 @@ const AdminHeader = () => {
         {/* NOTIFICATION */}
         <FaBell className="text-xl cursor-pointer" />
 
-        {/* PROFILE */}
-        <div onClick={() => setOpen(!open)} className="cursor-pointer">
-          <img
-            src={getImageUrl(admin?.image)}
-            className="w-8 h-8 rounded-full object-cover"
-            alt="admin"
-          />
-        </div>
+        {/* PROFILE MENU */}
+        <div className="relative">
 
-        {/* DROPDOWN */}
-        {open && (
-          <div className="absolute right-0 top-12 bg-white shadow rounded-lg w-40">
-            <button
-              onClick={() => navigate("/admin/profile")}
-              className="block w-full p-2 hover:bg-gray-100"
-            >
-              Profile
-            </button>
+          <div
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-xl transition"
+          >
 
-            <button
-              onClick={handleLogout}
-              className="block w-full p-2 text-red-500 hover:bg-red-100"
-            >
-              Logout
-            </button>
+            <img
+              src={getImageUrl(admin?.image)}
+              alt="admin"
+              className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
+            />
+
+            <div className="hidden md:block">
+
+              <h4 className="font-semibold text-gray-800">
+                {admin?.username || "Admin"}
+              </h4>
+
+            </div>
+
+            <FaChevronDown className="text-gray-500 text-sm" />
+
           </div>
-        )}
+
+          {/* DROPDOWN */}
+          {open && (
+
+            <div className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+
+              {/* PROFILE */}
+              <button
+                onClick={() => {
+                  navigate("/admin/profile");
+                  setOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left"
+              >
+
+                <FaUser className="text-blue-500" />
+
+                <span>Profile</span>
+
+              </button>
+
+              {/* LOGOUT */}
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition text-left text-red-600"
+              >
+
+                <FaSignOutAlt />
+
+                <span>Logout</span>
+
+              </button>
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
