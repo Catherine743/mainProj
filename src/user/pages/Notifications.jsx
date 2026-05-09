@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
 import {
   getNotificationsAPI,
   markNotificationAPI,
   clearNotificationsAPI,
   deleteNotificationAPI,
-} from "../../services/allAPI"
+} from "../../services/allAPI";
 
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/AuthContext";
 
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 import {
   FaTrash,
   FaCheck
-} from "react-icons/fa"
+} from "react-icons/fa";
 
 const Notifications = () => {
 
-  const { token } = useAuth()
+  const { token } = useAuth();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([]);
 
   // FETCH NOTIFICATIONS
 
@@ -32,28 +32,28 @@ const Notifications = () => {
 
       const headers = {
         Authorization: `Bearer ${token}`,
-      }
+      };
 
-      const res = await getNotificationsAPI(headers)
+      const res = await getNotificationsAPI(headers);
 
       if (res.status === 200) {
 
-        setNotifications(res.data)
+        setNotifications(res.data);
       }
 
     } catch (err) {
 
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   // LOAD
 
   useEffect(() => {
 
-    fetchNotifications()
+    fetchNotifications();
 
-  }, [])
+  }, []);
 
   // MARK AS READ
 
@@ -63,17 +63,24 @@ const Notifications = () => {
 
       const headers = {
         Authorization: `Bearer ${token}`,
-      }
+      };
 
-      await markNotificationAPI(id, headers)
+      await markNotificationAPI(id, headers);
 
-      fetchNotifications()
+      // UPDATE STATE ONLY
+      setNotifications((prev) =>
+        prev.map((item) =>
+          item._id === id
+            ? { ...item, read: true }
+            : item
+        )
+      );
 
     } catch (err) {
 
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   // DELETE SINGLE
 
@@ -83,17 +90,19 @@ const Notifications = () => {
 
       const headers = {
         Authorization: `Bearer ${token}`,
-      }
+      };
 
-      await deleteNotificationAPI(id, headers)
+      await deleteNotificationAPI(id, headers);
 
-      fetchNotifications()
+      setNotifications((prev) =>
+        prev.filter((item) => item._id !== id)
+      );
 
     } catch (err) {
 
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   // CLEAR ALL
 
@@ -103,17 +112,17 @@ const Notifications = () => {
 
       const headers = {
         Authorization: `Bearer ${token}`,
-      }
+      };
 
-      await clearNotificationsAPI(headers)
+      await clearNotificationsAPI(headers);
 
-      setNotifications([])
+      setNotifications([]);
 
     } catch (err) {
 
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   return (
 
@@ -131,7 +140,7 @@ const Notifications = () => {
 
           <button
             onClick={() => navigate(-1)}
-            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg"
+            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg transition"
           >
             Back
           </button>
@@ -146,7 +155,7 @@ const Notifications = () => {
 
         <button
           onClick={handleClear}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
         >
           Clear All
         </button>
@@ -155,15 +164,15 @@ const Notifications = () => {
 
       {/* NOTIFICATIONS */}
 
-      <div className="bg-white rounded-xl shadow">
+      <div className="bg-white rounded-xl shadow overflow-hidden">
 
-        {notifications.filter((n) => !n.read).length > 0 ? (
+        {notifications.length > 0 ? (
 
-          notifications.filter((n) => !n.read).map((n) => (
+          notifications.map((n) => (
 
             <div
               key={n._id}
-              className={`p-4 border-b flex justify-between items-start ${n.read
+              className={`p-4 border-b flex justify-between items-start transition ${n.read
                 ? "bg-white"
                 : "bg-blue-50"
                 }`}
@@ -173,15 +182,31 @@ const Notifications = () => {
 
               <div className="flex-1">
 
-                <p className="text-gray-800">
-                  {n.message}
-                </p>
+                <div className="flex items-center gap-2">
 
-                <small className="text-gray-500">
+                  <p className="text-gray-800">
+                    {n.message}
+                  </p>
+
+                  {!n.read && (
+
+                    <span className="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full">
+
+                      New
+
+                    </span>
+
+                  )}
+
+                </div>
+
+                <small className="text-gray-500 block mt-1">
+
                   {
                     new Date(n.createdAt)
                       .toLocaleString()
                   }
+
                 </small>
 
               </div>
@@ -197,6 +222,7 @@ const Notifications = () => {
                   <button
                     onClick={() => handleRead(n._id)}
                     className="bg-green-100 hover:bg-green-200 p-2 rounded-lg transition"
+                    title="Mark as Read"
                   >
 
                     <FaCheck className="text-green-600" />
@@ -212,15 +238,16 @@ const Notifications = () => {
 
                     const confirmDelete = window.confirm(
                       "Delete this notification?"
-                    )
+                    );
 
                     if (confirmDelete) {
 
-                      handleDelete(n._id)
+                      handleDelete(n._id);
                     }
 
                   }}
                   className="bg-red-100 hover:bg-red-200 p-2 rounded-lg transition"
+                  title="Delete Notification"
                 >
 
                   <FaTrash className="text-red-600" />
@@ -247,7 +274,7 @@ const Notifications = () => {
 
     </div>
 
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;

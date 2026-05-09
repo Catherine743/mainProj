@@ -219,7 +219,7 @@ const Profile = () => {
           </h2>
 
           <p className="text-gray-500">
-            {user.role}
+            {user.email}
           </p>
 
         </div>
@@ -233,7 +233,7 @@ const Profile = () => {
             src={
               dp
                 ? dp
-                : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                : "https://ui-avatars.com/api/?name=" + user.username
             }
             alt="user"
           />

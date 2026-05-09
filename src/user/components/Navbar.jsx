@@ -9,6 +9,8 @@ function Navbar() {
   const [dp, setDp] = useState("")
   const [dropDown, setDropDown] = useState(false)
   const location = useLocation();
+  const [notifications, setNotifications] = useState([])
+  const [showNotif, setShowNotif] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
@@ -18,6 +20,10 @@ function Navbar() {
       setDp(user?.image || "")
     }
   }, [token])
+
+  const user =
+    JSON.parse(sessionStorage.getItem("user")) || {};
+  const username = user?.username || "User";
 
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");
@@ -80,7 +86,7 @@ function Navbar() {
                   src={
                     dp
                       ? dp
-                      : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"
+                      : `https://ui-avatars.com/api/?name=${username}`
                   }
                   alt="user"
                   className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"
@@ -118,7 +124,7 @@ function Navbar() {
                   src={
                     dp
                       ? dp
-                      : "http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png"
+                      : `https://ui-avatars.com/api/?name=${username}`
                   }
                   alt="user"
                   className="w-15 h-15 min-w-10 min-h-10 rounded-full object-cover aspect-square"

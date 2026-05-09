@@ -234,6 +234,8 @@ const Dashboard = () => {
 
               <FaBell className="text-lg text-gray-700" />
 
+              {/* UNREAD BADGE */}
+
               {notifications.filter((n) => !n.read).length > 0 && (
 
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -256,47 +258,59 @@ const Dashboard = () => {
 
               <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border z-50 overflow-hidden">
 
-                <div className="p-4 border-b">
+                {/* HEADER */}
+
+                <div className="p-4 border-b flex items-center justify-between">
 
                   <h4 className="font-bold text-lg">
                     Notifications
                   </h4>
 
+                  <span className="text-sm text-gray-500">
+                    {
+                      notifications.filter(
+                        (n) => !n.read
+                      ).length
+                    } unread
+                  </span>
+
                 </div>
+
+                {/* UNREAD LIST */}
 
                 <div className="max-h-72 overflow-y-auto">
 
-                  {notifications.length > 0 ? (
+                  {notifications.filter((n) => !n.read).length > 0 ? (
 
-                    notifications.slice(0, 5).map((n) => (
+                    notifications
+                      .filter((n) => !n.read)
+                      .slice(0, 5)
+                      .map((n) => (
 
-                      <div
-                        key={n._id}
-                        className={`p-4 border-b hover:bg-gray-50 transition ${n.read
-                            ? "bg-white"
-                            : "bg-blue-50"
-                          }`}
-                      >
+                        <div
+                          key={n._id}
+                          className="p-4 border-b bg-blue-50 hover:bg-blue-100 transition"
+                        >
 
-                        <p className="text-sm text-gray-700">
-                          {n.message}
-                        </p>
+                          <p className="text-sm text-gray-700">
+                            {n.message}
+                          </p>
 
-                        <small className="text-gray-400">
-                          {new Date(
-                            n.createdAt
-                          ).toLocaleString()}
-                        </small>
+                          <small className="text-gray-400">
+                            {new Date(
+                              n.createdAt
+                            ).toLocaleString()}
+                          </small>
 
-                      </div>
+                        </div>
 
-                    ))
+                      ))
 
                   ) : (
 
                     <div className="p-5 text-center text-gray-500">
 
-                      No Notifications
+                      No unread notifications
 
                     </div>
 
@@ -304,12 +318,15 @@ const Dashboard = () => {
 
                 </div>
 
+                {/* FOOTER */}
+
                 <div className="p-3 bg-gray-50 text-center">
 
                   <button
-                    onClick={() =>
-                      navigate("/notifications")
-                    }
+                    onClick={() => {
+                      navigate("/notifications");
+                      setShowNotif(false);
+                    }}
                     className="text-blue-600 text-sm font-medium hover:underline"
                   >
                     View All Notifications
@@ -649,12 +666,12 @@ const Dashboard = () => {
 
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-medium ${app.status === "Applied"
-                              ? "bg-blue-100 text-blue-600"
-                              : app.status === "Interview"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : app.status === "Offer"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-red-100 text-red-600"
+                            ? "bg-blue-100 text-blue-600"
+                            : app.status === "Interview"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : app.status === "Offer"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-600"
                             }`}
                         >
                           {app.status}
