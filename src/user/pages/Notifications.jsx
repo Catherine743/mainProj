@@ -157,81 +157,81 @@ const Notifications = () => {
 
       <div className="bg-white rounded-xl shadow">
 
-        {unreadNotifications.length > 0 ? (
+        {notifications.filter((n) => !n.read).length > 0 ? (
 
-          unreadNotifications.map((n) => (
+          notifications.filter((n) => !n.read).map((n) => (
 
-              <div
-                key={n._id}
-                className={`p-4 border-b flex justify-between items-start ${n.read
-                    ? "bg-white"
-                    : "bg-blue-50"
-                  }`}
-              >
+            <div
+              key={n._id}
+              className={`p-4 border-b flex justify-between items-start ${n.read
+                ? "bg-white"
+                : "bg-blue-50"
+                }`}
+            >
 
-                {/* LEFT SIDE */}
+              {/* LEFT SIDE */}
 
-                <div className="flex-1">
+              <div className="flex-1">
 
-                  <p className="text-gray-800">
-                    {n.message}
-                  </p>
+                <p className="text-gray-800">
+                  {n.message}
+                </p>
 
-                  <small className="text-gray-500">
-                    {
-                      new Date(n.createdAt)
-                        .toLocaleString()
-                    }
-                  </small>
-
-                </div>
-
-                {/* ACTION BUTTONS */}
-
-                <div className="flex gap-2 ml-4">
-
-                  {/* MARK AS READ */}
-
-                  {!n.read && (
-
-                    <button
-                      onClick={() => handleRead(n._id)}
-                      className="bg-green-100 hover:bg-green-200 p-2 rounded-lg transition"
-                    >
-
-                      <FaCheck className="text-green-600" />
-
-                    </button>
-
-                  )}
-
-                  {/* DELETE */}
-
-                  <button
-                    onClick={() => {
-
-                      const confirmDelete = window.confirm(
-                        "Delete this notification?"
-                      )
-
-                      if (confirmDelete) {
-
-                        handleDelete(n._id)
-                      }
-
-                    }}
-                    className="bg-red-100 hover:bg-red-200 p-2 rounded-lg transition"
-                  >
-
-                    <FaTrash className="text-red-600" />
-
-                  </button>
-
-                </div>
+                <small className="text-gray-500">
+                  {
+                    new Date(n.createdAt)
+                      .toLocaleString()
+                  }
+                </small>
 
               </div>
 
-            ))
+              {/* ACTION BUTTONS */}
+
+              <div className="flex gap-2 ml-4">
+
+                {/* MARK AS READ */}
+
+                {!n.read && (
+
+                  <button
+                    onClick={() => handleRead(n._id)}
+                    className="bg-green-100 hover:bg-green-200 p-2 rounded-lg transition"
+                  >
+
+                    <FaCheck className="text-green-600" />
+
+                  </button>
+
+                )}
+
+                {/* DELETE */}
+
+                <button
+                  onClick={() => {
+
+                    const confirmDelete = window.confirm(
+                      "Delete this notification?"
+                    )
+
+                    if (confirmDelete) {
+
+                      handleDelete(n._id)
+                    }
+
+                  }}
+                  className="bg-red-100 hover:bg-red-200 p-2 rounded-lg transition"
+                >
+
+                  <FaTrash className="text-red-600" />
+
+                </button>
+
+              </div>
+
+            </div>
+
+          ))
 
         ) : (
 
