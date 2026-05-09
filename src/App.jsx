@@ -19,6 +19,7 @@ import AdminHome from './Admin/Pages/AdminHome'
 import AdminProfile from './Admin/Pages/AdminProfile'
 import AdminApplications from './Admin/Pages/AdminApplications'
 import AdminUsers from './Admin/Pages/AdminUsers'
+import UpdateResume from './user/pages/UpdateResume'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path='/home' element={<Home />} />
       <Route path='/' element={<Auth />} />
       <Route path='/register' element={<Auth register />} />
+      
 
       {/* USER MODULE */}
       <Route path='/dashboard' element={<Dashboard />} />
@@ -35,6 +37,7 @@ function App() {
       <Route path='/profile' element={<Profile />} />
       <Route path='/add-application' element={<AddApplication />} />
       <Route path='/edit-application/:id' element={<EditApplication />} />
+      <Route path='/update-resume/:id' element={<UpdateResume />} />
 
       {/* ADMIN MODULE */}
       <Route path="/admin" element={<AdminLayout />}>

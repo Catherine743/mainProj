@@ -126,17 +126,17 @@ const EditApplication = () => {
         <form onSubmit={handleUpdate} className="space-y-5">
 
           <input
-            name="user"
+            name="date"
             value={formData.user}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
+            disabled
+            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
           />
 
           <input
-            name="email"
+            name="date"
             value={formData.email}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
+            disabled
+            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
           />
 
           <input
@@ -154,35 +154,11 @@ const EditApplication = () => {
           />
 
           <input
-            type="date"
             name="date"
             value={formData.date}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
+            disabled
+            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
           />
-
-          {/* STATUS (ONLY IN EDIT) */}
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
-          >
-            <option value="Applied">Applied</option>
-            <option value="Interview">Interview</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-
-          {/* INTERVIEW DATE */}
-          {formData.status === "Interview" && (
-            <input
-              type="date"
-              value={interviewDate}
-              onChange={(e) => setInterviewDate(e.target.value)}
-              className="border p-3 rounded-lg w-full"
-            />
-          )}
 
           <input
             type="file"

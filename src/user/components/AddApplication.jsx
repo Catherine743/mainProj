@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addApplicationAPI } from "../../services/allAPI";
-import { FaBriefcase, FaCalendarAlt } from "react-icons/fa";
-import {toast, ToastContainer} from 'react-toastify'
+import { FaBriefcase, FaCalendarAlt, FaBuilding } from "react-icons/fa";
+import { toast, ToastContainer } from 'react-toastify'
 
 const AddApplication = () => {
 
@@ -10,6 +10,7 @@ const AddApplication = () => {
 
   const [error, setError] = useState("");
   const [resume, setResume] = useState("");
+  const today = new Date().toISOString().split("T")[0];
 
   const loggedUser =
     JSON.parse(sessionStorage.getItem("user")) || {};
@@ -21,7 +22,7 @@ const AddApplication = () => {
     email: loggedUser?.email || "",
     designation: "",
     company: "",
-    date: ""
+    date: today
   });
 
   const handleChange = (e) => {
@@ -34,7 +35,7 @@ const AddApplication = () => {
   const handleAdd = async () => {
     try {
 
-      if (!form.designation || !form.company || !form.date) {
+      if (!form.designation || !form.company) {
         setError("Please fill all fields");
         return;
       }
@@ -100,14 +101,14 @@ const AddApplication = () => {
             name="user"
             value={form.user}
             readOnly
-            className="w-full px-4 py-2 border rounded-xl bg-gray-100"
+            className="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
           />
 
           <input
             name="email"
             value={form.email}
             readOnly
-            className="w-full px-4 py-2 border rounded-xl bg-gray-100"
+            className="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
           />
 
           <div className="relative">
@@ -121,23 +122,33 @@ const AddApplication = () => {
             />
           </div>
 
-          <input
-            name="company"
-            value={form.company}
-            onChange={handleChange}
-            placeholder="Company"
-            className="w-full px-4 py-2 border rounded-xl"
-          />
 
           <div className="relative">
+
+            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
+
+            <input
+              name="company"
+              value={form.company}
+              onChange={handleChange}
+              placeholder="Company"
+              className="w-full pl-10 py-2 border rounded-xl"
+            />
+
+          </div>
+
+          <div className="relative">
+
             <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
+
             <input
               type="date"
               name="date"
               value={form.date}
-              onChange={handleChange}
-              className="w-full pl-10 py-2 border rounded-xl"
+              disabled
+              className="w-full pl-10 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
             />
+
           </div>
 
           <div>

@@ -1,87 +1,99 @@
 import React, { useEffect, useState } from "react";
 import {
   FaBell,
-  FaUserCircle,
-  FaTachometerAlt,
-  FaBriefcase,
-  FaUserTie,
-  FaChartLine,
-  FaCog,
-  FaSearch,
-  FaClock,
   FaHistory,
+  FaFilter,
+  FaCalendarAlt,
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
-import { getUserApplicationsAPI } from "../../services/allAPI";
+
+import {
+  getUserApplicationsAPI,
+  getNotificationsAPI,
+} from "../../services/allAPI";
+
 import PipelineColumn from "../components/PipelineColumn";
 import { useAuth } from "../../context/AuthContext";
+import { FaChevronDown, FaUser, FaSignOutAlt } from "react-icons/fa";
 
 const Dashboard = () => {
+
   const navigate = useNavigate();
 
   const stages = ["Applied", "Interview", "Offer", "Rejected"];
 
   const [jobs, setJobs] = useState([]);
+
   const [notifications, setNotifications] = useState([]);
+
   const [showNotif, setShowNotif] = useState(false);
 
-  const { token } = useAuth();
-
   const [applications, setApplications] = useState([]);
-  const [filter, setFilter] = useState("All");
+
+  const [fromDate, setFromDate] = useState("");
+
+  const [toDate, setToDate] = useState("");
+
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const { token } = useAuth();
 
   const user =
     JSON.parse(sessionStorage.getItem("user")) || {};
 
   const username = user?.username || "User";
 
-
+  // =========================
+  // LOAD DATA
+  // =========================
 
   useEffect(() => {
+
     if (token) {
+
       getJobs();
-      generateNotifications();
+
       fetchApplications();
+
+      fetchNotifications();
+
     }
+
   }, [token]);
 
+  // =========================
+  // GET JOBS
+  // =========================
+
   const getJobs = async () => {
-    const token = sessionStorage.getItem("token");
 
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
+    try {
 
-    const res = await getUserApplicationsAPI(reqHeader);
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
 
-    if (res.status === 200) {
-      setJobs(res.data);
+      const res = await getUserApplicationsAPI(reqHeader);
+
+      if (res.status === 200) {
+        setJobs(res.data);
+      }
+
+    } catch (err) {
+      console.log(err);
     }
+
   };
 
-  const generateNotifications = () => {
-    setNotifications([
-      { id: 1, message: "Interview scheduled with Google" },
-      { id: 2, message: "New offer received" },
-      { id: 3, message: "Application rejected" },
-    ]);
-  };
-
-  const stats = {
-    applied: jobs.filter((j) => j.status === "Applied").length,
-    interview: jobs.filter((j) => j.status === "Interview").length,
-    offer: jobs.filter((j) => j.status === "Offer").length,
-    rejected: jobs.filter((j) => j.status === "Rejected").length,
-  };
-
-  const filteredApplications =
-  filter === "All"
-    ? applications
-    : applications.filter(app => app.status === filter);
+  // =========================
+  // GET APPLICATIONS
+  // =========================
 
   const fetchApplications = async () => {
+
     try {
+
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -95,195 +107,591 @@ const Dashboard = () => {
     } catch (err) {
       console.log(err);
     }
+
   };
 
+  // =========================
+  // GET NOTIFICATIONS
+  // =========================
+
+  const fetchNotifications = async () => {
+
+    try {
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getNotificationsAPI(headers);
+
+      if (res.status === 200) {
+        setNotifications(res.data);
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
+
+  // =========================
+  // STATS
+  // =========================
+
+  const stats = {
+
+    applied: jobs.filter(
+      (j) => j.status === "Applied"
+    ).length,
+
+    interview: jobs.filter(
+      (j) => j.status === "Interview"
+    ).length,
+
+    offer: jobs.filter(
+      (j) => j.status === "Offer"
+    ).length,
+
+    rejected: jobs.filter(
+      (j) => j.status === "Rejected"
+    ).length,
+
+  };
+
+  // =========================
+  // FILTER INTERVIEWS
+  // =========================
+
   const interviews = applications
-  .filter(app => app.status === "Interview")
-  .sort((a, b) => new Date(a.interviewDate) - new Date(b.interviewDate));
+    .filter((app) => app.status === "Interview")
+    .filter((app) => {
+
+      if (!app.interviewDate) return false;
+
+      const interview = new Date(app.interviewDate);
+
+      const from = fromDate
+        ? new Date(fromDate)
+        : null;
+
+      const to = toDate
+        ? new Date(toDate)
+        : null;
+
+      if (from && interview < from) {
+        return false;
+      }
+
+      if (to && interview > to) {
+        return false;
+      }
+
+      return true;
+
+    })
+    .sort(
+      (a, b) =>
+        new Date(a.interviewDate) -
+        new Date(b.interviewDate)
+    );
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* MAIN */}
-      <div className="flex-1 flex flex-col">
 
-        {/* TOPBAR */}
-        <header className="bg-white shadow-md px-6 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-100">
 
-          {/* CLICK → HOME */}
-          <h2
-            onClick={() => navigate("/home")}
-            className="text-xl md:text-2xl font-bold cursor-pointer text-gray-800 hover:text-blue-500 transition"
-          >
+      {/* ========================= */}
+      {/* TOP NAVBAR */}
+      {/* ========================= */}
+
+      <header className="bg-white shadow-md px-8 py-4 flex items-center justify-between sticky top-0 z-50">
+
+        {/* LEFT */}
+        <div
+          onClick={() => navigate("/home")}
+          className="cursor-pointer"
+        >
+
+          <h2 className="text-2xl font-bold text-blue-600">
             Smart Pipeline Tracker
           </h2>
 
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-4 relative">
+          <p className="text-sm text-gray-500">
+            Track your career journey
+          </p>
 
-            {/* NOTIFICATION */}
-            <div className="relative">
-              <button
-                onClick={() => setShowNotif(!showNotif)}
-                className="bg-gray-100 p-2 rounded-lg hover:bg-gray-200"
-              >
-                <FaBell />
-              </button>
+        </div>
 
-              {notifications.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
-                  {notifications.length}
+        {/* RIGHT */}
+        <div className="flex items-center gap-5">
+
+          {/* NOTIFICATION */}
+          <div className="relative">
+
+            <button
+              onClick={() => setShowNotif(!showNotif)}
+              className="bg-gray-100 hover:bg-gray-200 transition p-3 rounded-xl relative"
+            >
+
+              <FaBell className="text-lg text-gray-700" />
+
+              {notifications.filter((n) => !n.read).length > 0 && (
+
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+
+                  {
+                    notifications.filter(
+                      (n) => !n.read
+                    ).length
+                  }
+
                 </span>
+
               )}
 
-              {/* DROPDOWN */}
-              {showNotif && (
-                <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 z-50">
-                  <h4 className="font-bold mb-2">Notifications</h4>
-                  <ul className="space-y-2 text-sm">
-                    {notifications.map((n) => (
-                      <li key={n.id} className="text-gray-600">
-                        {n.message}
-                      </li>
-                    ))}
-                  </ul>
+            </button>
+
+            {/* DROPDOWN */}
+
+            {showNotif && (
+
+              <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border z-50 overflow-hidden">
+
+                <div className="p-4 border-b">
+
+                  <h4 className="font-bold text-lg">
+                    Notifications
+                  </h4>
+
                 </div>
-              )}
+
+                <div className="max-h-72 overflow-y-auto">
+
+                  {notifications.length > 0 ? (
+
+                    notifications.slice(0, 5).map((n) => (
+
+                      <div
+                        key={n._id}
+                        className={`p-4 border-b hover:bg-gray-50 transition ${n.read
+                            ? "bg-white"
+                            : "bg-blue-50"
+                          }`}
+                      >
+
+                        <p className="text-sm text-gray-700">
+                          {n.message}
+                        </p>
+
+                        <small className="text-gray-400">
+                          {new Date(
+                            n.createdAt
+                          ).toLocaleString()}
+                        </small>
+
+                      </div>
+
+                    ))
+
+                  ) : (
+
+                    <div className="p-5 text-center text-gray-500">
+
+                      No Notifications
+
+                    </div>
+
+                  )}
+
+                </div>
+
+                <div className="p-3 bg-gray-50 text-center">
+
+                  <button
+                    onClick={() =>
+                      navigate("/notifications")
+                    }
+                    className="text-blue-600 text-sm font-medium hover:underline"
+                  >
+                    View All Notifications
+                  </button>
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
+
+          {/* PROFILE MENU */}
+
+          <div className="relative">
+
+            <div
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-xl transition"
+            >
+
+              <img
+                src={
+                  user?.image
+                    ? user.image
+                    : `https://ui-avatars.com/api/?name=${username}`
+                }
+                alt="profile"
+                className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
+              />
+
+              <div className="hidden md:block">
+
+                <h4 className="font-semibold text-gray-800">
+                  {username}
+                </h4>
+
+                <p className="text-xs text-gray-500">
+                  User Dashboard
+                </p>
+
+              </div>
+
+              <FaChevronDown className="text-gray-500 text-sm" />
+
             </div>
 
-            {/* PROFILE */}
-            <img
-              src={
-                user?.image
-                  ? user.image
-                  : `https://ui-avatars.com/api/?name=${username}`
-              }
-              alt="profile"
-              className="w-9 h-9 rounded-full border"
+            {/* DROPDOWN */}
+
+            {showProfileMenu && (
+
+              <div className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+
+                {/* PROFILE */}
+
+                <button
+                  onClick={() => {
+                    navigate("/profile");
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left"
+                >
+
+                  <FaUser className="text-blue-500" />
+
+                  <span>Profile</span>
+
+                </button>
+
+                {/* LOGOUT */}
+
+                <button
+                  onClick={() => {
+
+                    sessionStorage.clear();
+
+                    navigate("/");
+
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition text-left text-red-600"
+                >
+
+                  <FaSignOutAlt />
+
+                  <span>Logout</span>
+
+                </button>
+
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
+
+      </header>
+
+      {/* ========================= */}
+      {/* MAIN CONTENT */}
+      {/* ========================= */}
+
+      <main className="p-6">
+
+        {/* STATS */}
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+          <div className="bg-white p-6 rounded-2xl shadow">
+
+            <h4 className="text-gray-500">
+              Total Applied
+            </h4>
+
+            <p className="text-3xl font-bold mt-2">
+              {jobs.length}
+            </p>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow">
+
+            <h4 className="text-gray-500">
+              Interviews
+            </h4>
+
+            <p className="text-3xl font-bold mt-2 text-yellow-600">
+              {stats.interview}
+            </p>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow">
+
+            <h4 className="text-gray-500">
+              Offers
+            </h4>
+
+            <p className="text-3xl font-bold mt-2 text-green-600">
+              {stats.offer}
+            </p>
+
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow">
+
+            <h4 className="text-gray-500">
+              Rejected
+            </h4>
+
+            <p className="text-3xl font-bold mt-2 text-red-500">
+              {stats.rejected}
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* PIPELINE */}
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+          {stages.map((stage) => (
+
+            <PipelineColumn
+              key={stage}
+              title={stage}
+              jobs={jobs.filter(
+                (j) => j.status === stage
+              )}
             />
 
-          </div>
+          ))}
 
-        </header>
+        </div>
 
-        {/* CONTENT */}
-        <main className="p-6 overflow-y-auto">
+        {/* BOTTOM SECTION */}
 
-          {/* STATS */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
 
-            <div className="bg-white p-5 rounded-xl shadow">
-              <h4>Total Applied</h4>
-              <p className="text-2xl font-bold">{jobs.length}</p>
-            </div>
+          {/* UPCOMING INTERVIEWS */}
 
-            <div className="bg-white p-5 rounded-xl shadow">
-              <h4>Interviews</h4>
-              <p className="text-2xl font-bold text-yellow-600">
-                {stats.interview}
-              </p>
-            </div>
+          <div className="bg-white rounded-2xl shadow p-6">
 
-            <div className="bg-white p-5 rounded-xl shadow">
-              <h4>Offers</h4>
-              <p className="text-2xl font-bold text-green-600">
-                {stats.offer}
-              </p>
-            </div>
+            <div className="flex items-center justify-between mb-5">
 
-            <div className="bg-white p-5 rounded-xl shadow">
-              <h4>Rejected</h4>
-              <p className="text-2xl font-bold text-red-500">
-                {stats.rejected}
-              </p>
-            </div>
+              <h2 className="text-xl font-bold flex items-center gap-2">
 
-          </div>
-          
-          {/* PIPELINE */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {stages.map((stage) => (
-              <PipelineColumn
-                key={stage}
-                title={stage}
-                jobs={jobs.filter((j) => j.status === stage)}
-              />
-            ))}
-          </div>
+                <FaCalendarAlt className="text-blue-500" />
 
-          {/* BOTTOM */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-
-            {/* INTERVIEW REMINDERS */}
-            <div className="bg-white rounded-xl shadow p-5 mt-6">
-
-              <h2 className="text-xl font-bold mb-4">
                 Upcoming Interviews
+
               </h2>
 
-              {interviews.length > 0 ? (
+            </div>
 
-                <div className="space-y-4">
+            {/* FILTERS */}
 
-                  {interviews.map((item) => (
-                    <div
-                      key={item._id}
-                      className="border rounded-lg p-4 flex justify-between items-center"
-                    >
+            <div className="flex flex-col md:flex-row gap-4 mb-5">
+
+              <div className="flex flex-col w-full">
+
+                <label className="text-sm text-gray-500 mb-1">
+                  From Date
+                </label>
+
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) =>
+                    setFromDate(e.target.value)
+                  }
+                  className="border rounded-lg p-2"
+                />
+
+              </div>
+
+              <div className="flex flex-col w-full">
+
+                <label className="text-sm text-gray-500 mb-1">
+                  To Date
+                </label>
+
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) =>
+                    setToDate(e.target.value)
+                  }
+                  className="border rounded-lg p-2"
+                />
+
+              </div>
+
+            </div>
+
+            {/* INTERVIEW LIST */}
+
+            {interviews.length > 0 ? (
+
+              <div className="space-y-4">
+
+                {interviews.map((item) => (
+
+                  <div
+                    key={item._id}
+                    className="border rounded-xl p-4 hover:shadow-md transition"
+                  >
+
+                    <div className="flex items-center justify-between">
 
                       <div>
+
                         <h3 className="font-semibold text-lg">
                           {item.company}
                         </h3>
 
-                        <p className="text-gray-600">
+                        <p className="text-gray-500">
                           {item.designation}
                         </p>
+
                       </div>
 
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">
+
+                        <p className="text-sm text-gray-400">
                           Interview Date
                         </p>
 
-                        <p className="font-semibold text-blue-600">
-                          {item.interviewDate || "Not Scheduled"}
+                        <p className="font-bold text-blue-600">
+                          {item.interviewDate}
                         </p>
+
                       </div>
 
                     </div>
-                  ))}
 
-                </div>
+                  </div>
 
-              ) : (
-
-                <p className="text-gray-500">
-                  No interviews scheduled
-                </p>
-
-              )}
-
-            </div>
-
-            <div className="bg-white p-5 rounded-xl shadow">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <FaHistory className="text-purple-500" />
-                Recent Activity
-              </h3>
-
-              <ul className="space-y-3 text-sm text-gray-600">
-                {notifications.map((n) => (
-                  <li key={n.id}>{n.message}</li>
                 ))}
-              </ul>
 
-            </div>
+              </div>
+
+            ) : (
+
+              <div className="text-center py-10 text-gray-500">
+
+                No interviews found
+
+              </div>
+
+            )}
 
           </div>
 
-        </main>
-      </div>
+          {/* RECENT ACTIVITY */}
+
+          <div className="bg-white p-6 rounded-2xl shadow">
+
+            <h3 className="font-bold text-xl mb-5 flex items-center gap-2">
+
+              <FaHistory className="text-purple-500" />
+
+              Recent Activity
+
+            </h3>
+
+            {applications.length > 0 ? (
+
+              <div className="space-y-4">
+
+                {applications
+                  .slice()
+                  .reverse()
+                  .slice(0, 6)
+                  .map((app) => (
+
+                    <div
+                      key={app._id}
+                      className="flex justify-between items-center border rounded-xl p-4 hover:bg-gray-50 transition"
+                    >
+
+                      <div>
+
+                        <h4 className="font-semibold">
+                          {app.company}
+                        </h4>
+
+                        <p className="text-sm text-gray-500">
+                          {app.designation}
+                        </p>
+
+                      </div>
+
+                      <div className="text-right">
+
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${app.status === "Applied"
+                              ? "bg-blue-100 text-blue-600"
+                              : app.status === "Interview"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : app.status === "Offer"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-600"
+                            }`}
+                        >
+                          {app.status}
+                        </span>
+
+                        <p className="text-xs text-gray-400 mt-1">
+                          {new Date(
+                            app.createdAt
+                          ).toLocaleDateString()}
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  ))}
+
+              </div>
+
+            ) : (
+
+              <div className="text-center text-gray-500 py-10">
+
+                No recent activity
+
+              </div>
+
+            )}
+
+          </div>
+
+        </div>
+
+      </main>
+
     </div>
+
   );
 };
 

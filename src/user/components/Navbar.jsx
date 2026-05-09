@@ -37,7 +37,7 @@ function Navbar() {
         <h1
           className="text-xl font-bold text-blue-600"
         >
-          Smart Pipeline
+          Smart Pipeline Tracker
         </h1>
 
         {/* CENTER: NAV LINKS - hidden on mobile */}

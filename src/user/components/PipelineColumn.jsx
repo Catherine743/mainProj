@@ -30,7 +30,7 @@ const PipelineColumn = ({ title, jobs = [], onSelect }) => {
             {job.status}
           </span>
 
-          {/* ✅ INTERVIEW DATE (ONLY WHEN STATUS = INTERVIEW) */}
+          {/* INTERVIEW DATE (ONLY WHEN STATUS = INTERVIEW) */}
           {job.status === "Interview" && (
             <p className="text-blue-600 text-sm mt-2">
               Interview Date: {job.interviewDate || "Not Scheduled"}
