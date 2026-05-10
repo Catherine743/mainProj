@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import {
   FaCamera
 } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 
 const Profile = () => {
 
@@ -25,6 +26,8 @@ const Profile = () => {
 
   const [dp, setDp] = useState("");
   const [imageFile, setImageFile] = useState(null);
+
+  const { setUser: setAuthUser } = useAuth();
 
   const [stats, setStats] = useState({
     applied: 0,
@@ -192,6 +195,8 @@ const Profile = () => {
           "user",
           JSON.stringify(updatedUser)
         );
+
+        setAuthUser(updatedUser);
 
         navigate("/home");
       }

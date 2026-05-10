@@ -8,6 +8,8 @@ import { useAuth } from "../../context/AuthContext";
 const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const [admin, setAdmin] = useState({});
+  const [notifications, setNotifications] = useState([]);
+  const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate();
 
   const { token, logout } = useAuth();
@@ -42,7 +44,43 @@ const AdminHeader = () => {
     };
 
     fetchProfile();
+
+    fetchAdminNotifications();
+
   }, [token]);
+
+  const fetchAdminNotifications = async () => {
+
+    try {
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getNotificationsAPI(reqHeader);
+
+      if (res.status === 200) {
+
+        setNotifications(res.data);
+
+        // AUTO ALERT WHEN DASHBOARD OPENS
+        const unread = res.data.filter(n => !n.read);
+
+        if (unread.length > 0) {
+
+          unread.forEach((item) => {
+            alert(item.message);
+          });
+
+        }
+
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+
+  };
 
   const handleLogout = () => {
     logout();
@@ -55,7 +93,106 @@ const AdminHeader = () => {
       <div className="flex items-center gap-6 relative">
 
         {/* NOTIFICATION */}
-        <FaBell className="text-xl cursor-pointer" />
+        <div className="relative">
+
+          <button
+            onClick={() => setShowNotif(!showNotif)}
+            className="bg-gray-100 hover:bg-gray-200 transition p-3 rounded-xl relative"
+          >
+
+            <FaBell className="text-lg text-gray-700" />
+
+            {notifications.filter((n) => !n.read).length > 0 && (
+
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+
+                {
+                  notifications.filter(
+                    (n) => !n.read
+                  ).length
+                }
+
+              </span>
+
+            )}
+
+          </button>
+
+          {/* DROPDOWN */}
+
+          {showNotif && (
+
+            <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border z-50 overflow-hidden">
+
+              {/* HEADER */}
+
+              <div className="p-4 border-b flex items-center justify-between">
+
+                <h4 className="font-bold text-lg">
+                  Notifications
+                </h4>
+
+                <span className="text-sm text-gray-500">
+                  {
+                    notifications.filter(
+                      (n) => !n.read
+                    ).length
+                  } unread
+                </span>
+
+              </div>
+
+              {/* LIST */}
+
+              <div className="max-h-72 overflow-y-auto">
+
+                {notifications.length > 0 ? (
+
+                  notifications
+                    .slice()
+                    .reverse()
+                    .slice(0, 8)
+                    .map((n) => (
+
+                      <div
+                        key={n._id}
+                        className={`p-4 border-b transition ${n.read
+                            ? "bg-white"
+                            : "bg-blue-50 hover:bg-blue-100"
+                          }`}
+                      >
+
+                        <p className="text-sm text-gray-700">
+                          {n.message}
+                        </p>
+
+                        <small className="text-gray-400">
+                          {new Date(
+                            n.createdAt
+                          ).toLocaleString()}
+                        </small>
+
+                      </div>
+
+                    ))
+
+                ) : (
+
+                  <div className="p-5 text-center text-gray-500">
+
+                    No notifications
+
+                  </div>
+
+                )}
+
+              </div>
+
+            </div>
+
+          )}
+
+        </div>
 
         {/* PROFILE MENU */}
         <div className="relative">
