@@ -74,7 +74,6 @@ const AdminProfile = () => {
 
       if (res.status === 200) {
         alert("Profile Updated!");
-        navigate("/admin/home");
 
         const updatedUser = res.data;
 
@@ -84,8 +83,13 @@ const AdminProfile = () => {
             ? `http://localhost:4000/uploads/${updatedUser.image}`
             : ""
         );
-
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
+
+        // IMPORTANT: notify app immediately (global sync idea)
+        window.dispatchEvent(new Event("profileUpdated"));
+
+        navigate("/admin/home");
+
       }
     } catch (err) {
       console.log(err);
