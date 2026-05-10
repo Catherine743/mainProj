@@ -1,45 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getProfileAPI, getNotificationsAPI } from "../../services/allAPI";
+import { getProfileAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 
-const AdminHeader = () => {
 
+const AdminHeader = () => {
   const [open, setOpen] = useState(false);
-  const [adminData, setAdminData] = useState(null);
+  const [admin, setAdmin] = useState({});
   const [notifications, setNotifications] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
-
   const navigate = useNavigate();
+
   const { token, logout } = useAuth();
 
-  // ========================
-  // FETCH PROFILE
-  // ========================
-  const fetchProfile = async () => {
-    if (!token) return;
+  const getImageUrl = (img) => {
+    if (!img) {
+      return `https://ui-avatars.com/api/?name=${admin?.username || "Admin"}`;
+    }
 
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
+    // already full URL
+    if (img.startsWith("http")) {
+      return img;
+    }
 
-    try {
+    // filename → convert to backend URL
+    return `http://localhost:4000/uploads/${img}`;
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!token) return;
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+
       const res = await getProfileAPI(reqHeader);
 
       if (res.status === 200) {
-        setAdminData(res.data);
+        setAdmin(res.data);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    };
 
-  // ========================
-  // FETCH NOTIFICATIONS
-  // ========================
+    fetchProfile();
+
+    fetchAdminNotifications();
+
+  }, [token]);
+
   const fetchAdminNotifications = async () => {
+
     try {
+
       const reqHeader = {
         Authorization: `Bearer ${token}`,
       };
@@ -47,62 +60,28 @@ const AdminHeader = () => {
       const res = await getNotificationsAPI(reqHeader);
 
       if (res.status === 200) {
+
         setNotifications(res.data);
 
-        const unread = res.data.filter((n) => !n.read);
+        // AUTO ALERT WHEN DASHBOARD OPENS
+        const unread = res.data.filter(n => !n.read);
 
-        unread.forEach((item) => {
-          alert(item.message);
-        });
+        if (unread.length > 0) {
+
+          unread.forEach((item) => {
+            alert(item.message);
+          });
+
+        }
+
       }
+
     } catch (err) {
       console.log(err);
     }
+
   };
 
-  // ========================
-  // IMAGE HANDLER
-  // ========================
-  const getImageUrl = (img) => {
-    if (!img) {
-      return `https://ui-avatars.com/api/?name=${
-        adminData?.username || "Admin"
-      }`;
-    }
-
-    if (img.startsWith("http")) return img;
-
-    return `http://localhost:4000/uploads/${img}`;
-  };
-
-  // ========================
-  // LOAD DATA
-  // ========================
-  useEffect(() => {
-    if (token) {
-      fetchProfile();
-      fetchAdminNotifications();
-    }
-  }, [token]);
-
-  // ========================
-  // LISTEN PROFILE UPDATE EVENT
-  // ========================
-  useEffect(() => {
-    const handleProfileUpdate = () => {
-      fetchProfile(); // refresh header instantly
-    };
-
-    window.addEventListener("profileUpdated", handleProfileUpdate);
-
-    return () => {
-      window.removeEventListener("profileUpdated", handleProfileUpdate);
-    };
-  }, []);
-
-  // ========================
-  // LOGOUT
-  // ========================
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -120,65 +99,102 @@ const AdminHeader = () => {
             onClick={() => setShowNotif(!showNotif)}
             className="bg-gray-100 hover:bg-gray-200 transition p-3 rounded-xl relative"
           >
+
             <FaBell className="text-lg text-gray-700" />
 
             {notifications.filter((n) => !n.read).length > 0 && (
+
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                {notifications.filter((n) => !n.read).length}
+
+                {
+                  notifications.filter(
+                    (n) => !n.read
+                  ).length
+                }
+
               </span>
+
             )}
+
           </button>
 
           {/* DROPDOWN */}
+
           {showNotif && (
+
             <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border z-50 overflow-hidden">
 
+              {/* HEADER */}
+
               <div className="p-4 border-b flex items-center justify-between">
-                <h4 className="font-bold text-lg">Notifications</h4>
+
+                <h4 className="font-bold text-lg">
+                  Notifications
+                </h4>
+
                 <span className="text-sm text-gray-500">
-                  {notifications.filter((n) => !n.read).length} unread
+                  {
+                    notifications.filter(
+                      (n) => !n.read
+                    ).length
+                  } unread
                 </span>
+
               </div>
+
+              {/* LIST */}
 
               <div className="max-h-72 overflow-y-auto">
 
                 {notifications.length > 0 ? (
+
                   notifications
                     .slice()
                     .reverse()
                     .slice(0, 8)
                     .map((n) => (
+
                       <div
                         key={n._id}
-                        className={`p-4 border-b transition ${
-                          n.read
+                        className={`p-4 border-b transition ${n.read
                             ? "bg-white"
                             : "bg-blue-50 hover:bg-blue-100"
-                        }`}
+                          }`}
                       >
+
                         <p className="text-sm text-gray-700">
                           {n.message}
                         </p>
 
                         <small className="text-gray-400">
-                          {new Date(n.createdAt).toLocaleString()}
+                          {new Date(
+                            n.createdAt
+                          ).toLocaleString()}
                         </small>
+
                       </div>
+
                     ))
+
                 ) : (
+
                   <div className="p-5 text-center text-gray-500">
+
                     No notifications
+
                   </div>
+
                 )}
 
               </div>
 
             </div>
+
           )}
 
         </div>
 
-        {/* PROFILE */}
+        {/* PROFILE MENU */}
         <div className="relative">
 
           <div
@@ -187,24 +203,29 @@ const AdminHeader = () => {
           >
 
             <img
-              src={getImageUrl(adminData?.image)}
+              src={getImageUrl(admin?.image)}
               alt="admin"
               className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
             />
 
             <div className="hidden md:block">
+
               <h4 className="font-semibold text-gray-800">
-                {adminData?.username || "Admin"}
+                {admin?.username || "Admin"}
               </h4>
+
             </div>
 
             <FaChevronDown className="text-gray-500 text-sm" />
+
           </div>
 
           {/* DROPDOWN */}
           {open && (
+
             <div className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
 
+              {/* PROFILE */}
               <button
                 onClick={() => {
                   navigate("/admin/profile");
@@ -212,19 +233,27 @@ const AdminHeader = () => {
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left"
               >
+
                 <FaUser className="text-blue-500" />
+
                 <span>Profile</span>
+
               </button>
 
+              {/* LOGOUT */}
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition text-left text-red-600"
               >
+
                 <FaSignOutAlt />
+
                 <span>Logout</span>
+
               </button>
 
             </div>
+
           )}
 
         </div>
