@@ -96,10 +96,12 @@ export const clearNotificationsAPI = async (header) => {
   return await commonAPI("DELETE", `${server_url}/clear-notify`, "", header);
 };
 
+// GET ALL NOTIFICATIONS (ADMIN)
 export const getAdminNotificationsAPI = async (header) => {
   return await commonAPI("GET", `${server_url}/admin-notify`, "", header);
 }
 
+// CLEAR ALL NOTFICATIONS (ADMIN)
 export const clearAdminNotificationsAPI = async (header) => {
   return await commonAPI("DELETE", `${server_url}/admin-clear-notify`, "", header);
 };
