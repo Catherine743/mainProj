@@ -57,23 +57,23 @@ export const getSingleApplicationAPI = async (id, reqHeader) => {
 };
 
 // EDIT APPLICATION
-export const editApplicationAPI = (id, reqBody, reqHeader) => {
-  return commonAPI("PUT",`${server_url}/edit/${id}`,reqBody,reqHeader)
+export const editApplicationAPI = async (id, reqBody, reqHeader) => {
+  return await commonAPI("PUT",`${server_url}/edit/${id}`,reqBody,reqHeader)
 }
 
 // UPDATE STATUS
-export const updateStatusAPI = (id, body, headers) => {
-  return commonAPI("PUT", `${server_url}/update/${id}`, body, headers);
+export const updateStatusAPI = async (id, body, headers) => {
+  return await commonAPI("PUT", `${server_url}/update/${id}`, body, headers);
 };
 
 // DELETE
-export const deleteApplicationAPI = (id, headers) => {
-  return commonAPI("DELETE", `${server_url}/user/delete/${id}`, "", headers);
+export const deleteApplicationAPI = async (id, headers) => {
+  return await commonAPI("DELETE", `${server_url}/user/delete/${id}`, "", headers);
 };
 
 // DELETE (ADMIN)
-export const deleteAdminApplicationAPI = (id, headers) => {
-  return commonAPI("DELETE", `${server_url}/admin/delete/${id}`, "", headers);
+export const deleteAdminApplicationAPI = async (id, headers) => {
+  return await commonAPI("DELETE", `${server_url}/admin/delete/${id}`, "", headers);
 };
 
 // GET NOTIFICATIONS
@@ -95,3 +95,21 @@ export const deleteNotificationAPI = async (id, header) => {
 export const clearNotificationsAPI = async (header) => {
   return await commonAPI("DELETE", `${server_url}/clear-notify`, "", header);
 };
+
+export const getAdminNotificationsAPI = async (header) => {
+  return await commonAPI("GET", `${server_url}/admin-notify`, "", header);
+}
+
+export const clearAdminNotificationsAPI = async (header) => {
+  return await commonAPI("DELETE", `${server_url}/admin-clear-notify`, "", header);
+};
+
+// MARK AS READ (ADMIN)
+export const markAdminNotificationAPI = async (id, header) => {
+  return await commonAPI("PUT", `${server_url}/admin-put-notify/${id}`, {}, header);
+}
+
+// DELETE SINGLE (ADMIN)
+export const deleteAdminNotificationAPI = async (id, header) => {
+  return await commonAPI("DELETE", `${server_url}/admin-delete-notify/${id}`, "", header);
+}

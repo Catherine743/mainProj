@@ -20,6 +20,7 @@ import AdminProfile from './Admin/Pages/AdminProfile'
 import AdminApplications from './Admin/Pages/AdminApplications'
 import AdminUsers from './Admin/Pages/AdminUsers'
 import UpdateResume from './user/pages/UpdateResume'
+import AdminNotifications from './Admin/Pages/AdminNotifications'
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="applications" element={<AdminApplications />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="profile" element={<AdminProfile />} />
+        <Route path="notifications" element={<AdminNotifications />} />
       </Route>
 
       {/* NOT FOUND */}

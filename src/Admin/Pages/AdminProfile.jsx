@@ -83,13 +83,13 @@ const AdminProfile = () => {
             ? `http://localhost:4000/uploads/${updatedUser.image}`
             : ""
         );
+
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
-        // IMPORTANT: notify app immediately (global sync idea)
+        // ADD THIS LINE (IMPORTANT FIX)
         window.dispatchEvent(new Event("profileUpdated"));
 
         navigate("/admin/home");
-
       }
     } catch (err) {
       console.log(err);

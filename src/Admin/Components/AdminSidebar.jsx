@@ -18,6 +18,7 @@ const AdminSidebar = () => {
     { name: "Dashboard", path: "/admin/home", icon: <FaHome /> },
     { name: "Applications", path: "/admin/applications", icon: <FaBriefcase /> },
     { name: "Users", path: "/admin/users", icon: <FaUsers /> },
+    { name: "Notifications", path: "/admin/notifications", icon: <FaUserCircle /> }
   ];
 
   return (
@@ -29,8 +30,8 @@ const AdminSidebar = () => {
           <Link key={i} to={item.path}>
             <li
               className={`flex items-center gap-3 p-3 rounded-lg ${location.pathname === item.path
-                  ? "bg-blue-600"
-                  : "hover:bg-gray-700"
+                ? "bg-blue-600"
+                : "hover:bg-gray-700"
                 }`}
             >
               {item.icon}
