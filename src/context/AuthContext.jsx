@@ -11,7 +11,13 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(
     sessionStorage.getItem("token") || ""
   );
-  
+
+  const [profileRefresh, setProfileRefresh] = useState(false);
+
+  const triggerProfileRefresh = () => {
+    setProfileRefresh(prev => !prev);
+  };
+
   const login = (data) => {
     setUser(data.user);
     setToken(data.token);
@@ -26,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, profileRefresh, triggerProfileRefresh }}>
       {children}
     </AuthContext.Provider>
   );

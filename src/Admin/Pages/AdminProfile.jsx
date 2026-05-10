@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FaUserEdit, FaSave, FaCamera } from "react-icons/fa";
 import { updateProfileAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const AdminProfile = () => {
 
   const navigate = useNavigate();
   const storedUser =
     JSON.parse(sessionStorage.getItem("user")) || {};
+
+  const { triggerProfileRefresh } = useAuth();
 
   const token = sessionStorage.getItem("token");
 
@@ -86,8 +89,7 @@ const AdminProfile = () => {
 
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
-        // ADD THIS LINE (IMPORTANT FIX)
-        window.dispatchEvent(new Event("profileUpdated"));
+        triggerProfileRefresh(); 
 
         navigate("/admin/home");
       }

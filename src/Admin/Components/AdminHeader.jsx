@@ -12,7 +12,7 @@ const AdminHeader = () => {
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate();
 
-  const { token, logout } = useAuth();
+  const { token, logout, profileRefresh } = useAuth();
 
   const getImageUrl = (img) => {
     if (!img) {
@@ -29,25 +29,23 @@ const AdminHeader = () => {
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!token) return;
+    fetchProfile();
+    fetchAdminNotifications();
+  }, [token, profileRefresh]);
 
-      const reqHeader = {
-        Authorization: `Bearer ${token}`,
-      };
+  const fetchProfile = async () => {
+    if (!token) return;
 
-      const res = await getProfileAPI(reqHeader);
-
-      if (res.status === 200) {
-        setAdmin(res.data);
-      }
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
     };
 
-    fetchProfile();
+    const res = await getProfileAPI(reqHeader);
 
-    fetchAdminNotifications();
-
-  }, [token]);
+    if (res.status === 200) {
+      setAdmin(res.data);
+    }
+  };
 
   const fetchAdminNotifications = async () => {
 
@@ -157,8 +155,8 @@ const AdminHeader = () => {
                       <div
                         key={n._id}
                         className={`p-4 border-b transition ${n.read
-                            ? "bg-white"
-                            : "bg-blue-50 hover:bg-blue-100"
+                          ? "bg-white"
+                          : "bg-blue-50 hover:bg-blue-100"
                           }`}
                       >
 
