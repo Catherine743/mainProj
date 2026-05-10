@@ -37,12 +37,10 @@ const Notifications = () => {
       const res = await getNotificationsAPI(headers);
 
       if (res.status === 200) {
-
         setNotifications(res.data);
       }
 
     } catch (err) {
-
       console.log(err);
     }
   };
@@ -50,10 +48,10 @@ const Notifications = () => {
   // LOAD
 
   useEffect(() => {
-
-    fetchNotifications();
-
-  }, []);
+    if (token) {
+      fetchNotifications();
+    }
+  }, [token]);
 
   // MARK AS READ
 
@@ -68,13 +66,8 @@ const Notifications = () => {
       await markNotificationAPI(id, headers);
 
       // UPDATE STATE ONLY
-      setNotifications((prev) =>
-        prev.map((item) =>
-          item._id === id
-            ? { ...item, read: true }
-            : item
-        )
-      );
+      await markNotificationAPI(id, headers);
+      fetchNotifications();
 
     } catch (err) {
 
@@ -94,9 +87,8 @@ const Notifications = () => {
 
       await deleteNotificationAPI(id, headers);
 
-      setNotifications((prev) =>
-        prev.filter((item) => item._id !== id)
-      );
+      await deleteNotificationAPI(id, headers);
+      fetchNotifications();
 
     } catch (err) {
 
