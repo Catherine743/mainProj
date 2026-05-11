@@ -23,7 +23,7 @@ const AdminSidebar = () => {
 
   return (
     <aside className="w-64 bg-gray-900 text-white p-6 min-h-screen">
-      <h2 className="text-2xl font-bold mb-10">Admin Panel</h2>
+      <h2 className="text-2xl font-bold mb-10">Smart Pipeline Tracker</h2>
 
       <ul className="space-y-4">
         {menu.map((item, i) => (
