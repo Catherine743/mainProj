@@ -102,8 +102,9 @@ const AddApplication = () => {
             <input
               name="user"
               value={form.user}
-              readOnly
-              className="w-full pl-10 py-2 border rounded-xl"
+              onChange={handleChange}
+              placeholder="Name"
+              className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
           </div>
 
@@ -112,8 +113,9 @@ const AddApplication = () => {
             <input
               name="email"
               value={form.email}
-              readOnly
-              className="w-full pl-10 py-2 border rounded-xl"
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
           </div>
 
@@ -124,7 +126,7 @@ const AddApplication = () => {
               value={form.designation}
               onChange={handleChange}
               placeholder="Designation"
-              className="w-full pl-10 py-2 border rounded-xl"
+              className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
           </div>
 
@@ -136,7 +138,7 @@ const AddApplication = () => {
               value={form.company}
               onChange={handleChange}
               placeholder="Company"
-              className="w-full pl-10 py-2 border rounded-xl"
+              className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
 
           </div>

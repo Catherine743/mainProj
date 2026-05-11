@@ -1,5 +1,6 @@
 import React from "react";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdPictureAsPdf } from "react-icons/md";
+import { server_url } from "../../services/server_url";
 
 const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
 
@@ -21,6 +22,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
             <th className="p-3 text-left w-[15%]">Role</th>
             <th className="p-3 text-left w-[15%]">Status</th>
             <th className="p-3 text-left w-[15%]">Interview Date</th>
+            <th className="p-3 text-left w-[10%]">Resume</th>
             <th className="p-3 text-left w-[12%]">Date</th>
             <th className="p-3 text-center w-[10%]">Action</th>
           </tr>
@@ -86,6 +88,37 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
                   )}
                 </td>
 
+                {/* RESUME */}
+
+                <td className="p-3">
+
+                  {app.resume ? (
+
+                    <a
+                      href={`${server_url}/uploads/${app.resume}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                    >
+
+                      <MdPictureAsPdf size={20} />
+
+                      <span className="text-xs font-medium">
+                        View Resume
+                      </span>
+
+                    </a>
+
+                  ) : (
+
+                    <span className="text-gray-400 text-xs">
+                      No Resume
+                    </span>
+
+                  )}
+
+                </td>
+
                 {/* DATE */}
                 <td className="p-3 text-gray-500">
                   {formatDate(app.date)}
@@ -105,7 +138,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center p-6 text-gray-500">
+              <td colSpan="8" className="text-center p-6 text-gray-500">
                 No applications found
               </td>
             </tr>
