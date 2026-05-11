@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getProfileAPI } from "../../services/allAPI";
+import { getNotificationsAPI, getProfileAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 
 
@@ -61,17 +61,7 @@ const AdminHeader = () => {
 
         setNotifications(res.data);
 
-        // AUTO ALERT WHEN DASHBOARD OPENS
-        const unread = res.data.filter(n => !n.read);
-
-        if (unread.length > 0) {
-
-          unread.forEach((item) => {
-            alert(item.message);
-          });
-
-        }
-
+        
       }
 
     } catch (err) {
@@ -147,6 +137,7 @@ const AdminHeader = () => {
                 {notifications.length > 0 ? (
 
                   notifications
+                    .filter((n) => !n.read)
                     .slice()
                     .reverse()
                     .slice(0, 8)
