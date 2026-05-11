@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  getProfileAPI,
-  userUpdateProfileAPI,
-  getUserApplicationsAPI
-} from "../../services/allAPI";
-
+import { getProfileAPI, userUpdateProfileAPI, getUserApplicationsAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
-
-import {
-  FaCamera
-} from "react-icons/fa";
+import { FaArrowLeft, FaCamera } from "react-icons/fa";
 
 const Profile = () => {
 
@@ -390,9 +381,10 @@ const Profile = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300"
+            className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 flex items-center gap-2"
           >
-            ← Back
+            <FaArrowLeft />
+            Back
           </button>
 
           {/* SAVE BUTTON */}

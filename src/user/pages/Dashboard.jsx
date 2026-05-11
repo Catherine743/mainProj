@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaBell,
-  FaHistory,
-  FaFilter,
-  FaCalendarAlt,
-} from "react-icons/fa";
-
+import { FaBell, FaHistory, FaFilter, FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-import {
-  getUserApplicationsAPI,
-  getNotificationsAPI,
-} from "../../services/allAPI";
-
+import { getUserApplicationsAPI, getNotificationsAPI } from "../../services/allAPI";
 import PipelineColumn from "../components/PipelineColumn";
 import { useAuth } from "../../context/AuthContext";
 import { FaChevronDown, FaUser, FaSignOutAlt } from "react-icons/fa";

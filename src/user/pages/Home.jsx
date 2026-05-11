@@ -1,20 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaLightbulb,
-  FaPlus,
-  FaTasks,
-  FaBolt,
-  FaBriefcase,
-  FaEdit,
-  FaTrash
-} from "react-icons/fa";
+import { FaLightbulb, FaPlus, FaTasks, FaBolt, FaBriefcase, FaEdit, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
-import {
-  getUserApplicationsAPI,
-  deleteApplicationAPI
-} from "../../services/allAPI";
+import { getUserApplicationsAPI, deleteApplicationAPI } from "../../services/allAPI";
 
 const Home = () => {
 
@@ -98,7 +86,7 @@ const Home = () => {
 
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            Welcome back, {name}
+            Welcome, {name}
           </h1>
 
           <p className="text-gray-500">

@@ -1,20 +1,8 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  getNotificationsAPI,
-  markNotificationAPI,
-  clearNotificationsAPI,
-  deleteNotificationAPI,
-} from "../../services/allAPI";
-
+import { getNotificationsAPI, markNotificationAPI, clearNotificationsAPI, deleteNotificationAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
-
 import { useNavigate } from "react-router-dom";
-
-import {
-  FaTrash,
-  FaCheck
-} from "react-icons/fa";
+import { FaTrash, FaCheck, FaArrowLeft } from "react-icons/fa";
 
 const Notifications = () => {
 
@@ -127,8 +115,9 @@ const Notifications = () => {
 
           <button
             onClick={() => navigate(-1)}
-            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg transition"
+            className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg transition flex items-center gap-2"
           >
+            <FaArrowLeft />
             Back
           </button>
 
