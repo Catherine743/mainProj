@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addApplicationAPI } from "../../services/allAPI";
-import { FaBriefcase, FaCalendarAlt, FaBuilding } from "react-icons/fa";
+import { FaBriefcase, FaCalendarAlt, FaBuilding, FaUser, FaEnvelope } from "react-icons/fa";
 import { toast, ToastContainer } from 'react-toastify'
 
 const AddApplication = () => {
@@ -97,19 +97,25 @@ const AddApplication = () => {
           }}
         >
 
-          <input
-            name="user"
-            value={form.user}
-            readOnly
-            className="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
-          />
+          <div className="relative">
+            <FaUser className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="user"
+              value={form.user}
+              readOnly
+              className="w-full pl-10 py-2 border rounded-xl"
+            />
+          </div>
 
-          <input
-            name="email"
-            value={form.email}
-            readOnly
-            className="w-full px-4 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
-          />
+          <div className="relative">
+            <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="email"
+              value={form.email}
+              readOnly
+              className="w-full pl-10 py-2 border rounded-xl"
+            />
+          </div>
 
           <div className="relative">
             <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
@@ -124,9 +130,7 @@ const AddApplication = () => {
 
 
           <div className="relative">
-
             <FaBuilding className="absolute top-3 left-3 text-gray-400" />
-
             <input
               name="company"
               value={form.company}
@@ -138,9 +142,7 @@ const AddApplication = () => {
           </div>
 
           <div className="relative">
-
             <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
-
             <input
               type="date"
               name="date"

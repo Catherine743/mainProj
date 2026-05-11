@@ -6,7 +6,7 @@ import {
   editApplicationAPI,
 } from "../../services/allAPI";
 
-import { FaEdit, FaArrowLeft, FaSave } from "react-icons/fa";
+import { FaEdit, FaArrowLeft, FaSave, FaBriefcase, FaBuilding, FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa";
 
 const EditApplication = () => {
 
@@ -125,40 +125,55 @@ const EditApplication = () => {
 
         <form onSubmit={handleUpdate} className="space-y-5">
 
-          <input
-            name="date"
-            value={formData.user}
-            disabled
-            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
-          />
+          <div className="relative">
+            <FaUser className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="user"
+              value={formData.user}
+              disabled
+              className="border pl-10 py-2 rounded-xl w-full"
+            />
+          </div>
 
-          <input
-            name="date"
-            value={formData.email}
-            disabled
-            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
-          />
+          <div className="relative">
+            <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="email"
+              value={formData.email}
+              disabled
+              className="border pl-10 py-2 rounded-xl w-full"
+            />
+          </div>
 
-          <input
-            name="designation"
-            value={formData.designation}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
-          />
+          <div className="relative">
+            <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="designation"
+              value={formData.designation}
+              onChange={handleChange}
+              className="border pl-10 py-2 rounded-xl w-full"
+            />
+          </div>
 
-          <input
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            className="border p-3 rounded-lg w-full"
-          />
+          <div className="relative">
+            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              className="border pl-10 py-2 rounded-xl w-full"
+            />
+          </div>
 
-          <input
-            name="date"
-            value={formData.date}
-            disabled
-            className="border p-3 rounded-lg w-full bg-gray-100 cursor-not-allowed"
-          />
+          <div className="relative">
+            <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
+            <input
+              name="date"
+              value={formData.date}
+              disabled
+              className="border pl-10 py-2 rounded-xl w-full bg-gray-100 cursor-not-allowed"
+            />
+          </div>
 
           <input
             type="file"
