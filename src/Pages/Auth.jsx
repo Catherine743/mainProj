@@ -16,7 +16,6 @@ function Auth({ register }) {
   const [userDetails, setUserDetails] = useState({
     username: "",
     email: "",
-    phoneNo: "",
     password: "",
   });
 
@@ -25,19 +24,19 @@ function Auth({ register }) {
   // =========================
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { username, email, phoneNo, password } = userDetails;
-    if (username && email && phoneNo && password) {
+    const { username, email, password } = userDetails;
+    if (username && email && password) {
       try {
         const result = await registerAPI(userDetails);
         // console.log(result);
         if (result.status == 200) {
           alert("Successfully registered");
-          setUserDetails({ username: "", email: "", phoneNo: "", password: "" });
+          setUserDetails({ username: "", email: "", password: "" });
           navigate('/login');
         }
         else {
           alert("Something went wrong")
-          setUserDetails({ username: "", email: "", phoneNo: "",password: "" });
+          setUserDetails({ username: "", email: "", password: "" });
         }
       }
       catch (err) {
@@ -132,39 +131,20 @@ function Auth({ register }) {
 
           {/* Username (register only) */}
           {register && (
-            <div>
-              <div className="relative mb-4">
-                <FaUserAlt className="absolute top-3 left-3 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={userDetails.username}
-                  onChange={e =>
-                    setUserDetails({
-                      ...userDetails,
-                      username: e.target.value,
-                    })
-                  }
-                  className="w-full pl-10 py-2 border rounded-lg"
-                />
-              </div>
-
-              <div className="relative">
-                <FaPhoneAlt className="absolute top-3 left-3 text-gray-400" />
-
-                <input
-                  type="text"
-                  placeholder="Phone Number"
-                  value={userDetails.phoneNo}
-                  onChange={e =>
-                    setUserDetails({
-                      ...userDetails,
-                      phoneNo: e.target.value,
-                    })
-                  }
-                  className="w-full pl-10 py-2 border rounded-lg"
-                />
-              </div>
+            <div className="relative mb-4">
+              <FaUserAlt className="absolute top-3 left-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Username"
+                value={userDetails.username}
+                onChange={e =>
+                  setUserDetails({
+                    ...userDetails,
+                    username: e.target.value,
+                  })
+                }
+                className="w-full pl-10 py-2 border rounded-lg"
+              />
             </div>
           )}
 
