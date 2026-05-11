@@ -19,9 +19,8 @@ const PipelineColumn = ({ title, jobs = [], onSelect }) => {
       ) : (jobs.map(job => (
         <div key={job._id} className="bg-white p-3 rounded shadow mb-3">
 
-          <h3 className="font-bold">{job.company}</h3>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm font-bold">
             {job.designation}
           </p>
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addApplicationAPI } from "../../services/allAPI";
-import { FaBriefcase, FaCalendarAlt, FaBuilding, FaUser, FaEnvelope } from "react-icons/fa";
+import { FaBriefcase, FaCalendarAlt, FaBuilding, FaUser, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { toast, ToastContainer } from 'react-toastify'
 
 const AddApplication = () => {
@@ -21,7 +21,6 @@ const AddApplication = () => {
     user: loggedUser?.username || "",
     email: loggedUser?.email || "",
     designation: "",
-    company: "",
     date: today
   });
 
@@ -35,7 +34,7 @@ const AddApplication = () => {
   const handleAdd = async () => {
     try {
 
-      if (!form.designation || !form.company) {
+      if (!form.designation) {
         setError("Please fill all fields");
         return;
       }
@@ -46,7 +45,6 @@ const AddApplication = () => {
       reqBody.append("user", form.user);
       reqBody.append("email", form.email);
       reqBody.append("designation", form.designation);
-      reqBody.append("company", form.company);
       reqBody.append("date", form.date);
 
       // STATUS ALWAYS HANDLED IN BACKEND (Applied default)
@@ -128,19 +126,6 @@ const AddApplication = () => {
               placeholder="Designation"
               className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
-          </div>
-
-
-          <div className="relative">
-            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
-            <input
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              placeholder="Company"
-              className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
-            />
-
           </div>
 
           <div className="relative">

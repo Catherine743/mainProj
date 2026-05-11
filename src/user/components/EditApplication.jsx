@@ -16,7 +16,6 @@ const EditApplication = () => {
     user: "",
     email: "",
     designation: "",
-    company: "",
     date: "",
     status: ""
   });
@@ -43,7 +42,6 @@ const EditApplication = () => {
           user: app.user,
           email: app.email,
           designation: app.designation,
-          company: app.company,
           date: app.date?.split("T")[0],
           status: app.status
         });
@@ -76,7 +74,6 @@ const EditApplication = () => {
       reqBody.append("user", formData.user);
       reqBody.append("email", formData.email);
       reqBody.append("designation", formData.designation);
-      reqBody.append("company", formData.company);
       reqBody.append("date", formData.date);
 
 
@@ -143,16 +140,6 @@ const EditApplication = () => {
             <input
               name="designation"
               value={formData.designation}
-              onChange={handleChange}
-              className="border pl-10 py-2 rounded-xl w-full"
-            />
-          </div>
-
-          <div className="relative">
-            <FaBuilding className="absolute top-3 left-3 text-gray-400" />
-            <input
-              name="company"
-              value={formData.company}
               onChange={handleChange}
               className="border pl-10 py-2 rounded-xl w-full"
             />

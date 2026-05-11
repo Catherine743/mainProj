@@ -8,7 +8,7 @@ const Profile = () => {
   const [user, setUser] = useState({
     username: "",
     email: "",
-    role: "",
+    phoneNo: "",
     bio: "",
     location: "",
     image: "",
@@ -333,13 +333,13 @@ const Profile = () => {
             className="border p-3 rounded-lg"
           />
 
-          {/* ROLE */}
+          {/* PHONE */}
 
           <input
             type="text"
-            value={user.role}
-            disabled
-            className="border p-3 rounded-lg bg-gray-100"
+            name="phoneNo"
+            value={profile.phoneNo}
+            onChange={handleChange}
           />
 
           {/* LOCATION */}

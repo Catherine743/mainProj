@@ -567,12 +567,9 @@ const Dashboard = () => {
                       <div>
 
                         <h3 className="font-semibold text-lg">
-                          {item.company}
+                          {item.designation}
                         </h3>
 
-                        <p className="text-gray-500">
-                          {item.designation}
-                        </p>
 
                       </div>
 
@@ -638,12 +635,9 @@ const Dashboard = () => {
                       <div>
 
                         <h4 className="font-semibold">
-                          {app.company}
+                          {app.designation}
                         </h4>
 
-                        <p className="text-sm text-gray-500">
-                          {app.designation}
-                        </p>
 
                       </div>
 

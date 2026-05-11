@@ -168,8 +168,6 @@ const AdminApplications = () => {
 
       app.user?.toLowerCase().includes(k) ||
 
-      app.company?.toLowerCase().includes(k) ||
-
       app.designation?.toLowerCase().includes(k)
 
     );

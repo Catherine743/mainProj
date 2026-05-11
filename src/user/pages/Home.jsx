@@ -143,8 +143,7 @@ const Home = () => {
                 className="bg-blue-50 p-4 rounded-xl hover:shadow-md transition flex flex-col gap-3"
               >
                 <div>
-                  <p className="font-semibold text-lg">{app.company}</p>
-                  <p className="text-gray-600 text-sm">{app.designation}</p>
+                  <p className="font-semibold text-lg">{app.designation}</p>
                 </div>
 
                 <div className="flex justify-between items-center">
@@ -185,7 +184,7 @@ const Home = () => {
                   <div>
 
                     <p className="font-medium">
-                      {a.designation} - {a.company}
+                      {a.designation}
                     </p>
 
                     {a.resume && (

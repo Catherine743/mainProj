@@ -1,40 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaHome, FaUser, FaBell, FaBars, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+
 
 function Navbar() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [token, setToken] = useState("")
-  const [dp, setDp] = useState("")
   const [dropDown, setDropDown] = useState(false)
   const location = useLocation();
   const [notifications, setNotifications] = useState([])
   const [showNotif, setShowNotif] = useState(false)
+  const { user, token, logout } = useAuth();
 
-  useEffect(() => {
-    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-      const userToken = sessionStorage.getItem("token")
-      setToken(userToken)
-      const user = JSON.parse(sessionStorage.getItem("user"))
-      setDp(
-        user?.image
-          ? user.image.startsWith("http")
-            ? user.image
-            : `http://localhost:4000/uploads/${user.image}`
-          : ""
-      )
-    }
-  }, [token])
-
-  const user =
-    JSON.parse(sessionStorage.getItem("user")) || {};
   const username = user?.username || "User";
 
+  const dp =
+    user?.image?.startsWith("http")
+      ? user.image
+      : user?.image
+        ? `http://localhost:4000/uploads/${user.image}`
+        : "";
+
   const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
-    sessionStorage.clear();
-    navigate("/home");
+    logout(); // from context
+    navigate("/");
   };
 
   const isActive = (path) =>

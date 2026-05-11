@@ -11,6 +11,7 @@ const UserTable = ({ users = [] }) => {
           <tr>
             <th className="p-4 text-left">Name</th>
             <th className="p-4 text-left">Email</th>
+            <th className="p-4 text-left">Phone Number</th>
           </tr>
         </thead>
 
@@ -26,6 +27,10 @@ const UserTable = ({ users = [] }) => {
 
                 <td className="p-4 text-gray-600">
                   {u.email || "-"}
+                </td>
+
+                <td className="p-4 text-gray-600">
+                  {u.phoneNo || "-"}
                 </td>
 
               </tr>
