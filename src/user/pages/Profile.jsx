@@ -26,7 +26,7 @@ const Profile = () => {
 
   const navigate = useNavigate();
 
-  // ✅ GET PROFILE DATA
+  // GET PROFILE DATA
 
   const getProfile = async () => {
 
@@ -47,7 +47,7 @@ const Profile = () => {
         setUser({
           username: data.username,
           email: data.email,
-          role: data.role,
+          phoneNo: data.phoneNo || "",
           bio: data.bio || "",
           location: data.location || "",
           image: data.image || "",
@@ -67,7 +67,7 @@ const Profile = () => {
     }
   };
 
-  // ✅ GET APPLICATION STATS
+  // GET APPLICATION STATS
 
   const getStats = async () => {
 
@@ -140,7 +140,7 @@ const Profile = () => {
     }
   };
 
-  // ✅ UPDATE PROFILE
+  // UPDATE PROFILE
 
   const handleSave = async () => {
 
@@ -152,6 +152,7 @@ const Profile = () => {
 
       formData.append("username", user.username);
       formData.append("email", user.email);
+      formData.append("phoneNo", user.phoneNo);
       formData.append("bio", user.bio);
       formData.append("location", user.location);
 
@@ -338,8 +339,10 @@ const Profile = () => {
           <input
             type="text"
             name="phoneNo"
-            value={profile.phoneNo}
+            value={user.phoneNo}
             onChange={handleChange}
+            placeholder="Phone"
+            className="border p-3 rounded-lg"
           />
 
           {/* LOCATION */}

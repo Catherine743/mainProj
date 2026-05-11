@@ -14,16 +14,16 @@ const Home = () => {
 
   const name = user?.username || "User";
 
-  // ✅ PROTECT PAGE
+  // PROTECT PAGE
   useEffect(() => {
     if (!token) {
-      navigate("/home");
+      navigate("/");
     } else {
       getApplications();
     }
   }, []);
 
-  // ✅ LOAD APPLICATIONS
+  // LOAD APPLICATIONS
   const getApplications = async () => {
     try {
       const reqHeader = {

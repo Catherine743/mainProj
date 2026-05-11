@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addApplicationAPI } from "../../services/allAPI";
 import { FaBriefcase, FaCalendarAlt, FaBuilding, FaUser, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
-import { toast, ToastContainer } from 'react-toastify'
 
 const AddApplication = () => {
 
@@ -62,7 +61,7 @@ const AddApplication = () => {
       const result = await addApplicationAPI(reqBody, reqHeader);
 
       if (result.status === 200) {
-        toast.success("Application added successfully");
+        alert("Application added successfully");
         navigate("/home");
       }
 
@@ -174,11 +173,6 @@ const AddApplication = () => {
         </form>
 
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        theme="colored"
-      />
     </div>
   );
 };
