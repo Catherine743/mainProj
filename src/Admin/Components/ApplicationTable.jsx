@@ -18,13 +18,12 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
         <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
           <tr>
             <th className="p-3 text-left w-[18%]">User</th>
-            <th className="p-3 text-left w-[15%]">Company</th>
             <th className="p-3 text-left w-[15%]">Role</th>
             <th className="p-3 text-left w-[15%]">Status</th>
             <th className="p-3 text-left w-[15%]">Interview Date</th>
-            <th className="p-3 text-left w-[10%]">Resume</th>
-            <th className="p-3 text-left w-[12%]">Date</th>
-            <th className="p-3 text-center w-[10%]">Action</th>
+            <th className="p-3 text-left w-[15%]">Resume</th>
+            <th className="p-3 text-left w-[15%]">Date</th>
+            <th className="p-3 text-left w-[15%]">Action</th>
           </tr>
         </thead>
 
@@ -42,8 +41,6 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
                   </div>
                 </td>
 
-                {/* COMPANY */}
-                <td className="p-3 truncate">{app.company}</td>
 
                 {/* ROLE */}
                 <td className="p-3 truncate">{app.designation}</td>
@@ -138,7 +135,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" className="text-center p-6 text-gray-500">
+              <td colSpan="7" className="text-center p-6 text-gray-500">
                 No applications found
               </td>
             </tr>
