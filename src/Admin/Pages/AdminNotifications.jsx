@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  getAdminNotificationsAPI,
-  markAdminNotificationAPI,
-  clearAdminNotificationsAPI,
-  deleteAdminNotificationAPI,
-} from "../../services/allAPI";
-
+import { getAdminNotificationsAPI, markAdminNotificationAPI, clearAdminNotificationsAPI, deleteAdminNotificationAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-
 import { FaTrash, FaCheck } from "react-icons/fa";
 
 const AdminNotifications = () => {
@@ -137,9 +129,8 @@ const AdminNotifications = () => {
 
             <div
               key={n._id}
-              className={`p-4 border-b flex justify-between items-start transition ${
-                n.read ? "bg-white" : "bg-blue-50"
-              }`}
+              className={`p-4 border-b flex justify-between items-start transition ${n.read ? "bg-white" : "bg-blue-50"
+                }`}
             >
 
               {/* LEFT SIDE */}

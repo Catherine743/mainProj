@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-
 import ApplicationTable from "../components/ApplicationTable";
-
-import {
-  getAllApplicationsAPI,
-  updateStatusAPI,
-  deleteAdminApplicationAPI,
-} from "../../services/allAPI";
-
+import { getAllApplicationsAPI, updateStatusAPI, deleteAdminApplicationAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 
 const AdminApplications = () => {

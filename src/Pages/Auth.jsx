@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { googleLoginAPI, loginAPI, registerAPI } from "../services/allAPI";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+
 function Auth({ register }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();

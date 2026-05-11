@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  getAllApplicationsAPI,
-  getAllUsersAPI
-} from "../../services/allAPI";
+import { getAllApplicationsAPI, getAllUsersAPI } from "../../services/allAPI";
 
 const AdminHome = () => {
 
