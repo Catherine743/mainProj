@@ -64,9 +64,6 @@ const Notifications = () => {
       };
 
       await markNotificationAPI(id, headers);
-
-      // UPDATE STATE ONLY
-      await markNotificationAPI(id, headers);
       fetchNotifications();
 
     } catch (err) {
@@ -84,8 +81,6 @@ const Notifications = () => {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-
-      await deleteNotificationAPI(id, headers);
 
       await deleteNotificationAPI(id, headers);
       fetchNotifications();

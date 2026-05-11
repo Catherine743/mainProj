@@ -17,7 +17,13 @@ function Navbar() {
       const userToken = sessionStorage.getItem("token")
       setToken(userToken)
       const user = JSON.parse(sessionStorage.getItem("user"))
-      setDp(user?.image || "")
+      setDp(
+        user?.image
+          ? user.image.startsWith("http")
+            ? user.image
+            : `http://localhost:4000/uploads/${user.image}`
+          : ""
+      )
     }
   }, [token])
 

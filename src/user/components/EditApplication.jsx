@@ -84,8 +84,6 @@ const EditApplication = () => {
       reqBody.append("company", formData.company);
       reqBody.append("date", formData.date);
 
-      // STATUS CONTROLLED HERE ONLY (ADMIN FLOW)
-      reqBody.append("status", formData.status);
 
       if (formData.status === "Interview") {
         reqBody.append("interviewDate", interviewDate);
