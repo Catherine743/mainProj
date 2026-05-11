@@ -25,7 +25,7 @@ function Navbar() {
           : ""
       )
     }
-  }, [token])
+  }, [])
 
   const user =
     JSON.parse(sessionStorage.getItem("user")) || {};
