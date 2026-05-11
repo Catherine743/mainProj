@@ -3,7 +3,7 @@ import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getNotificationsAPI, getProfileAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
-
+import AdminNotifications from "../Pages/AdminNotifications";
 
 const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -61,7 +61,7 @@ const AdminHeader = () => {
 
         setNotifications(res.data);
 
-        
+
       }
 
     } catch (err) {
@@ -174,6 +174,22 @@ const AdminHeader = () => {
                   </div>
 
                 )}
+
+              </div>
+
+              {/* FOOTER */}
+
+              <div className="p-3 bg-gray-50 text-center">
+
+                <button
+                  onClick={() => {
+                    navigate("/admin/notify")
+                    setShowNotif(false);
+                  }}
+                  className="text-blue-600 text-sm font-medium hover:underline"
+                >
+                  View All Notifications
+                </button>
 
               </div>
 

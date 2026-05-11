@@ -46,7 +46,7 @@ function App() {
         <Route path="applications" element={<AdminApplications />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="profile" element={<AdminProfile />} />
-        <Route path="notifications" element={<AdminNotifications />} />
+        <Route path="notify" element={<AdminNotifications />} />
       </Route>
 
       {/* NOT FOUND */}

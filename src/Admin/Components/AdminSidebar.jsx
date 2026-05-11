@@ -18,7 +18,7 @@ const AdminSidebar = () => {
     { name: "Dashboard", path: "/admin/home", icon: <FaHome /> },
     { name: "Applications", path: "/admin/applications", icon: <FaBriefcase /> },
     { name: "Users", path: "/admin/users", icon: <FaUsers /> },
-    { name: "Notifications", path: "/admin/notifications", icon: <FaUserCircle /> }
+    { name: "Notifications", path: "/admin/notify", icon: <FaUserCircle /> }
   ];
 
   return (
