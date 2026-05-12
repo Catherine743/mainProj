@@ -118,7 +118,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
 
                 {/* DATE */}
                 <td className="p-3 text-gray-500">
-                  {formatDate(app.date)}
+                  {formatDate(app.createdAt)}
                 </td>
 
                 {/* DELETE */}
