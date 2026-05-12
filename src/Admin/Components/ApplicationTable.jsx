@@ -23,7 +23,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
             <th className="p-3 text-left w-[15%]">Interview Date</th>
             <th className="p-3 text-left w-[15%]">Resume</th>
             <th className="p-3 text-left w-[15%]">Date</th>
-            <th className="p-3 text-left w-[15%]">Action</th>
+            <th className="p-3 text-center w-[15%]">Action</th>
           </tr>
         </thead>
 
