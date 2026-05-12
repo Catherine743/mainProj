@@ -66,18 +66,19 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
                   {app.status === "Interview" ? (
                     <input
                       type="date"
+                      min={
+                        new Date(Date.now() + 86400000)
+                          .toISOString()
+                          .split("T")[0]
+                      }
                       value={
                         app.interviewDate
                           ? app.interviewDate.substring(0, 10)
                           : ""
                       }
-                      onChange={(e) =>
-                        onStatusChange(
-                          app._id,
-                          "Interview",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => {
+                        onStatusChange(app._id, "Interview", e.target.value, false);
+                      }}
                       className="border px-2 py-1 rounded text-xs w-full"
                     />
                   ) : (
