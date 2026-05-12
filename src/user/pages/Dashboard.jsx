@@ -33,9 +33,7 @@ const Dashboard = () => {
 
   const username = user?.username || "User";
 
-  // =========================
   // LOAD DATA
-  // =========================
 
   useEffect(() => {
 
@@ -61,9 +59,7 @@ const Dashboard = () => {
 
   }, []);
 
-  // =========================
   // GET JOBS
-  // =========================
 
   const getJobs = async () => {
 
@@ -85,9 +81,7 @@ const Dashboard = () => {
 
   };
 
-  // =========================
   // GET APPLICATIONS
-  // =========================
 
   const fetchApplications = async () => {
 
@@ -109,9 +103,7 @@ const Dashboard = () => {
 
   };
 
-  // =========================
   // GET NOTIFICATIONS
-  // =========================
 
   const fetchNotifications = async () => {
 
@@ -133,9 +125,7 @@ const Dashboard = () => {
 
   };
 
-  // =========================
   // STATS
-  // =========================
 
   const stats = {
 
@@ -157,9 +147,7 @@ const Dashboard = () => {
 
   };
 
-  // =========================
   // FILTER INTERVIEWS
-  // =========================
 
   const interviews = applications
     .filter((app) => app.status === "Interview")
@@ -198,9 +186,7 @@ const Dashboard = () => {
 
     <div className="min-h-screen bg-gray-100">
 
-      {/* ========================= */}
       {/* TOP NAVBAR */}
-      {/* ========================= */}
 
       <header className="bg-white shadow-md px-8 py-4 flex items-center justify-between sticky top-0 z-50">
 
@@ -421,9 +407,7 @@ const Dashboard = () => {
 
       </header>
 
-      {/* ========================= */}
       {/* MAIN CONTENT */}
-      {/* ========================= */}
 
       <main className="p-6">
 

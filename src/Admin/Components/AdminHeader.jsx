@@ -24,7 +24,7 @@ const AdminHeader = () => {
       return img;
     }
 
-    // filename → convert to backend URL
+    // filename -> convert to backend URL
     return `http://localhost:4000/uploads/${img}`;
   };
 

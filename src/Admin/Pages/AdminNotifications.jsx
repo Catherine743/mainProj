@@ -11,9 +11,7 @@ const AdminNotifications = () => {
 
   const [notifications, setNotifications] = useState([]);
 
-  // =========================
   // FETCH NOTIFICATIONS
-  // =========================
   const fetchNotifications = async () => {
     try {
       const headers = {
@@ -35,9 +33,7 @@ const AdminNotifications = () => {
     if (token) fetchNotifications();
   }, [token]);
 
-  // =========================
   // MARK AS READ
-  // =========================
   const handleRead = async (id) => {
     try {
       const headers = {
@@ -57,9 +53,7 @@ const AdminNotifications = () => {
     }
   };
 
-  // =========================
   // DELETE SINGLE
-  // =========================
   const handleDelete = async (id) => {
     try {
       const headers = {
@@ -77,9 +71,7 @@ const AdminNotifications = () => {
     }
   };
 
-  // =========================
   // CLEAR ALL
-  // =========================
   const handleClear = async () => {
     try {
       const headers = {

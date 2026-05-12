@@ -49,7 +49,7 @@ const Home = () => {
     }
   };
 
-  // ✅ DELETE
+  // DELETE
   const handleDelete = async (id) => {
     try {
       const reqHeader = {
@@ -248,7 +248,7 @@ const Home = () => {
   );
 };
 
-// ✅ REUSABLE
+// REUSABLE
 const Stat = ({ title, value, color }) => (
   <div className="bg-white p-5 rounded-xl shadow text-center">
     <h4 className="text-gray-500">{title}</h4>

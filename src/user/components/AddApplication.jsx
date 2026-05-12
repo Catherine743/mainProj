@@ -47,8 +47,6 @@ const AddApplication = () => {
       reqBody.append("designation", form.designation);
       reqBody.append("date", form.date);
 
-      // STATUS ALWAYS HANDLED IN BACKEND (Applied default)
-      // NO STATUS FIELD HERE
 
       if (resume) {
         reqBody.append("resume", resume);

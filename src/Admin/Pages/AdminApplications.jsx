@@ -20,9 +20,7 @@ const AdminApplications = () => {
 
   const [selectedDate, setSelectedDate] = useState("");
 
-  // =========================
   // FETCH APPLICATIONS
-  // =========================
 
   const fetchApplications = async () => {
 
@@ -54,9 +52,7 @@ const AdminApplications = () => {
 
   }, [token]);
 
-  // =========================
   // DELETE APPLICATION
-  // =========================
 
   const handleDelete = async (id) => {
 
@@ -76,9 +72,7 @@ const AdminApplications = () => {
     }
   };
 
-  // =========================
   // UPDATE STATUS
-  // =========================
 
   const handleStatusChange = async (id, status) => {
 
@@ -113,9 +107,7 @@ const AdminApplications = () => {
     }
   };
 
-  // =========================
   // SAVE INTERVIEW DATE
-  // =========================
 
   const handleInterviewSave = async () => {
 
@@ -157,9 +149,7 @@ const AdminApplications = () => {
     }
   };
 
-  // =========================
   // SEARCH FILTER
-  // =========================
 
   const filteredApps = apps.filter((app) => {
 

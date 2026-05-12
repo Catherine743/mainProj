@@ -6,7 +6,7 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
-  // ✅ LOAD USERS
+  // LOAD USERS
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -29,7 +29,7 @@ const AdminUsers = () => {
     }
   };
 
-  // ✅ SEARCH FILTER
+  // SEARCH FILTER
   const filteredUsers = users.filter((u) => {
     const keyword = search.toLowerCase();
 
