@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllApplicationsAPI, getAllUsersAPI } from "../../services/allAPI";
+import { FaThumbtack } from "react-icons/fa";
 
 const AdminHome = () => {
 
@@ -119,24 +120,18 @@ const AdminHome = () => {
 
         <ul className="text-gray-600 space-y-2">
 
-          <li>
-            📌 Active Users: {stats.users}
-          </li>
-
-          <li>
-            📌 Total Applications: {stats.applications}
-          </li>
-
-          <li>
-            📌 Success Rate:
-            {
-              stats.applications > 0
-                ? (
-                  (stats.offers / stats.applications) * 100
-                ).toFixed(1)
-                : 0
-            }%
-          </li>
+          <div className="flex items-center gap-2">
+            <FaThumbtack className="text-pink-500" />
+            <span>Success Rate:
+              {
+                stats.applications > 0
+                  ? (
+                    (stats.offers / stats.applications) * 100
+                  ).toFixed(1)
+                  : 0
+              }%
+            </span>
+          </div>
 
         </ul>
 
