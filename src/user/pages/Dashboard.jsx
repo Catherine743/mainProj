@@ -39,7 +39,9 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-    if (token) {
+    const currentToken = sessionStorage.getItem("token");
+
+    if (currentToken) {
 
       getJobs();
 
@@ -47,9 +49,17 @@ const Dashboard = () => {
 
       fetchNotifications();
 
+    } else {
+
+      setJobs([]);
+
+      setApplications([]);
+
+      setNotifications([]);
+
     }
 
-  }, [token]);
+  }, []);
 
   // =========================
   // GET JOBS

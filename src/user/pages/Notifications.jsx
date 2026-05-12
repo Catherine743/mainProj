@@ -36,10 +36,20 @@ const Notifications = () => {
   // LOAD
 
   useEffect(() => {
-    if (token) {
+
+    const currentToken = sessionStorage.getItem("token");
+
+    if (currentToken) {
+
       fetchNotifications();
+
+    } else {
+
+      setNotifications([]);
+
     }
-  }, [token]);
+
+  }, []);
 
   // MARK AS READ
 

@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { googleLoginAPI, loginAPI, registerAPI } from "../services/allAPI";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 function Auth({ register }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,17 +31,17 @@ function Auth({ register }) {
         const result = await registerAPI(userDetails);
         // console.log(result);
         if (result.status == 200) {
-          alert("Successfully registered");
+          toast.success("User successfully registered");
           setUserDetails({ username: "", email: "", password: "" });
           navigate('/login');
         }
         else {
-          alert("Something went wrong")
+          toast.warning("Something went wrong")
           setUserDetails({ username: "", email: "", password: "" });
         }
       }
       catch (err) {
-        alert("Error")
+        toast.error("Error")
         console.log(err);
       }
     }
@@ -59,25 +60,25 @@ function Auth({ register }) {
         login(result.data)
         setUserDetails({ email: "", password: "" })
         if (result.data.user.role == "admin") {
-          alert("Admin logined")
+          toast.success("Admin logined")
           navigate('/admin/home')
         }
         else {
-          alert("User logined")
+          toast.success("User logined")
           navigate('/home')
         }
       }
       else if (result.status == 401 || result.status == 404) {
-        alert(result.response.data)
+        toast.warning(result.response.data)
         setUserDetails({ email: "", password: "" })
       }
       else {
-        alert("Something went wrong");
+        toast.error("Something went wrong");
         console.log(result);
       }
     }
     else {
-      alert("Please fill the form");
+      toast.info("Please fill the form");
     }
   }
 
@@ -91,17 +92,16 @@ function Auth({ register }) {
       login(result.data)
       setTimeout(() => {
         if (result.data.user.role == "admin") {
-          alert("Admin logined with google")
           navigate('/admin/home')
         }
         else {
-          alert("User logined with google")
+          toast.success("User logined with google")
           navigate('/home')
         }
       }, 2000)
     }
     else {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
       console.log(result);
     }
   }

@@ -110,9 +110,19 @@ const Profile = () => {
 
   useEffect(() => {
 
-    getProfile();
+    const currentToken = sessionStorage.getItem("token");
 
-    getStats();
+    if (currentToken) {
+
+      getProfile();
+
+      getStats();
+
+    } else {
+
+      navigate("/");
+
+    }
 
   }, []);
 

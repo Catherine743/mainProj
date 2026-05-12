@@ -5,36 +5,32 @@ import { FaHome, FaUser, FaBell, FaBars, FaChevronDown, FaSignOutAlt } from "rea
 function Navbar() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [token, setToken] = useState("")
-  const [dp, setDp] = useState("")
   const [dropDown, setDropDown] = useState(false)
   const location = useLocation();
   const [notifications, setNotifications] = useState([])
   const [showNotif, setShowNotif] = useState(false)
 
-  useEffect(() => {
-    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
-      const userToken = sessionStorage.getItem("token")
-      setToken(userToken)
-      const user = JSON.parse(sessionStorage.getItem("user"))
-      setDp(
-        user?.image
-          ? user.image.startsWith("http")
-            ? user.image
-            : `http://localhost:4000/uploads/${user.image}`
-          : ""
-      )
-    }
-  }, [])
+  const user = JSON.parse(sessionStorage.getItem("user")) || null;
 
-  const user =
-    JSON.parse(sessionStorage.getItem("user")) || {};
+  const token = sessionStorage.getItem("token");
+
   const username = user?.username || "User";
 
+  const dp =
+    user?.image
+      ? user.image.startsWith("http")
+        ? user.image
+        : `http://localhost:4000/uploads/${user.image}`
+      : "";
+
   const handleLogout = () => {
+
     localStorage.removeItem("loggedUser");
+
     sessionStorage.clear();
-    navigate("/");
+
+    window.location.href = "/home";
+
   };
 
   const isActive = (path) =>
@@ -78,7 +74,7 @@ function Navbar() {
         {/* RIGHT: PROFILE DROPDOWN & HAMBURGER on mobile */}
         <div className="md:hidden flex items-center gap-4 relative">
           {!token ? (
-            <Link to="/login">
+            <Link to="/">
               <button className="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-700 flex items-center gap-2">
                 <FaUser />Login
               </button>
@@ -159,7 +155,7 @@ function Navbar() {
 
           {!token ? (
 
-            <Link to="/login">
+            <Link to="/">
               <button className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 flex items-center gap-2">
                 <FaUser />
                 Login
