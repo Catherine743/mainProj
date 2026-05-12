@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { getSingleApplicationAPI, editApplicationAPI } from "../../services/allAPI";
 import { FaEdit, FaArrowLeft, FaSave, FaBriefcase, FaBuilding, FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa";
+import { toast } from 'react-toastify'
 
 const EditApplication = () => {
 
@@ -93,13 +94,13 @@ const EditApplication = () => {
       const result = await editApplicationAPI(id, reqBody, reqHeader);
 
       if (result.status === 200) {
-        alert("Application Updated Successfully");
+        toast.success("Application Updated Successfully");
         navigate("/home");
       }
 
     } catch (err) {
       console.log(err);
-      alert("Update Failed");
+      toast.error("Update Failed");
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getProfileAPI, userUpdateProfileAPI, getUserApplicationsAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaCamera } from "react-icons/fa";
+import { toast } from 'react-toastify'
 
 const Profile = () => {
 
@@ -171,7 +172,7 @@ const Profile = () => {
 
       if (result.status === 200) {
 
-        alert("Profile Updated Successfully!");
+        toast.success("Profile Updated Successfully!");
 
         const updatedUser = result.data;
 
@@ -192,7 +193,7 @@ const Profile = () => {
 
       console.log(err);
 
-      alert("Update failed!");
+      toast.error("Update failed!");
     }
   };
 

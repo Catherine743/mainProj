@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ApplicationTable from "../components/ApplicationTable";
 import { getAllApplicationsAPI, updateStatusAPI, deleteAdminApplicationAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from 'react-toastify'
 
 const AdminApplications = () => {
 
@@ -122,7 +123,7 @@ const AdminApplications = () => {
 
       if (!selectedDate) {
 
-        alert("Please select interview date");
+        toast.info("Please select interview date");
 
         return;
       }

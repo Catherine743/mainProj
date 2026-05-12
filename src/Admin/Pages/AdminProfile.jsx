@@ -3,6 +3,7 @@ import { FaUserEdit, FaSave, FaCamera } from "react-icons/fa";
 import { updateProfileAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from 'react-toastify'
 
 const AdminProfile = () => {
 
@@ -76,7 +77,7 @@ const AdminProfile = () => {
       const res = await updateProfileAPI(user._id, formData, reqHeader);
 
       if (res.status === 200) {
-        alert("Profile Updated!");
+        toast.success("Profile Updated!");
 
         const updatedUser = res.data;
 
