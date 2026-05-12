@@ -19,7 +19,8 @@ const AddApplication = () => {
   const [form, setForm] = useState({
     user: loggedUser?.username || "",
     email: loggedUser?.email || "",
-    designation: ""
+    designation: "",
+    resume: ""
   });
 
   const handleChange = (e) => {
@@ -32,7 +33,7 @@ const AddApplication = () => {
   const handleAdd = async () => {
     try {
 
-      if (!form.designation) {
+      if (!form.designation || !resume) {
         setError("Please fill all fields");
         return;
       }
@@ -43,10 +44,7 @@ const AddApplication = () => {
       reqBody.append("user", form.user);
       reqBody.append("email", form.email);
       reqBody.append("designation", form.designation);
-
-      if (resume) {
-        reqBody.append("resume", resume);
-      }
+      reqBody.append("resume", resume);
 
       const reqHeader = {
         Authorization: `Bearer ${token}`,
