@@ -125,28 +125,6 @@ const Dashboard = () => {
 
   };
 
-  // STATS
-
-  const stats = {
-
-    applied: jobs.filter(
-      (j) => j.status === "Applied"
-    ).length,
-
-    interview: jobs.filter(
-      (j) => j.status === "Interview"
-    ).length,
-
-    offer: jobs.filter(
-      (j) => j.status === "Offer"
-    ).length,
-
-    rejected: jobs.filter(
-      (j) => j.status === "Rejected"
-    ).length,
-
-  };
-
   // FILTER INTERVIEWS
 
   const interviews = applications
@@ -411,59 +389,7 @@ const Dashboard = () => {
 
       <main className="p-6">
 
-        {/* STATS */}
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-
-            <h4 className="text-gray-500">
-              Total Applied
-            </h4>
-
-            <p className="text-3xl font-bold mt-2">
-              {jobs.length}
-            </p>
-
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-
-            <h4 className="text-gray-500">
-              Interviews
-            </h4>
-
-            <p className="text-3xl font-bold mt-2 text-yellow-600">
-              {stats.interview}
-            </p>
-
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-
-            <h4 className="text-gray-500">
-              Offers
-            </h4>
-
-            <p className="text-3xl font-bold mt-2 text-green-600">
-              {stats.offer}
-            </p>
-
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow">
-
-            <h4 className="text-gray-500">
-              Rejected
-            </h4>
-
-            <p className="text-3xl font-bold mt-2 text-red-500">
-              {stats.rejected}
-            </p>
-
-          </div>
-
-        </div>
+        
 
         {/* PIPELINE */}
 

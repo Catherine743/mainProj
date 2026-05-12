@@ -18,13 +18,6 @@ const Profile = () => {
   const [dp, setDp] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
-  const [stats, setStats] = useState({
-    applied: 0,
-    interviews: 0,
-    offers: 0,
-    rejected: 0,
-  });
-
   const navigate = useNavigate();
 
   // GET PROFILE DATA
@@ -68,46 +61,6 @@ const Profile = () => {
     }
   };
 
-  // GET APPLICATION STATS
-
-  const getStats = async () => {
-
-    try {
-
-      const token = sessionStorage.getItem("token");
-
-      const reqHeader = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const res = await getUserApplicationsAPI(reqHeader);
-
-      if (res.status === 200) {
-
-        const apps = res.data;
-
-        setStats({
-          applied: apps.length,
-
-          interviews: apps.filter(
-            a => a.status === "Interview"
-          ).length,
-
-          offers: apps.filter(
-            a => a.status === "Offer"
-          ).length,
-
-          rejected: apps.filter(
-            a => a.status === "Rejected"
-          ).length,
-        });
-      }
-
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
 
     const currentToken = sessionStorage.getItem("token");
@@ -115,8 +68,6 @@ const Profile = () => {
     if (currentToken) {
 
       getProfile();
-
-      getStats();
 
     } else {
 
@@ -254,60 +205,6 @@ const Profile = () => {
             />
 
           </label>
-
-        </div>
-
-      </div>
-
-      {/* STATS */}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-
-        <div className="bg-white p-5 rounded-xl shadow text-center">
-
-          <p className="text-gray-500">
-            Applied
-          </p>
-
-          <h3 className="text-xl font-bold">
-            {stats.applied}
-          </h3>
-
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow text-center">
-
-          <p className="text-gray-500">
-            Interviews
-          </p>
-
-          <h3 className="text-xl font-bold">
-            {stats.interviews}
-          </h3>
-
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow text-center">
-
-          <p className="text-gray-500">
-            Offers
-          </p>
-
-          <h3 className="text-xl font-bold text-green-600">
-            {stats.offers}
-          </h3>
-
-        </div>
-
-        <div className="bg-white p-5 rounded-xl shadow text-center">
-
-          <p className="text-gray-500">
-            Rejected
-          </p>
-
-          <h3 className="text-xl font-bold text-red-500">
-            {stats.rejected}
-          </h3>
 
         </div>
 

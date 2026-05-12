@@ -33,7 +33,7 @@ function Auth({ register }) {
         if (result.status == 200) {
           toast.success("User successfully registered");
           setUserDetails({ username: "", email: "", password: "" });
-          navigate('/login');
+          navigate('/');
         }
         else {
           toast.warning("Something went wrong")
