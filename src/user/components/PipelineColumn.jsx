@@ -24,18 +24,6 @@ const PipelineColumn = ({ title, jobs = [], onSelect }) => {
             {job.designation}
           </p>
 
-          {/* STATUS */}
-          <span className="text-xs px-2 py-1 bg-gray-200 rounded">
-            {job.status}
-          </span>
-
-          {/* INTERVIEW DATE (ONLY WHEN STATUS = INTERVIEW) */}
-          {job.status === "Interview" && (
-            <p className="text-blue-600 text-sm mt-2">
-              Interview Date: {job.interviewDate || "Not Scheduled"}
-            </p>
-          )}
-
         </div>
       )))}
 
