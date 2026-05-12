@@ -71,14 +71,15 @@ const Home = () => {
     return new Date(app.createdAt).toDateString() === new Date().toDateString();
   });
 
-  const upcoming = applications.filter((a) => {
-    if (!a.date) return false;
+  const upcomingInterviews = applications.filter((a) => {
+    if (!a.interviewDate) return false;
 
     const diff =
-      (new Date(a.date) - new Date()) / (1000 * 60 * 60 * 24);
+      (new Date(a.interviewDate) - new Date()) /
+      (1000 * 60 * 60 * 24);
 
     return diff > 0 && diff <= 2;
-  });
+  });;
 
   const pending = applications.filter(
     (a) => a.status === "Applied"
@@ -160,7 +161,7 @@ const Home = () => {
                   </span>
 
                   <span className="text-sm text-gray-500">
-                    {new Date(app.date).toLocaleDateString()}
+                    {new Date(app.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>

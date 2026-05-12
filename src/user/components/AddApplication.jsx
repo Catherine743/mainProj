@@ -10,7 +10,6 @@ const AddApplication = () => {
 
   const [error, setError] = useState("");
   const [resume, setResume] = useState("");
-  const today = new Date().toISOString().split("T")[0];
 
   const loggedUser =
     JSON.parse(sessionStorage.getItem("user")) || {};
@@ -20,8 +19,7 @@ const AddApplication = () => {
   const [form, setForm] = useState({
     user: loggedUser?.username || "",
     email: loggedUser?.email || "",
-    designation: "",
-    date: today
+    designation: ""
   });
 
   const handleChange = (e) => {
@@ -45,8 +43,6 @@ const AddApplication = () => {
       reqBody.append("user", form.user);
       reqBody.append("email", form.email);
       reqBody.append("designation", form.designation);
-      reqBody.append("date", form.date);
-
 
       if (resume) {
         reqBody.append("resume", resume);
@@ -124,18 +120,6 @@ const AddApplication = () => {
               placeholder="Designation"
               className="w-full pl-10 py-2 border rounded-xl placeholder:text-gray-400"
             />
-          </div>
-
-          <div className="relative">
-            <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
-            <input
-              type="date"
-              name="date"
-              value={form.date}
-              disabled
-              className="w-full pl-10 py-2 border rounded-xl bg-gray-100 cursor-not-allowed"
-            />
-
           </div>
 
           <div>

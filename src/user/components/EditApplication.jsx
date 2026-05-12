@@ -17,7 +17,6 @@ const EditApplication = () => {
     user: "",
     email: "",
     designation: "",
-    date: "",
     status: ""
   });
 
@@ -43,7 +42,6 @@ const EditApplication = () => {
           user: app.user,
           email: app.email,
           designation: app.designation,
-          date: app.date?.split("T")[0],
           status: app.status
         });
 
@@ -75,7 +73,6 @@ const EditApplication = () => {
       reqBody.append("user", formData.user);
       reqBody.append("email", formData.email);
       reqBody.append("designation", formData.designation);
-      reqBody.append("date", formData.date);
 
 
       if (formData.status === "Interview") {
@@ -143,16 +140,6 @@ const EditApplication = () => {
               value={formData.designation}
               onChange={handleChange}
               className="border pl-10 py-2 rounded-xl w-full"
-            />
-          </div>
-
-          <div className="relative">
-            <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
-            <input
-              name="date"
-              value={formData.date}
-              disabled
-              className="border pl-10 py-2 rounded-xl w-full bg-gray-100 cursor-not-allowed"
             />
           </div>
 
