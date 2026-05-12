@@ -59,19 +59,14 @@ const AdminApplications = () => {
   };
 
   // STATUS CHANGE HANDLER
-  const handleStatusChange = async (
-    id,
-    status,
-    interviewDate = null,
-    openModal = false
-  ) => {
+  const handleStatusChange = async (id, status, interviewDate = null, openModal = false) => {
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
 
-      // OPEN MODAL ONLY FOR INTERVIEW
-      if (openModal) {
+      // ONLY OPEN MODAL WHEN FIRST TIME INTERVIEW
+      if (status === "Interview" && openModal) {
         setSelectedId(id);
         setShowModal(true);
         return;

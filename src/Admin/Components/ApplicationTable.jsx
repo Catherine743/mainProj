@@ -50,7 +50,7 @@ const ApplicationTable = ({ data = [], onDelete, onStatusChange }) => {
                   <select
                     value={app.status}
                     onChange={(e) =>
-                      onStatusChange(app._id, e.target.value, app.interviewDate)
+                      onStatusChange(app._id, e.target.value, app.interviewDate, true)
                     }
                     className="border px-2 py-1 rounded text-xs w-full"
                   >
