@@ -3,6 +3,7 @@ import { getProfileAPI, userUpdateProfileAPI, getUserApplicationsAPI } from "../
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaCamera } from "react-icons/fa";
 import { toast } from 'react-toastify'
+import { useAuth } from '../../context/AuthContext'
 
 const Profile = () => {
 
@@ -17,6 +18,7 @@ const Profile = () => {
 
   const [dp, setDp] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const { token, updateUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -26,7 +28,6 @@ const Profile = () => {
 
     try {
 
-      const token = sessionStorage.getItem("token");
 
       const reqHeader = {
         Authorization: `Bearer ${token}`,
@@ -49,11 +50,7 @@ const Profile = () => {
 
         setDp(data.image || "");
 
-        // SAVE UPDATED USER IN SESSION
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(data)
-        );
+        updateUser(data);
       }
 
     } catch (err) {
@@ -63,9 +60,7 @@ const Profile = () => {
 
   useEffect(() => {
 
-    const currentToken = sessionStorage.getItem("token");
-
-    if (currentToken) {
+    if (token) {
 
       getProfile();
 
@@ -108,8 +103,6 @@ const Profile = () => {
 
     try {
 
-      const token = sessionStorage.getItem("token");
-
       const formData = new FormData();
 
       formData.append("username", user.username);
@@ -141,11 +134,7 @@ const Profile = () => {
 
         setDp(updatedUser.image);
 
-        // UPDATE SESSION
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(updatedUser)
-        );
+        updateUser(updatedUser);
 
         navigate("/home");
       }

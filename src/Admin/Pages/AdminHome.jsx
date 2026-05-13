@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllApplicationsAPI, getAllUsersAPI } from "../../services/allAPI";
 import { FaThumbtack } from "react-icons/fa";
-
+import { useAuth } from '../../context/AuthContext'
 const AdminHome = () => {
 
   const [stats, setStats] = useState({
@@ -11,13 +11,13 @@ const AdminHome = () => {
     offers: 0,
     rejected: 0,
   });
+  
+  const { token } = useAuth();
 
   // LOAD DATA
   const loadData = async () => {
 
     try {
-
-      const token = sessionStorage.getItem("token");
 
       if (!token) return;
 

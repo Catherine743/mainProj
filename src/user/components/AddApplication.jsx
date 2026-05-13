@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { addApplicationAPI } from "../../services/allAPI";
 import { FaBriefcase, FaCalendarAlt, FaBuilding, FaUser, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useAuth } from '../../context/AuthContext'
 
 const AddApplication = () => {
 
@@ -11,10 +12,7 @@ const AddApplication = () => {
   const [error, setError] = useState("");
   const [resume, setResume] = useState("");
 
-  const loggedUser =
-    JSON.parse(sessionStorage.getItem("user")) || {};
-
-  const token = sessionStorage.getItem("token");
+  const { user: loggedUser, token } = useAuth();
 
   const [form, setForm] = useState({
     user: loggedUser?.username || "",

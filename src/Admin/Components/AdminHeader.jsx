@@ -7,16 +7,15 @@ import AdminNotifications from "../Pages/AdminNotifications";
 
 const AdminHeader = () => {
   const [open, setOpen] = useState(false);
-  const [admin, setAdmin] = useState({});
   const [notifications, setNotifications] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate();
 
-  const { token, logout, profileRefresh } = useAuth();
+  const { user, token, logout } = useAuth();
 
   const getImageUrl = (img) => {
     if (!img) {
-      return `https://ui-avatars.com/api/?name=${admin?.username || "Admin"}`;
+      return `https://ui-avatars.com/api/?name=${user?.username || "Admin"}`;
     }
 
     // already full URL
@@ -29,23 +28,12 @@ const AdminHeader = () => {
   };
 
   useEffect(() => {
-    fetchProfile();
-    fetchAdminNotifications();
-  }, [token, profileRefresh]);
 
-  const fetchProfile = async () => {
-    if (!token) return;
-
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    const res = await getProfileAPI(reqHeader);
-
-    if (res.status === 200) {
-      setAdmin(res.data);
+    if (token) {
+      fetchAdminNotifications();
     }
-  };
+
+  }, [token]);
 
   const fetchAdminNotifications = async () => {
 
@@ -208,7 +196,7 @@ const AdminHeader = () => {
           >
 
             <img
-              src={getImageUrl(admin?.image)}
+              src={getImageUrl(user?.image)}
               alt="admin"
               className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
             />
@@ -216,7 +204,7 @@ const AdminHeader = () => {
             <div className="hidden md:block">
 
               <h4 className="font-semibold text-gray-800">
-                {admin?.username || "Admin"}
+                {user?.username || "Admin"}
               </h4>
 
             </div>

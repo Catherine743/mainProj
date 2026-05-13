@@ -3,23 +3,21 @@ import { FaLightbulb, FaPlus, FaTasks, FaBolt, FaBriefcase, FaEdit, FaTrash } fr
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getUserApplicationsAPI, deleteApplicationAPI } from "../../services/allAPI";
+import { useAuth } from '../../context/AuthContext'
 
 const Home = () => {
 
   const [applications, setApplications] = useState([]);
   const navigate = useNavigate();
 
-  const user = JSON.parse(sessionStorage.getItem("user")) || {};
-  const token = sessionStorage.getItem("token") || "";
+  const { user, token, logout } = useAuth();
 
   const name = user?.username || "User";
 
   // PROTECT PAGE
   useEffect(() => {
 
-    const currentToken = sessionStorage.getItem("token");
-
-    if (currentToken) {
+    if (token) {
 
       getApplications();
 
@@ -29,7 +27,7 @@ const Home = () => {
 
     }
 
-  }, []);
+  }, [token]);
 
   // LOAD APPLICATIONS
   const getApplications = async () => {
@@ -179,7 +177,7 @@ const Home = () => {
 
           <h3 className="font-bold mb-4 flex items-center gap-2">
             <FaBriefcase className="text-blue-500" />
-            Recent Applications
+            Applications
           </h3>
 
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -187,56 +185,62 @@ const Home = () => {
             {applications.length === 0 ? (
               <p>No applications yet</p>
             ) : (
-              applications.slice(0, 5).map((a) => (
-                <li key={a._id} className="flex justify-between border-b pb-2">
+              applications
+                .sort(
+                  (a, b) =>
+                    new Date(b.createdAt) -
+                    new Date(a.createdAt)
+                )
+                .map((a) => (
+                  <li key={a._id} className="flex justify-between border-b pb-2">
 
-                  <div>
+                    <div>
 
-                    <p className="font-medium">
-                      {a.designation}
-                    </p>
+                      <p className="font-medium">
+                        {a.designation}
+                      </p>
 
-                    {a.resume && (
-                      <a
-                        href={`http://localhost:4000/uploads/${a.resume}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition"
+                      {a.resume && (
+                        <a
+                          href={`http://localhost:4000/uploads/${a.resume}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition"
+                        >
+                          View Resume
+                        </a>
+                      )}
+
+                    </div>
+
+                    <span className="flex gap-2">
+
+                      <Link
+                        to={`/edit-application/${a._id}`}
+                        className="flex items-center justify-center bg-yellow-100 w-9 h-9 rounded-lg hover:bg-yellow-200 transition"
                       >
-                        View Resume
-                      </a>
-                    )}
+                        <FaEdit className="text-yellow-600" />
+                      </Link>
 
-                  </div>
+                      <button
+                        className="flex items-center justify-center bg-red-100 w-9 h-9 rounded-lg hover:bg-red-200 transition cursor-pointer"
+                        onClick={() => {
+                          const confirmDelete = window.confirm(
+                            "Are you sure you want to delete this application?"
+                          )
 
-                  <span className="flex gap-2">
+                          if (confirmDelete) {
+                            handleDelete(a._id)
+                          }
+                        }}
+                      >
+                        <FaTrash className="text-red-600" />
+                      </button>
 
-                    <Link
-                      to={`/edit-application/${a._id}`}
-                      className="flex items-center justify-center bg-yellow-100 w-9 h-9 rounded-lg hover:bg-yellow-200 transition"
-                    >
-                      <FaEdit className="text-yellow-600" />
-                    </Link>
+                    </span>
 
-                    <button
-                      className="flex items-center justify-center bg-red-100 w-9 h-9 rounded-lg hover:bg-red-200 transition cursor-pointer"
-                      onClick={() => {
-                        const confirmDelete = window.confirm(
-                          "Are you sure you want to delete this application?"
-                        )
-
-                        if (confirmDelete) {
-                          handleDelete(a._id)
-                        }
-                      }}
-                    >
-                      <FaTrash className="text-red-600" />
-                    </button>
-
-                  </span>
-
-                </li>
-              ))
+                  </li>
+                ))
             )}
 
           </ul>

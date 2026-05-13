@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaHome, FaUser, FaBell, FaBars, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from '../../context/AuthContext'
 
 function Navbar() {
   const navigate = useNavigate();
@@ -10,9 +11,7 @@ function Navbar() {
   const [notifications, setNotifications] = useState([])
   const [showNotif, setShowNotif] = useState(false)
 
-  const user = JSON.parse(sessionStorage.getItem("user")) || null;
-
-  const token = sessionStorage.getItem("token");
+  const { user, token, logout } = useAuth();
 
   const username = user?.username || "User";
 
@@ -25,11 +24,10 @@ function Navbar() {
 
   const handleLogout = () => {
 
-    localStorage.removeItem("loggedUser");
 
-    sessionStorage.clear();
+    logout();
 
-    window.location.href = "/home";
+    navigate("/home");
 
   };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../components/UserTable";
 import { getAllUsersAPI } from "../../services/allAPI";
+import { useAuth } from '../../context/AuthContext'
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -10,10 +11,11 @@ const AdminUsers = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+  
+  const { token } = useAuth();
 
   const fetchUsers = async () => {
     try {
-      const token = sessionStorage.getItem("token");
 
       const headers = {
         Authorization: `Bearer ${token}`,

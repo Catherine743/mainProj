@@ -8,36 +8,33 @@ import { toast } from 'react-toastify'
 const AdminProfile = () => {
 
   const navigate = useNavigate();
-  const storedUser =
-    JSON.parse(sessionStorage.getItem("user")) || {};
+  const {
+    user: authUser,
+    updateUser,
+    token,
+  } = useAuth();
 
-  const { triggerProfileRefresh } = useAuth();
-
-  const token = sessionStorage.getItem("token");
-
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-    role: "",
-    location: "",
-    bio: "",
-    image: "",
-  });
+  const [user, setUser] = useState(authUser || {});
 
   const [preview, setPreview] = useState("");
   const [imageFile, setImageFile] = useState(null);
 
   // LOAD USER FROM SESSION
   useEffect(() => {
-    if (storedUser) {
-      setUser(storedUser);
+
+    if (authUser) {
+
+      setUser(authUser);
+
       setPreview(
-        storedUser.image
-          ? `http://localhost:4000/uploads/${storedUser.image}`
+        authUser.image
+          ? `http://localhost:4000/uploads/${authUser.image}`
           : ""
       );
+
     }
-  }, []);
+
+  }, [authUser]);
 
   // HANDLE INPUT
   const handleChange = (e) => {
@@ -77,20 +74,20 @@ const AdminProfile = () => {
       const res = await updateProfileAPI(user._id, formData, reqHeader);
 
       if (res.status === 200) {
+
         toast.success("Profile Updated!");
 
         const updatedUser = res.data;
 
         setUser(updatedUser);
+
+        updateUser(updatedUser);
+
         setPreview(
           updatedUser.image
             ? `http://localhost:4000/uploads/${updatedUser.image}`
             : ""
         );
-
-        sessionStorage.setItem("user", JSON.stringify(updatedUser));
-
-        triggerProfileRefresh(); 
 
         navigate("/admin/home");
       }

@@ -3,11 +3,13 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getSingleApplicationAPI, editApplicationAPI } from "../../services/allAPI";
 import { FaEdit, FaArrowLeft, FaSave, FaBriefcase, FaBuilding, FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa";
 import { toast } from 'react-toastify'
+import { useAuth } from '../../context/AuthContext'
 
 const EditApplication = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   const [resume, setResume] = useState("");
   const [existingResume, setExistingResume] = useState("");
@@ -26,8 +28,6 @@ const EditApplication = () => {
 
   const getApplication = async () => {
     try {
-
-      const token = sessionStorage.getItem("token");
 
       const reqHeader = {
         Authorization: `Bearer ${token}`,
@@ -65,8 +65,6 @@ const EditApplication = () => {
     e.preventDefault();
 
     try {
-
-      const token = sessionStorage.getItem("token");
 
       const reqBody = new FormData();
 

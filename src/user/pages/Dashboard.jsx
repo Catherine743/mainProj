@@ -26,10 +26,7 @@ const Dashboard = () => {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  const { token } = useAuth();
-
-  const user =
-    JSON.parse(sessionStorage.getItem("user")) || {};
+  const { user, token, logout } = useAuth();
 
   const username = user?.username || "User";
 
@@ -37,9 +34,7 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-    const currentToken = sessionStorage.getItem("token");
-
-    if (currentToken) {
+    if (token) {
 
       getJobs();
 
@@ -315,7 +310,7 @@ const Dashboard = () => {
               <img
                 src={
                   user?.image
-                    ? user.image
+                    ? `http://localhost:4000/uploads/${user.image}`
                     : `https://ui-avatars.com/api/?name=${username}`
                 }
                 alt="profile"
@@ -361,7 +356,7 @@ const Dashboard = () => {
                 <button
                   onClick={() => {
 
-                    sessionStorage.clear();
+                    logout();
 
                     navigate("/");
 
@@ -389,7 +384,7 @@ const Dashboard = () => {
 
       <main className="p-6">
 
-        
+
 
         {/* PIPELINE */}
 

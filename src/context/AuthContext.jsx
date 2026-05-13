@@ -17,6 +17,11 @@ export const AuthProvider = ({ children }) => {
     setProfileRefresh(prev => !prev);
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    sessionStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   const login = (data) => {
     setUser(data.user);
     setToken(data.token);
@@ -32,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, profileRefresh, triggerProfileRefresh }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUser, profileRefresh, triggerProfileRefresh }}>
       {children}
     </AuthContext.Provider>
   );

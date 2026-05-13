@@ -37,9 +37,7 @@ const Notifications = () => {
 
   useEffect(() => {
 
-    const currentToken = sessionStorage.getItem("token");
-
-    if (currentToken) {
+    if (token) {
 
       fetchNotifications();
 
