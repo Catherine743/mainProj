@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import UserTable from "../components/UserTable";
 import { getAllUsersAPI } from "../../services/allAPI";
 import { useAuth } from '../../context/AuthContext'
+import UserTable from "../Components/UserTable";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
