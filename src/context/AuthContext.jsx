@@ -11,12 +11,6 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.getItem("token") || ""
   );
 
-  const [profileRefresh, setProfileRefresh] = useState(false);
-
-  const triggerProfileRefresh = () => {
-    setProfileRefresh(prev => !prev);
-  };
-
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     sessionStorage.setItem("user", JSON.stringify(updatedUser));
@@ -37,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, updateUser, profileRefresh, triggerProfileRefresh }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
