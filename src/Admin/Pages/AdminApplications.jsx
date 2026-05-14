@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ApplicationTable from "../components/ApplicationTable";
 import {
   getAllApplicationsAPI,
   updateStatusAPI,
@@ -7,6 +6,7 @@ import {
 } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import ApplicationTable from "../Components/ApplicationTable";
 
 const AdminApplications = () => {
 
