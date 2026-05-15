@@ -3,6 +3,14 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+
+  const login = (data) => {
+    setUser(data.user);
+    setToken(data.token);
+    sessionStorage.setItem("user", JSON.stringify(data.user));
+    sessionStorage.setItem("token", data.token);
+  };
+  
   const [user, setUser] = useState(
     JSON.parse(sessionStorage.getItem("user")) || null
   );
@@ -14,13 +22,6 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     sessionStorage.setItem("user", JSON.stringify(updatedUser));
-  };
-
-  const login = (data) => {
-    setUser(data.user);
-    setToken(data.token);
-    sessionStorage.setItem("user", JSON.stringify(data.user));
-    sessionStorage.setItem("token", data.token);
   };
 
   const logout = () => {
