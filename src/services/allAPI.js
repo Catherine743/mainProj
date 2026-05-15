@@ -31,7 +31,7 @@ export const getSingleApplicationAPI = async (id, reqHeader) => {
   return await commonAPI("GET", `${server_url}/single/${id}`, "", reqHeader);
 };
 
-// GET APPLICATIONS (USER)
+// GET ALL APPLICATIONS (USER)
 export const getUserApplicationsAPI = async (reqHeader) => {
   return await commonAPI("GET", `${server_url}/user-apps`, "", reqHeader);
 }
