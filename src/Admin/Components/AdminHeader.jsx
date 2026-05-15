@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getNotificationsAPI, getProfileAPI } from "../../services/allAPI";
+import { getNotificationsAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import AdminNotifications from "../Pages/AdminNotifications";
 
