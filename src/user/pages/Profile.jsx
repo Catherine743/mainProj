@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProfileAPI, userUpdateProfileAPI, getUserApplicationsAPI } from "../../services/allAPI";
+import { getProfileAPI, userUpdateProfileAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaCamera } from "react-icons/fa";
 import { toast } from 'react-toastify'
