@@ -3,17 +3,17 @@ import { server_url } from "./server_url";
 
 // REGISTERAPI
 export const registerAPI = async (reqBody) => {
-    return await commonAPI("POST", `${server_url}/register`, reqBody);
+  return await commonAPI("POST", `${server_url}/register`, reqBody);
 }
 
 // LOGINAPI
 export const loginAPI = async (reqBody) => {
-    return await commonAPI("POST", `${server_url}/login`, reqBody);
+  return await commonAPI("POST", `${server_url}/login`, reqBody);
 }
 
 // GOOGLE LOGIN API
 export const googleLoginAPI = async (reqBody) => {
-    return await commonAPI("POST", `${server_url}/google-login`, reqBody);
+  return await commonAPI("POST", `${server_url}/google-login`, reqBody);
 }
 
 // ADD APPLICATION (USER)
@@ -23,7 +23,7 @@ export const addApplicationAPI = async (reqBody, reqHeader) => {
 
 // EDIT APPLICATION (USER)
 export const editApplicationAPI = async (id, reqBody, reqHeader) => {
-  return await commonAPI("PUT",`${server_url}/edit/${id}`,reqBody,reqHeader)
+  return await commonAPI("PUT", `${server_url}/edit/${id}`, reqBody, reqHeader)
 }
 
 // GET SINGLE APPLICATION (USER)
@@ -72,13 +72,13 @@ export const clearNotificationsAPI = async (header) => {
 };
 
 // GET ALL APPLICATIONS (ADMIN)
-export const getAllApplicationsAPI = (headers) => {
-  return commonAPI("GET", `${server_url}/all-apps`, "", headers);
+export const getAllApplicationsAPI = async (headers) => {
+  return await commonAPI("GET", `${server_url}/all-apps`, "", headers);
 };
 
 // GET ALL USERS (ADMIN)
-export const getAllUsersAPI = (headers) => {
-  return commonAPI("GET", `${server_url}/all-users`, "", headers);
+export const getAllUsersAPI = async (headers) => {
+  return await commonAPI("GET", `${server_url}/all-users`, "", headers);
 };
 
 // UPDATE PROFILE (ADMIN)
