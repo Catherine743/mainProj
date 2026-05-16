@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getNotificationsAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import AdminNotifications from "../Pages/AdminNotifications";
+import { server_url } from "../../services/server_url";
 
 const AdminHeader = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +25,7 @@ const AdminHeader = () => {
     }
 
     // filename -> convert to backend URL
-    return `http://localhost:4000/uploads/${img}`;
+    return `${server_url}/uploads/${img}`;
   };
 
   useEffect(() => {

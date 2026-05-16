@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { FaHome, FaUser, FaBell, FaBars, FaChevronDown, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from '../../context/AuthContext'
+import { server_url } from "../../services/server_url";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Navbar() {
     user?.image
       ? user.image.startsWith("http")
         ? user.image
-        : `http://localhost:4000/uploads/${user.image}`
+        : `${server_url}/uploads/${user.image}`
       : "";
 
   const handleLogout = () => {

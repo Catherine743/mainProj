@@ -4,6 +4,7 @@ import { getSingleApplicationAPI, editApplicationAPI } from "../../services/allA
 import { FaEdit, FaArrowLeft, FaSave, FaBriefcase, FaBuilding, FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa";
 import { toast } from 'react-toastify'
 import { useAuth } from '../../context/AuthContext'
+import { server_url } from "../../services/server_url";
 
 const EditApplication = () => {
 
@@ -149,7 +150,7 @@ const EditApplication = () => {
 
           {existingResume && (
             <a
-              href={`http://localhost:4000/uploads/${existingResume}`}
+              href={`${server_url}/uploads/${existingResume}`}
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 text-sm"

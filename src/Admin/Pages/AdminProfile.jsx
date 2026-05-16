@@ -4,6 +4,7 @@ import { updateProfileAPI } from "../../services/allAPI";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from 'react-toastify'
+import { server_url } from "../../services/server_url";
 
 const AdminProfile = () => {
 
@@ -28,7 +29,7 @@ const AdminProfile = () => {
 
       setPreview(
         authUser.image
-          ? `http://localhost:4000/uploads/${authUser.image}`
+          ? `${server_url}/uploads/${authUser.image}`
           : ""
       );
 
@@ -85,7 +86,7 @@ const AdminProfile = () => {
 
         setPreview(
           updatedUser.image
-            ? `http://localhost:4000/uploads/${updatedUser.image}`
+            ? `${server_url}/uploads/${updatedUser.image}`
             : ""
         );
 
@@ -117,7 +118,7 @@ const AdminProfile = () => {
               preview
                 ? preview
                 : user.image
-                  ? `http://localhost:4000/uploads/${user.image}`
+                  ? `${server_url}/uploads/${user.image}`
                   : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             }
             alt="profile"

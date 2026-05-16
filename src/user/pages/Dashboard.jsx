@@ -5,6 +5,7 @@ import { getUserApplicationsAPI, getNotificationsAPI } from "../../services/allA
 import PipelineColumn from "../components/PipelineColumn";
 import { useAuth } from "../../context/AuthContext";
 import { FaChevronDown, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { server_url } from "../../services/server_url";
 
 const Dashboard = () => {
 
@@ -310,7 +311,7 @@ const Dashboard = () => {
               <img
                 src={
                   user?.image
-                    ? `http://localhost:4000/uploads/${user.image}`
+                    ? `${server_url}/uploads/${user.image}`
                     : `https://ui-avatars.com/api/?name=${username}`
                 }
                 alt="profile"

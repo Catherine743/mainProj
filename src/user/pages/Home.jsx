@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getUserApplicationsAPI, deleteApplicationAPI } from "../../services/allAPI";
 import { useAuth } from '../../context/AuthContext'
+import { server_url } from "../../services/server_url";
 
 const Home = () => {
 
@@ -202,7 +203,7 @@ const Home = () => {
 
                       {a.resume && (
                         <a
-                          href={`http://localhost:4000/uploads/${a.resume}`}
+                          href={`${server_url}/uploads/${a.resume}`}
                           target="_blank"
                           rel="noreferrer"
                           className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition"
