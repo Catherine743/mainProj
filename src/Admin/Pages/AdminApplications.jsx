@@ -30,7 +30,7 @@ const AdminApplications = () => {
       const res = await getAllApplicationsAPI(headers);
 
       if (res.status === 200) {
-        setApps(res.data.data);
+        setApps(res.data);
       }
     } catch (err) {
       console.log(err);
@@ -51,6 +51,9 @@ const AdminApplications = () => {
       };
 
       await deleteAdminApplicationAPI(id, headers);
+
+      toast.success("Application deleted");
+
       fetchApplications();
 
     } catch (err) {
@@ -77,7 +80,7 @@ const AdminApplications = () => {
         { status, interviewDate },
         headers
       );
-
+      toast.success("Status updated")
       fetchApplications();
 
     } catch (err) {
@@ -183,6 +186,7 @@ const AdminApplications = () => {
                 onClick={() => {
                   setShowModal(false);
                   setSelectedDate("");
+                  setSelectedId("");
                 }}
                 className="bg-gray-300 px-5 py-2 rounded-lg hover:bg-gray-400"
               >
