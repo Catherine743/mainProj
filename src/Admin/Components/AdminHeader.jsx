@@ -50,7 +50,6 @@ const AdminHeader = () => {
 
         setNotifications(res.data);
 
-
       }
 
     } catch (err) {
