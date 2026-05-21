@@ -134,12 +134,6 @@ const AdminNotifications = () => {
                     {n.message}
                   </p>
 
-                  {!n.read && (
-                    <span className="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full">
-                      New
-                    </span>
-                  )}
-
                 </div>
 
                 <small className="text-gray-500 block mt-1">

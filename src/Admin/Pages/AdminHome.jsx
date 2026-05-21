@@ -36,7 +36,7 @@ const AdminHome = () => {
       // SAFE DATA
       const users = usersRes?.data || [];
 
-      const applications = appsRes?.data?.data || [];
+      const applications = appsRes?.data || [];
 
       // UPDATE STATE
       setStats({
