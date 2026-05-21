@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { getNotificationsAPI } from "../../services/allAPI";
+import { getAdminNotificationsAPI } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import AdminNotifications from "../Pages/AdminNotifications";
 import { server_url } from "../../services/server_url";
@@ -44,7 +44,7 @@ const AdminHeader = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      const res = await getNotificationsAPI(reqHeader);
+      const res = await getAdminNotificationsAPI(reqHeader);
 
       if (res.status === 200) {
 
@@ -63,6 +63,7 @@ const AdminHeader = () => {
     navigate("/");
   };
 
+  const unreadNotifications = notifications.filter((n) => !n.read).reverse()
   return (
     <header className="bg-white shadow px-6 py-4 flex items-center justify-end">
 
@@ -78,15 +79,11 @@ const AdminHeader = () => {
 
             <FaBell className="text-lg text-gray-700" />
 
-            {notifications.filter((n) => !n.read).length > 0 && (
+            {unreadNotifications.length > 0 && (
 
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
 
-                {
-                  notifications.filter(
-                    (n) => !n.read
-                  ).length
-                }
+                {unreadNotifications.length}
 
               </span>
 
@@ -109,11 +106,7 @@ const AdminHeader = () => {
                 </h4>
 
                 <span className="text-sm text-gray-500">
-                  {
-                    notifications.filter(
-                      (n) => !n.read
-                    ).length
-                  } unread
+                  {unreadNotifications.length} unread
                 </span>
 
               </div>
@@ -122,36 +115,31 @@ const AdminHeader = () => {
 
               <div className="max-h-72 overflow-y-auto">
 
-                {notifications.length > 0 ? (
+                {unreadNotifications.length > 0 ? (
 
-                  notifications
-                    .filter((n) => !n.read)
-                    .slice()
-                    .reverse()
-                    .slice(0, 8)
-                    .map((n) => (
+                  unreadNotifications.map((n) => (
 
-                      <div
-                        key={n._id}
-                        className={`p-4 border-b transition ${n.read
-                          ? "bg-white"
-                          : "bg-blue-50 hover:bg-blue-100"
-                          }`}
-                      >
+                    <div
+                      key={n._id}
+                      className={`p-4 border-b transition ${n.read
+                        ? "bg-white"
+                        : "bg-blue-50 hover:bg-blue-100"
+                        }`}
+                    >
 
-                        <p className="text-sm text-gray-700">
-                          {n.message}
-                        </p>
+                      <p className="text-sm text-gray-700">
+                        {n.message}
+                      </p>
 
-                        <small className="text-gray-400">
-                          {new Date(
-                            n.createdAt
-                          ).toLocaleString()}
-                        </small>
+                      <small className="text-gray-400">
+                        {new Date(
+                          n.createdAt
+                        ).toLocaleString()}
+                      </small>
 
-                      </div>
+                    </div>
 
-                    ))
+                  ))
 
                 ) : (
 

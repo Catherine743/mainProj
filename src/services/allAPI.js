@@ -16,6 +16,8 @@ export const googleLoginAPI = async (reqBody) => {
   return await commonAPI("POST", `${server_url}/google-login`, reqBody);
 }
 
+// USER APIS
+
 // ADD APPLICATION (USER)
 export const addApplicationAPI = async (reqBody, reqHeader) => {
   return await commonAPI("POST", `${server_url}/add`, reqBody, reqHeader);
@@ -70,6 +72,8 @@ export const deleteNotificationAPI = async (id, header) => {
 export const clearNotificationsAPI = async (header) => {
   return await commonAPI("DELETE", `${server_url}/clear-notify`, "", header);
 };
+
+// ADMIN APIS
 
 // GET ALL APPLICATIONS (ADMIN)
 export const getAllApplicationsAPI = async (headers) => {
