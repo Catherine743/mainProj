@@ -31,6 +31,12 @@ const Dashboard = () => {
 
   const username = user?.username || "User";
 
+  const profileImage = user?.image
+    ? user.image.startsWith("http")
+      ? user.image
+      : `${server_url}/uploads/${user.image}`
+    : "";
+
   // LOAD DATA
 
   useEffect(() => {
@@ -309,11 +315,7 @@ const Dashboard = () => {
             >
 
               <img
-                src={
-                  user?.image
-                    ? `${server_url}/uploads/${user.image}`
-                    : `https://ui-avatars.com/api/?name=${username}`
-                }
+                src={profileImage}
                 alt="profile"
                 className="w-11 h-11 rounded-full object-cover border-2 border-blue-500"
               />
