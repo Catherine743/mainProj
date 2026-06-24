@@ -128,6 +128,8 @@ const Dashboard = () => {
   };
 
   // FILTER INTERVIEWS
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const interviews = applications
     .filter((app) => app.status === "Interview")
@@ -136,6 +138,8 @@ const Dashboard = () => {
       if (!app.interviewDate) return false;
 
       const interview = new Date(app.interviewDate);
+
+      if (interview < today) return false;
 
       const from = fromDate
         ? new Date(fromDate)

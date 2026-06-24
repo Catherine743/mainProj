@@ -134,7 +134,6 @@ const AddApplication = () => {
 
             <button
               type="submit"
-              onClick={handleAdd}
               className="w-full bg-blue-600 text-white py-2 rounded-xl"
             >
               Save Application
