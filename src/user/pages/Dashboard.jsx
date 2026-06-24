@@ -39,7 +39,7 @@ const Dashboard = () => {
 
   // LOAD DATA
 
-  useEffect(() => {
+useEffect(() => {
 
     if (token) {
 

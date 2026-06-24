@@ -19,6 +19,9 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.getItem("token") || ""
   );
 
+  // ADMIN NOTIFICATIONS STATE
+  const [adminNotifications, setAdminNotifications] = useState([]);
+
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     sessionStorage.setItem("user", JSON.stringify(updatedUser));
@@ -32,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, user, token, updateUser, logout }}>
+    <AuthContext.Provider value={{ login, user, token, updateUser, adminNotifications, setAdminNotifications, logout }}>
       {children}
     </AuthContext.Provider>
   );

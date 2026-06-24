@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   getAllApplicationsAPI,
   updateStatusAPI,
-  deleteAdminApplicationAPI
+  deleteAdminApplicationAPI,
+  getAdminNotificationsAPI
 } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -10,7 +11,7 @@ import ApplicationTable from "../Components/ApplicationTable";
 
 const AdminApplications = () => {
 
-  const { token } = useAuth();
+  const { token, setAdminNotifications } = useAuth();
 
   const [apps, setApps] = useState([]);
   const [search, setSearch] = useState("");
@@ -19,6 +20,13 @@ const AdminApplications = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
+
+  useEffect(() => {
+    if (token) {
+      fetchApplications();
+      fetchAdminNotifications()
+    }
+  }, [token]);
 
   // FETCH APPLICATIONS
   const fetchApplications = async () => {
@@ -37,11 +45,23 @@ const AdminApplications = () => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      fetchApplications();
+  const fetchAdminNotifications = async () => {
+    try {
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getAdminNotificationsAPI(headers);
+
+      if (res.status === 200) {
+        setAdminNotifications(res.data);
+      }
+
+    } catch (err) {
+      console.log(err);
     }
-  }, [token]);
+  };
 
   // DELETE
   const handleDelete = async (id) => {
@@ -80,6 +100,7 @@ const AdminApplications = () => {
         { status, interviewDate },
         headers
       );
+      fetchAdminNotifications();
       toast.success("Status updated")
       fetchApplications();
 
@@ -109,6 +130,7 @@ const AdminApplications = () => {
         headers
       );
 
+      fetchAdminNotifications();
       setShowModal(false);
       setSelectedDate("");
       fetchApplications();

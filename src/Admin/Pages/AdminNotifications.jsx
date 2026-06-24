@@ -6,10 +6,10 @@ import { FaTrash, FaCheck } from "react-icons/fa";
 
 const AdminNotifications = () => {
 
-  const { token } = useAuth();
+  const { token, adminNotifications, setAdminNotifications } = useAuth();
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState([]);
+  
 
   // FETCH NOTIFICATIONS
   const fetchNotifications = async () => {
@@ -21,7 +21,7 @@ const AdminNotifications = () => {
       const res = await getAdminNotificationsAPI(headers);
 
       if (res.status === 200) {
-        setNotifications(res.data);
+        setAdminNotifications(res.data);
       }
     } catch (err) {
       console.log(err);
@@ -42,7 +42,7 @@ const AdminNotifications = () => {
 
       await markAdminNotificationAPI(id, headers);
 
-      setNotifications((prev) =>
+      setAdminNotifications((prev) =>
         prev.map((item) =>
           item._id === id ? { ...item, read: true } : item
         )
@@ -62,7 +62,7 @@ const AdminNotifications = () => {
 
       await deleteAdminNotificationAPI(id, headers);
 
-      setNotifications((prev) =>
+      setAdminNotifications((prev) =>
         prev.filter((item) => item._id !== id)
       );
 
@@ -80,7 +80,7 @@ const AdminNotifications = () => {
 
       await clearAdminNotificationsAPI(headers);
 
-      setNotifications([]);
+      setAdminNotifications([]);
 
     } catch (err) {
       console.log(err);
@@ -115,9 +115,9 @@ const AdminNotifications = () => {
       {/* NOTIFICATIONS LIST */}
       <div className="bg-white rounded-xl shadow overflow-hidden">
 
-        {notifications.length > 0 ? (
+        {adminNotifications.length > 0 ? (
 
-          notifications.map((n) => (
+          adminNotifications.map((n) => (
 
             <div
               key={n._id}

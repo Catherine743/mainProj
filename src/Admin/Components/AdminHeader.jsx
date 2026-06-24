@@ -12,7 +12,7 @@ const AdminHeader = () => {
   const [showNotif, setShowNotif] = useState(false);
   const navigate = useNavigate();
 
-  const { user, token, logout } = useAuth();
+  const { user, token, logout, adminNotifications, setAdminNotifications } = useAuth();
 
   const getImageUrl = (img) => {
     if (!img) {
@@ -48,7 +48,7 @@ const AdminHeader = () => {
 
       if (res.status === 200) {
 
-        setNotifications(res.data);
+        setAdminNotifications(res.data);
 
       }
 
@@ -63,7 +63,7 @@ const AdminHeader = () => {
     navigate("/");
   };
 
-  const unreadNotifications = notifications.filter((n) => !n.read).reverse()
+  const unreadNotifications = adminNotifications.filter((n) => !n.read).reverse()
   return (
     <header className="bg-white shadow px-6 py-4 flex items-center justify-end">
 
