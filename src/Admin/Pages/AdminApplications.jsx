@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   getAllApplicationsAPI,
   updateStatusAPI,
-  deleteAdminApplicationAPI,
-  getAdminNotificationsAPI
+  deleteAdminApplicationAPI
 } from "../../services/allAPI";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -11,7 +10,7 @@ import ApplicationTable from "../Components/ApplicationTable";
 
 const AdminApplications = () => {
 
-  const { token, setAdminNotifications } = useAuth();
+  const { token } = useAuth();
 
   const [apps, setApps] = useState([]);
   const [search, setSearch] = useState("");
@@ -20,13 +19,6 @@ const AdminApplications = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-
-  useEffect(() => {
-    if (token) {
-      fetchApplications();
-      fetchAdminNotifications()
-    }
-  }, [token]);
 
   // FETCH APPLICATIONS
   const fetchApplications = async () => {
@@ -45,23 +37,11 @@ const AdminApplications = () => {
     }
   };
 
-  const fetchAdminNotifications = async () => {
-    try {
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const res = await getAdminNotificationsAPI(headers);
-
-      if (res.status === 200) {
-        setAdminNotifications(res.data);
-      }
-
-    } catch (err) {
-      console.log(err);
+  useEffect(() => {
+    if (token) {
+      fetchApplications();
     }
-  };
+  }, [token]);
 
   // DELETE
   const handleDelete = async (id) => {
@@ -100,8 +80,12 @@ const AdminApplications = () => {
         { status, interviewDate },
         headers
       );
-      fetchAdminNotifications();
-      toast.success("Status updated")
+      if(status == "Interview" && interviewDate) {
+        toast.success("Interview date updated")
+      }
+      else {
+        toast.success("Status updated")
+      }
       fetchApplications();
 
     } catch (err) {
@@ -129,8 +113,9 @@ const AdminApplications = () => {
         },
         headers
       );
+      
+      toast.success("Interview date scheduled");
 
-      fetchAdminNotifications();
       setShowModal(false);
       setSelectedDate("");
       fetchApplications();
